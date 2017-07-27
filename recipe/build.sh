@@ -16,4 +16,6 @@ include_dirs = $PREFIX/include
 
 EOF
 
-$PYTHON -m pip install --no-deps --ignore-installed .
+$PYTHON setup.py config
+$PYTHON setup.py build
+$PYTHON setup.py install
