@@ -14,4 +14,14 @@ import numpy.fft.fftpack_lite
 import numpy.linalg.lapack_lite
 import numpy.random.mtrand
 
+from numpy.fft import using_mklfft
+
+try:
+    print('MKL: %r' % numpy.__mkl_version__)
+except AttributeError:
+    print('NO MKL')
+
+print('USING MKLFFT: %s' % using_mklfft)
+
+
 sys.exit(not numpy.test().wasSuccessful())
