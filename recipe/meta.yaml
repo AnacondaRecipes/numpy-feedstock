@@ -23,7 +23,9 @@ build:
 
 requirements:
   build:
-    - toolchain
+    - {{ compiler('c') }}
+    - {{ compiler('fortran') }}
+  host:
     - cython
     - python
     - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
