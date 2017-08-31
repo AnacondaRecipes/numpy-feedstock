@@ -11,6 +11,10 @@ source:
     # backport https://github.com/numpy/numpy/pull/6016
     - gzip.patch
     - mklfft.patch
+    # Windows filesystem doesn't support this, and you end up with a permission error
+    #    This test is not run on windows in later numpy versions
+    - disable_large_file_windows.patch  # [win]
+  # vc14 doesn't work well until numpy 1.9
 
 build:
   number: 1
@@ -20,6 +24,7 @@ build:
   # this is for conda 4.3 and below
   features:
     - nomkl    # [x86 and blas_impl != 'mkl']
+  skip: True  # [win and vc>=14]
 
 requirements:
   build:
