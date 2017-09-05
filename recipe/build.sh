@@ -33,11 +33,8 @@ include_dirs = $PREFIX/include
 
 EOF
 
-<<<<<<< HEAD
-=======
 fi
 
->>>>>>> graft mkl onto conda-forge recipe.  Use cb3.
 $PYTHON setup.py config
 $PYTHON setup.py build
-$PYTHON setup.py install
+$PYTHON setup.py install --single-version-externally-managed --record=record.txt

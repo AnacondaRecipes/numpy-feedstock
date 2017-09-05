@@ -69,11 +69,8 @@ class TestFFT1D(TestCase):
             assert_array_almost_equal(x, z)
 
     def test_rfft(self):
-        x = np.fft.rfft([0, 1+5j, 0+7j, -3j])
-        y = np.array([1, -1j, -1])
-        assert_array_almost_equal(x, y)
-
         x = np.fft.rfft([0, 1, 0, 0])
+        y = np.array([1, -1j, -1])
         assert_array_almost_equal(x, y)
 
         x = np.fft.rfft([0, 1, 0], n=4)

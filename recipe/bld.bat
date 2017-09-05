@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-%PYTHON% -m pip install --no-deps --ignore-installed .
-=======
 if "%blas_impl%" == "mkl" (
 
 (
@@ -30,6 +27,5 @@ echo include_dirs = %LIBRARY_INC%
 
 )
 
-python setup.py build install
->>>>>>> graft mkl onto conda-forge recipe.  Use cb3.
+python setup.py install --single-version-externally-managed --record=record.txt
 if errorlevel 1 exit 1
