@@ -14,7 +14,8 @@ source:
     # Windows filesystem doesn't support this, and you end up with a permission error
     #    This test is not run on windows in later numpy versions
     - disable_large_file_windows.patch  # [win]
-  # vc14 doesn't work well until numpy 1.9
+    # customize gfortran executable that gets looked for to use our GFORTRAN env var
+    - gfortran_alias.patch
 
 build:
   number: 1
