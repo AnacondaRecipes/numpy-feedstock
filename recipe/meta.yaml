@@ -18,6 +18,8 @@ source:
     - gfortran_alias.patch
     # fix fortran regex for ctng compilers
     - fortran_regex.patch
+    # make intel fortran version detection a little easier
+    - force_intel_compiler_version.patch
 
 build:
   number: 1
