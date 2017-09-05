@@ -23,5 +23,7 @@ except AttributeError:
 
 print('USING MKLFFT: %s' % using_mklfft)
 
+if sys.platform == 'darwin':
+    os.environ['LDFLAGS'] = ' '.join((os.getenv('LDFLAGS', ''), " -undefined dynamic_lookup"))
 
 sys.exit(not numpy.test().wasSuccessful())

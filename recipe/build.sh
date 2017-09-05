@@ -35,6 +35,10 @@ EOF
 
 fi
 
+if [[ $(uname) == 'Darwin' ]]; then
+    export LDFLAGS="$LDFLAGS -undefined dynamic_lookup"
+fi
+
 $PYTHON setup.py config
 $PYTHON setup.py build
 $PYTHON setup.py install --single-version-externally-managed --record=record.txt

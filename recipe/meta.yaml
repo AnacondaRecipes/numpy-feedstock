@@ -13,6 +13,8 @@ source:
     - osx-dist.patch
     # customize gfortran executable that gets looked for to use our GFORTRAN env var
     - gfortran_alias.patch
+    # Windows and its stupid long integer stuff breaks this test.  Just kill it.
+    - nuke_error_message.patch   # [win]
 
 build:
   number: 1
@@ -40,6 +42,8 @@ requirements:
 test:
   requires:
     - nose
+    - {{ compiler('c') }}
+    - {{ compiler('fortran') }}
   commands:
     - f2py -h
     - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
