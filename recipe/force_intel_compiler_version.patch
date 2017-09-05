@@ -1,0 +1,18 @@
+diff --git a/numpy/distutils/ccompiler.py b/numpy/distutils/ccompiler.py
+index 8484685..42f58ea 100644
+--- a/numpy/distutils/ccompiler.py
++++ b/numpy/distutils/ccompiler.py
+@@ -460,10 +460,9 @@ def CCompiler_get_version(self, force=False, ok_status=[0]):
+     status, output = exec_command(version_cmd, use_tee=0)
+ 
+     version = None
+-    if status in ok_status:
+-        version = matcher(output)
+-        if version:
+-            version = LooseVersion(version)
++    version = matcher(output)
++    if version:
++        version = LooseVersion(version)
+     self.version = version
+     return version
+ 

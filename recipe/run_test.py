@@ -25,5 +25,10 @@ print('USING MKLFFT: %s' % using_mklfft)
 
 if sys.platform == 'darwin':
     os.environ['LDFLAGS'] = ' '.join((os.getenv('LDFLAGS', ''), " -undefined dynamic_lookup"))
+elif sys.platform.startswith('linux'):
+    del os.environ['LDFLAGS']
+    del os.environ['CFLAGS']
+    del os.environ['FFLAGS']
+
 
 sys.exit(not numpy.test().wasSuccessful())
