@@ -35,8 +35,8 @@ EOF
 
 fi
 
-if [[ $(uname) == 'Darwin' ]]; then
-    export LDFLAGS="$LDFLAGS -undefined dynamic_lookup"
+if [[ ${HOST} =~ .*darwin.* ]]; then
+    export LDFLAGS="${LDFLAGS} -undefined dynamic_lookup"
 fi
 
 $PYTHON setup.py config
