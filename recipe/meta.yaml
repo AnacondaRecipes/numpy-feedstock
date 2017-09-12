@@ -15,8 +15,6 @@ source:
     - nuke_error_message.patch   # [win]
     # customize gfortran executable that gets looked for to use our GFORTRAN env var
     - gfortran_alias.patch
-    # make intel fortran version detection a little easier
-    - force_intel_compiler_version.patch
 
 build:
   number: 1
