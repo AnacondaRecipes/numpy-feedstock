@@ -36,7 +36,6 @@ requirements:
     - python
     - setuptools
     - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
-    - msinttypes   # [win and vc<14]
     - openblas    # [blas_impl == 'openblas']
     - setuptools
   run:
