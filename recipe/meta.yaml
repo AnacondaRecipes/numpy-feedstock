@@ -21,7 +21,7 @@ source:
     - fortran_regex.patch
 
 build:
-  number: 1
+  number: 2
   # conda 4.4+ can use this
   requires_features:
     blas: {{ blas_impl }}
