@@ -18,8 +18,6 @@ source:
     - nuke_error_message.patch   # [win]
     # Seems to be an issue with case sensitivity and Windows filesystem permission errors.
     - windows_case_sensitivity.patch   # [win]
-    # adjust the gfortran version regex to support crosstool-NG compilers
-    - fortran_regex.patch
 
 build:
   number: 0
