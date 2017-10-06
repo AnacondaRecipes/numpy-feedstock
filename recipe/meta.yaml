@@ -8,7 +8,6 @@ source:
   fn: numpy-{{ version }}.tar.gz
   url: https://github.com/numpy/numpy/archive/v{{ version }}.tar.gz
   sha256: ddbcda194f49e0cf0663fa8131cb9d7a3b876d14dea0047d3c5fdfaf20adbb40
-
   patches:
     - mklfft.patch
     - osx-dist.patch
