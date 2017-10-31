@@ -36,7 +36,7 @@ requirements:
     - python
     - setuptools
     - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
-    - openblas    # [blas_impl == 'openblas']
+    - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
     - setuptools
   run:
     - python
