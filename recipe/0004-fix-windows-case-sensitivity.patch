@@ -1,0 +1,41 @@
+From 904b7201d3dfc3d69f2e951a9c2a7be50057c9f6 Mon Sep 17 00:00:00 2001
+From: Jonathan Helmus <jjhelmus@gmail.com>
+Date: Mon, 8 Jan 2018 11:47:09 -0600
+Subject: [PATCH 4/4] fix windows case sensitivity
+
+Allow paths to vary in case in unit tests on Windows.
+---
+ numpy/core/tests/test_memmap.py | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/numpy/core/tests/test_memmap.py b/numpy/core/tests/test_memmap.py
+index 1cd09ab..0430925 100644
+--- a/numpy/core/tests/test_memmap.py
++++ b/numpy/core/tests/test_memmap.py
+@@ -27,7 +27,10 @@ class TestMemmap(object):
+ 
+     def teardown(self):
+         self.tmpfp.close()
+-        shutil.rmtree(self.tempdir)
++        try:
++            shutil.rmtree(self.tempdir)
++        except:
++            pass
+ 
+     def test_roundtrip(self):
+         # Write data to file
+@@ -83,9 +86,9 @@ class TestMemmap(object):
+                        shape=self.shape)
+         abspath = os.path.realpath(os.path.abspath(tmpname))
+         fp[:] = self.data[:]
+-        assert_equal(abspath, str(fp.filename.resolve()))
++        assert_equal(abspath.lower(), str(fp.filename.resolve()).lower())
+         b = fp[:1]
+-        assert_equal(abspath, str(b.filename.resolve()))
++        assert_equal(abspath.lower(), str(b.filename.resolve()).lower())
+         del b
+         del fp
+ 
+-- 
+2.7.4
+

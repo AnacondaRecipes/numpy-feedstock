@@ -9,14 +9,10 @@ source:
   url: https://github.com/numpy/numpy/archive/v{{ version }}.tar.gz
   sha256: ddbcda194f49e0cf0663fa8131cb9d7a3b876d14dea0047d3c5fdfaf20adbb40
   patches:
-    - mklfft.patch
-    - osx-dist.patch
-    # customize gfortran executable that gets looked for to use our GFORTRAN env var
-    - gfortran_alias.patch
-    # Windows and its stupid long integer stuff breaks this test.  Just kill it.
-    - nuke_error_message.patch   # [win]
-    # Seems to be an issue with case sensitivity and Windows filesystem permission errors.
-    - windows_case_sensitivity.patch   # [win]
+    - 0001-use-mklfft-when-available.patch
+    - 0002-simplify-arch-flags.patch
+    - 0003-use-gfortran-from-env-variable.patch
+    - 0004-fix-windows-case-sensitivity.patch   # [win]
 
 build:
   number: 0

@@ -1,0 +1,27 @@
+From 21466ed5e7d71e743d7af919b259e05f23e5c600 Mon Sep 17 00:00:00 2001
+From: Jonathan Helmus <jjhelmus@gmail.com>
+Date: Mon, 8 Jan 2018 11:45:15 -0600
+Subject: [PATCH 3/4] use gfortran from env variable
+
+Allow use of customize gfortran executable specified by the GFORTRAN
+environmental variable.
+---
+ numpy/distutils/fcompiler/gnu.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/numpy/distutils/fcompiler/gnu.py b/numpy/distutils/fcompiler/gnu.py
+index 56e9be5..b26e7b8 100644
+--- a/numpy/distutils/fcompiler/gnu.py
++++ b/numpy/distutils/fcompiler/gnu.py
+@@ -286,6 +286,8 @@ class Gnu95FCompiler(GnuFCompiler):
+         return v
+ 
+     possible_executables = ['gfortran', 'f95']
++    if os.getenv('GFORTRAN'):
++        possible_executables.append(os.path.basename(os.getenv('GFORTRAN')))
+     executables = {
+         'version_cmd'  : ["<F90>", "-dumpversion"],
+         'compiler_f77' : [None, "-Wall", "-g", "-ffixed-form",
+-- 
+2.7.4
+
