@@ -28,6 +28,9 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
+    # libgcc-ng should be a dependecy of libgfortran
+    # until this is fixed add libgcc explicitly
+    - libgcc-ng         # [linux and blas_impl == 'openblas']
   host:
     - cython
     - python
