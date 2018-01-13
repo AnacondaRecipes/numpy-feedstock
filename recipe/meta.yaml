@@ -47,7 +47,7 @@ test:
     - nose
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
-    - nomkl  # [blas_impl == 'openblas']
+    - nomkl  # [x86 and blas_impl != 'mkl']
   commands:
     - f2py -h
     - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
