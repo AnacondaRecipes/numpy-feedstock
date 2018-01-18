@@ -13,6 +13,7 @@ source:
     - 0002-simplify-arch-flags.patch
     - 0003-use-gfortran-from-env-variable.patch
     - 0004-fix-windows-case-sensitivity.patch   # [win]
+    - 0005-intel-init-mkl.patch                 # [blas_impl == 'mkl']
 
 build:
   number: 0
