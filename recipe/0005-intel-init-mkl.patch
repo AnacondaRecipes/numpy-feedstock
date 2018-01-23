@@ -2,27 +2,36 @@ diff --git a/numpy/_distributor_init.py b/numpy/_distributor_init.py
 index d893ba3..23e67aa 100644
 --- a/numpy/_distributor_init.py
 +++ b/numpy/_distributor_init.py
-@@ -8,3 +8,20 @@ For example, this is a good place to put any checks for hardware requirements.
+@@ -8,3 +8,29 @@ For example, this is a good place to put any checks for hardware requirements.
  The numpy standard source distribution will not put code in this file, so you
  can safely replace this file with your own version.
  """
 +import sys
 +
-+if sys.platform != "win32":
-+    import ctypes
-+    _old_rtld = sys.getdlopenflags()
-+    # python loads libraries with RTLD_LOCAL, but MKL requires RTLD_GLOBAL
-+    # pre-load MKL with RTLD_GLOBAL before loading the native extension
-+    sys.setdlopenflags(_old_rtld | ctypes.RTLD_GLOBAL)
++class RTLD_for_MKL():
++    def __init__(self):
++        self.saved_rtld = None
 +
-+from . import _mklinit
++    def __enter__(self):
++        import ctypes
++        try:
++            self.saved_rtld = sys.getdlopenflags()
++            # python loads libraries with RTLD_LOCAL, but MKL requires RTLD_GLOBAL
++            # pre-load MKL with RTLD_GLOBAL before loading the native extension
++            sys.setdlopenflags(self.saved_rtld | ctypes.RTLD_GLOBAL)
++        except AttributeError:
++            pass
++        del ctypes
 +
-+if sys.platform != "win32":
-+    sys.setdlopenflags(_old_rtld)
-+    del _old_rtld
-+    del ctypes
++    def __exit__(self, *args):
++        if self.saved_rtld:
++            sys.setdlopenflags(self.saved_rtld)
++            self.saved_rtld = None
 +
-+del sys
++with RTLD_for_MKL():
++    from . import _mklinit
++
++del RTLD_for_MKL
 diff --git a/numpy/_mklinitmodule.c b/numpy/_mklinitmodule.c
 new file mode 100644
 index 0000000..c3af525
