@@ -51,8 +51,7 @@ test:
     - nomkl  # [x86 and blas_impl != 'mkl']
   commands:
     - f2py -h
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
+    - python -c "import numpy; numpy.show_config()"
   imports:
     - numpy
     - numpy.linalg.lapack_lite
