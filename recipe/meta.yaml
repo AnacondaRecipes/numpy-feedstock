@@ -1,6 +1,6 @@
 {% set name = "numpy" %}
-{% set version = "1.14.0" %}
-{% set sha256 = "3de643935b212307b420248018323a44ec51987a336d1d747c1322afc3c099fb" %}
+{% set version = "1.14.1" %}
+{% set sha256 = "fa0944650d5d3fb95869eaacd8eedbd2d83610c85e271bd9d3495ffa9bc4dc9c" %}
 
 package:
   name: numpy
