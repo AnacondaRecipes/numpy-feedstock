@@ -14,11 +14,11 @@ source:
     - 0002-simplify-arch-flags.patch
     - 0003-use-gfortran-from-env-variable.patch
     - 0004-fix-windows-case-sensitivity.patch   # [win]
-    - 0005-intel-init-mkl.patch                 # [blas_impl == 'mkl' and vc>=14]
+    - 0005-intel-init-mkl.patch                 # [blas_impl == 'mkl' and (not win or vc>=14)]
     - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
 
 build:
-  number: 1
+  number: 2
   skip: True  # [blas_impl == 'openblas' and win]
   # conda 4.4+ can use this
   requires_features:
