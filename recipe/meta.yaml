@@ -1,6 +1,6 @@
 {% set name = "numpy" %}
-{% set version = "1.14.1" %}
-{% set sha256 = "fa0944650d5d3fb95869eaacd8eedbd2d83610c85e271bd9d3495ffa9bc4dc9c" %}
+{% set version = "1.14.2" %}
+{% set sha256 = "facc6f925c3099ac01a1f03758100772560a0b020fb9d70f210404be08006bcb" %}
 
 package:
   name: numpy
@@ -18,7 +18,7 @@ source:
     - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
 
 build:
-  number: 2
+  number: 0
   skip: True  # [blas_impl == 'openblas' and win]
   # conda 4.4+ can use this
   requires_features:
