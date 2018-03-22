@@ -10,12 +10,21 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
   sha256: {{ sha256 }}
   patches:
-    - 0001-use-mklfft-when-available.patch
-    - 0002-simplify-arch-flags.patch
-    - 0003-use-gfortran-from-env-variable.patch
-    - 0004-fix-windows-case-sensitivity.patch   # [win]
-    - 0005-intel-init-mkl.patch                 # [blas_impl == 'mkl' and (not win or vc>=14)]
-    - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
+    # patches for MKL based enhancements
+    - intel_mkl-version.patch # [not nomkl]
+    - intel_use_mkl_fft.patch # [not nomkl]
+    - intel_distribution.patch        # [not nomkl]
+    - intel_umath_optimizations.patch # [not nomkl]
+    - intel_mkl_mem_all.patch         # [not nomkl]
+    - intel_init_mkl.patch            # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_mkl_random.patch          # [not nomkl]
+
+      #    - 0001-use-mklfft-when-available.patch
+      #    - 0002-simplify-arch-flags.patch
+      #    - 0003-use-gfortran-from-env-variable.patch
+      #    - 0004-fix-windows-case-sensitivity.patch   # [win]
+      #    - 0005-intel-init-mkl.patch                 # [blas_impl == 'mkl' and (not win or vc>=14)]
+      #    - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
 
 build:
   number: 0
