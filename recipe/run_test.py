@@ -14,7 +14,21 @@ import numpy.fft.fftpack_lite
 import numpy.linalg.lapack_lite
 import numpy.random.mtrand
 
-from numpy.fft import using_mklfft
+npfft = 'False'
+
+try:
+    from numpy.fft import using_mklfft as oldstyle_mklfft
+    npfft = 'old_style_mklfft'
+except ImportError:
+    oldstyle_mklfft = None
+
+try:
+    from numpy.fft import __patched_functions__ as newstyle_mklfft
+    npfft = 'new_style_mklfft'
+except ImportError:
+    newstyle_mklfft = None
+
+assert not (newstyle_mklfft is not None and oldstyle_mklfft is not None)
 
 try:
     print('MKL: %r' % numpy.__mkl_version__)
@@ -23,7 +37,7 @@ except AttributeError:
     print('NO MKL')
     have_mkl = False
 
-print('USING MKLFFT: %s' % using_mklfft)
+print('USING MKLFFT: %s' % npfft)
 
 if sys.platform == 'darwin':
     os.environ['LDFLAGS'] = ' '.join((os.getenv('LDFLAGS', ''), " -undefined dynamic_lookup"))

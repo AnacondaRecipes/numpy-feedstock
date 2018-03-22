@@ -1,27 +1,31 @@
-From 21466ed5e7d71e743d7af919b259e05f23e5c600 Mon Sep 17 00:00:00 2001
-From: Jonathan Helmus <jjhelmus@gmail.com>
-Date: Mon, 8 Jan 2018 11:45:15 -0600
-Subject: [PATCH 3/4] use gfortran from env variable
+From 9acfdcf2468fdc7ac22d333e47ff064c36b04947 Mon Sep 17 00:00:00 2001
+From: Stuart Archibald <redacted>
+Date: Tue, 6 Mar 2018 10:23:01 +0000
+Subject: [PATCH] Obtain and prefer custom gfortran from env var
 
-Allow use of customize gfortran executable specified by the GFORTRAN
-environmental variable.
+Allows the use of a custom gfortran executable supplied by the
+GFORTRAN environment variable.
 ---
- numpy/distutils/fcompiler/gnu.py | 2 ++
- 1 file changed, 2 insertions(+)
+ numpy/distutils/fcompiler/gnu.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/numpy/distutils/fcompiler/gnu.py b/numpy/distutils/fcompiler/gnu.py
-index 56e9be5..b26e7b8 100644
+index 177302f..df53457 100644
 --- a/numpy/distutils/fcompiler/gnu.py
 +++ b/numpy/distutils/fcompiler/gnu.py
-@@ -286,6 +286,8 @@ class Gnu95FCompiler(GnuFCompiler):
+@@ -262,7 +262,12 @@ class Gnu95FCompiler(GnuFCompiler):
+                     self.executables[key].append('-mno-cygwin')
          return v
  
-     possible_executables = ['gfortran', 'f95']
-+    if os.getenv('GFORTRAN'):
-+        possible_executables.append(os.path.basename(os.getenv('GFORTRAN')))
+-    possible_executables = ['gfortran', 'f95']
++    possible_executables = []
++    _env_gfortran = os.getenv('GFORTRAN')
++    if _env_gfortran is not None:
++        possible_executables.append(os.path.basename(_env_gfortran))
++    possible_executables.extend(['gfortran', 'f95'])
++
      executables = {
          'version_cmd'  : ["<F90>", "-dumpversion"],
          'compiler_f77' : [None, "-Wall", "-g", "-ffixed-form",
 -- 
-2.7.4
-
+1.8.3.1

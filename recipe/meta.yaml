@@ -18,13 +18,20 @@ source:
     - intel_mkl_mem_all.patch         # [not nomkl]
     - intel_init_mkl.patch            # [blas_impl == 'mkl' and (not win or vc>=14)]
     - intel_mkl_random.patch          # [not nomkl]
+    # patch up MKL patches
+    - 0001-Remove-ICC-specific-flags.patch # [not nomkl]
+    - 0002-Remove-np.invsqrt.patch         # [not nomkl]
+    - 0003-Rewrite-inlining.patch          # [not nomkl]
 
-      #    - 0001-use-mklfft-when-available.patch
-      #    - 0002-simplify-arch-flags.patch
-      #    - 0003-use-gfortran-from-env-variable.patch
-      #    - 0004-fix-windows-case-sensitivity.patch   # [win]
-      #    - 0005-intel-init-mkl.patch                 # [blas_impl == 'mkl' and (not win or vc>=14)]
-      #    - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
+
+    # patch sequence switched as it is easier to apply smaller patches than
+    # larger ones to the changes above!
+    - 0002-simplify-arch-flags.patch # [osx]
+    # customize gfortran executable that gets looked for to use our GFORTRAN env var
+    - 0003-use-gfortran-from-env-variable.patch
+    # Seems to be an issue with case sensitivity and Windows filesystem permission errors.
+    - 0004-fix-windows-case-sensitivity.patch   # [win]
+    - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
 
 build:
   number: 0
@@ -53,6 +60,9 @@ requirements:
   run:
     - python
     # openblas or mkl runtime included with run_exports
+    - mkl_fft # [blas_impl == 'mkl']
+    - mkl_random # [blas_impl == 'mkl']
+
 
 test:
   requires:
