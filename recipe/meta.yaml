@@ -11,18 +11,17 @@ source:
   sha256: {{ sha256 }}
   patches:
     # patches for MKL based enhancements
-    - intel_mkl-version.patch # [not nomkl]
-    - intel_use_mkl_fft.patch # [not nomkl]
-    - intel_distribution.patch        # [not nomkl]
-    - intel_umath_optimizations.patch # [not nomkl]
-    - intel_mkl_mem_all.patch         # [not nomkl]
-    - intel_init_mkl.patch            # [blas_impl == 'mkl' and (not win or vc>=14)]
-    - intel_mkl_random.patch          # [not nomkl]
+    - intel_mkl-version.patch              # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_use_mkl_fft.patch              # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_distribution.patch             # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_umath_optimizations.patch      # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_mkl_mem_all.patch              # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_init_mkl.patch                 # [blas_impl == 'mkl' and (not win or vc>=14)]
+    - intel_mkl_random.patch               # [blas_impl == 'mkl' and (not win or vc>=14)]
     # patch up MKL patches
-    - 0001-Remove-ICC-specific-flags.patch # [not nomkl]
-    - 0002-Remove-np.invsqrt.patch         # [not nomkl]
-    - 0003-Rewrite-inlining.patch          # [not nomkl]
-
+    - 0001-Remove-ICC-specific-flags.patch # [blas_impl == 'mkl'  and (not win or vc>=14)]
+    - 0002-Remove-np.invsqrt.patch         # [blas_impl == 'mkl'  and (not win or vc>=14)]
+    - 0003-Rewrite-inlining.patch          # [blas_impl == 'mkl'  and (not win or vc>=14)]
 
     # patch sequence switched as it is easier to apply smaller patches than
     # larger ones to the changes above!
