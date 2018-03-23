@@ -33,7 +33,7 @@ source:
     - 0006-disable-memmap-filename-test-due-to-CI-link-confusio.patch  # [win]
 
 build:
-  number: 0
+  number: 1
   skip: True  # [blas_impl == 'openblas' and win]
   # conda 4.4+ can use this
   requires_features:
@@ -60,7 +60,7 @@ requirements:
     - python
     # openblas or mkl runtime included with run_exports
     - mkl_fft # [blas_impl == 'mkl']
-    - mkl_random # [blas_impl == 'mkl']
+    - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
 
 
 test:

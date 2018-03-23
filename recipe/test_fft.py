@@ -51,10 +51,11 @@ class TestFFT1D(TestCase):
             a = a.astype(t1)
             b = np.fft.fft(a)
             assert_array_almost_equal(fft1(a), b)
-            #if using_mklfft:
-            self.assertEqual(b.dtype.name, t2)
-            #else:
-                #self.assertEqual(b.dtype.name, 'complex128')
+            if using_mklfft:
+                self.assertEqual(b.dtype.name, t2)
+            # openblas doesn't really behave this way.  It upcasts more liberally.  Only do type check stuff for mkl.
+            # else:
+                # self.assertEqual(b.dtype.name, 'complex128')
 
     def test_sizes(self):
         for n in [1, 2, 3, 4, 5, 8, 16, 20, 31, 32, 127, 128, 129]:

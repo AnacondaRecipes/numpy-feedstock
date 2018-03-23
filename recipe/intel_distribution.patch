@@ -234,11 +234,11 @@ index 217eac8fb..e89e64bb0 100644
  
 +    def get_version(self):
 +        if platform.system() == 'Windows':
-+            version_cmd = "icl -dummy"
++            version_cmd = "ifort -dummy"
 +            status, output = exec_command(version_cmd, use_tee=0)
 +            version = re.search(r'Version\s*([\d.]+)', output).group(1)
 +        else:
-+            version_cmd = "icc -dumpversion"
++            version_cmd = "ifort -dumpversion"
 +            status, version = exec_command(version_cmd, use_tee=0)
 +        return version
 +
