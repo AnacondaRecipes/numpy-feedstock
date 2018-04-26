@@ -1,7 +1,7 @@
 {% set version = "1.11.3" %}
 
 package:
-  name: numpy
+  name: numpy_and_dev
   version: {{ version }}
 
 source:
@@ -22,44 +22,81 @@ source:
 build:
   number: 5
   skip: True  # [blas_impl == 'openblas' and win]
-  # conda 4.4+ can use this
-  requires_features:
-    blas: {{ blas_impl }}
-  # this is for conda 4.3 and below
-  features:
-    - nomkl    # [x86 and blas_impl != 'mkl']
 
-requirements:
-  build:
-    - {{ compiler('c') }}
-    - {{ compiler('fortran') }}
-    # libgcc-ng should be a dependecy of libgfortran
-    # until this is fixed add libgcc explicitly
-    - libgcc-ng         # [linux and blas_impl == 'openblas']
-  host:
-    - cython
-    - python
-    - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
-    - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
-    - setuptools
-  run:
-    - python
-    # openblas or mkl runtime included with run_exports
+outputs:
+  # this one has all the actual contents
+  - name: numpy-base
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('fortran') }}
+        # libgcc-ng should be a dependecy of libgfortran
+        # until this is fixed add libgcc explicitly
+        - libgcc-ng         # [linux and blas_impl == 'openblas']
+      host:
+        - cython
+        - python
+        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
+        - setuptools
+      run:
+        - python
+    test:
+      downstreams:
+        - numpy
 
-test:
-  requires:
-    - nose
-  commands:
-    - f2py -h
-  imports:
-    - numpy
-    - numpy.linalg.lapack_lite
 
-about:
-  home: http://numpy.scipy.org/
-  license: BSD 3-Clause
-  license_file: LICENSE.txt
-  summary: 'Array processing for numbers, strings, records, and objects.'
+  # devel exists mostly to add the run_exports info.
+  - name: numpy-devel
+    build:
+      run_exports:
+        - {{ pin_subpackage('numpy') }}
+    requirements:
+      host:
+        - python
+        - {{ pin_subpackage('numpy-base') }}
+
+  # metapackage for things that don't use numpy's C interface, or things
+  - name: numpy
+    requirements:
+      build:
+        # for runtime alignment
+        - {{ compiler('c') }}
+        - {{ compiler('fortran') }}
+      host:
+        - python
+      run:
+        - python
+        - {{ pin_subpackage('numpy-base') }}
+        # openblas or mkl runtime included with run_exports
+        - mkl_fft # [blas_impl == 'mkl']
+        - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
+
+    test:
+      requires:
+        - nose
+        - {{ compiler('c') }}
+        - {{ compiler('fortran') }}
+        - nomkl  # [x86 and blas_impl != 'mkl']
+      commands:
+        - f2py -h
+        - python -c "import numpy; numpy.show_config()"
+        - conda inspect linkages -p $PREFIX numpy  # [not win]
+        - conda inspect objects -p $PREFIX numpy  # [osx]
+      imports:
+        - numpy
+        - numpy.linalg.lapack_lite
+
+    about:
+      home: http://numpy.scipy.org/
+      license: BSD 3-Clause
+      license_file: LICENSE.txt
+      summary: 'Array processing for numbers, strings, records, and objects.'
+      description: |
+        NumPy is the fundamental package needed for scientific computing with Python.
+      doc_url: https://docs.scipy.org/doc/numpy-1.11.0/reference/
+      dev_url: https://github.com/numpy/numpy
+      dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
 extra:
   recipe-maintainers:
