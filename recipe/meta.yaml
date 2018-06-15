@@ -20,7 +20,7 @@ source:
     - 8656.patch  # [ppc64le]
 
 build:
-  number: 4
+  number: 5
   skip: True  # [blas_impl == 'openblas' and win]
   # conda 4.4+ can use this
   requires_features:
