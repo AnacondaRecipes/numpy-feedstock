@@ -1,6 +1,6 @@
 {% set name = "numpy" %}
-{% set version = "1.14.5" %}
-# {% set sha256 = "a4a433b3a264dbc9aa9c7c241e87c0358a503ea6394f8737df1683c7c9a102ac" %}
+{% set version = "1.15.0" %}
+{% set sha256 = "a4a433b3a264dbc9aa9c7c241e87c0358a503ea6394f8737df1683c7c9a102ac" %}
 
 package:
   name: numpy_and_dev
@@ -13,25 +13,25 @@ source:
   # sha256: {{ sha256 }}
   # .. so build from the git source instead:
   git_url: https://github.com/numpy/numpy
-  git_tag: v{{ version }}
+  git_tag: v{{ version }}rc1
   patches:
     - 0001-fix-windows-case-sensitivity.patch
     - 0002-simplify-arch-flags.patch
     - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-    - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
-    - 0005-disable-broken-tests.patch
+    # - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
+    # - 0005-disable-broken-tests.patch
     {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
     # patches for MKL based enhancements
-    - 0006-use-mklfft-when-available.patch
-    - 0007-define-mkl_version-in-__init__.py.patch
-    - 0008-intel-umath-optimizations.patch
-    - 0009-intel-mkl_mem-all.patch
+    # - 0006-use-mklfft-when-available.patch
+    # - 0007-define-mkl_version-in-__init__.py.patch
+    # - 0008-intel-umath-optimizations.patch
+    # - 0009-intel-mkl_mem-all.patch
     - 0010-intel-init_mkl.patch
     - 0011-intel-mkl_random.patch
     # patch up MKL patches
-    - 0012-Remove-ICC-specific-flags.patch
-    - 0013-Remove-np.invsqrt.patch
-    - 0014-Rewrite-inlining.patch
+    # - 0012-Remove-ICC-specific-flags.patch
+    # - 0013-Remove-np.invsqrt.patch
+    # - 0014-Rewrite-inlining.patch
     {%- endif %}
 
 build:
@@ -94,7 +94,7 @@ outputs:
     test:
       script: numpy_test.py
       requires:
-        - nose
+        - pytest
         - {{ compiler('c') }}
         - {{ compiler('fortran') }}
         - nomkl  # [x86 and blas_impl != 'mkl']
