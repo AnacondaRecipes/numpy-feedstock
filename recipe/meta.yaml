@@ -17,12 +17,16 @@ source:
     - correct-c-compiler-customization-in-system_info.py.patch
 
 build:
-  number: 4
+  number: 5
   skip: True  # [blas_impl == 'openblas' and win]
+  force_use_keys:
+    - python
 
 outputs:
   # this one has all the actual contents
   - name: numpy-base
+    script: install_base.sh   # [unix]
+    script: install_base.bat  # [win]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -38,9 +42,6 @@ outputs:
         - setuptools
       run:
         - python
-    test:
-      downstreams:
-        - numpy
 
   # devel exists mostly to add the run_exports info.
   - name: numpy-devel
@@ -67,6 +68,7 @@ outputs:
         # openblas or mkl runtime included with run_exports
 
     test:
+      script: numpy_test.py
       requires:
         - nose
         - {{ compiler('c') }}
