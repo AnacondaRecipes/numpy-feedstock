@@ -1,7 +1,7 @@
 {% set version = "1.11.3" %}
 
 package:
-  name: numpy_and_dev
+  name: numpy-split
   version: {{ version }}
 
 source:
@@ -20,12 +20,16 @@ source:
     - 8656.patch  # [ppc64le]
 
 build:
-  number: 5
+  number: 6
   skip: True  # [blas_impl == 'openblas' and win]
+  force_use_keys:
+    - python
 
 outputs:
   # this one has all the actual contents
   - name: numpy-base
+    script: install_base.sh   # [unix]
+    script: install_base.bat  # [win]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -41,9 +45,6 @@ outputs:
         - setuptools
       run:
         - python
-    test:
-      downstreams:
-        - numpy
 
 
   # devel exists mostly to add the run_exports info.
@@ -68,11 +69,9 @@ outputs:
       run:
         - python
         - {{ pin_subpackage('numpy-base') }}
-        # openblas or mkl runtime included with run_exports
-        - mkl_fft # [blas_impl == 'mkl']
-        - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
 
     test:
+      script: numpy_test.py
       requires:
         - nose
         - {{ compiler('c') }}
