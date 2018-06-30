@@ -20,7 +20,7 @@ source:
     - 8656.patch  # [ppc64le]
 
 build:
-  number: 6
+  number: 7
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
@@ -55,7 +55,11 @@ outputs:
     requirements:
       host:
         - python
-        - {{ pin_subpackage('numpy-base') }}
+        # these import blas metapackages to ensure consistency with downstream libs that also use blas
+        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
+      run:
+        - {{ pin_subpackage('numpy-base', exact=True) }}
 
   # metapackage for things that don't use numpy's C interface, or things
   - name: numpy
@@ -68,7 +72,7 @@ outputs:
         - python
       run:
         - python
-        - {{ pin_subpackage('numpy-base') }}
+        - {{ pin_subpackage('numpy-base', exact=True) }}
 
     test:
       script: numpy_test.py
