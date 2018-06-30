@@ -17,7 +17,7 @@ source:
     - correct-c-compiler-customization-in-system_info.py.patch
 
 build:
-  number: 5
+  number: 6
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
@@ -51,7 +51,12 @@ outputs:
     requirements:
       host:
         - python
-        - {{ pin_subpackage('numpy-base') }}
+        # these import blas metapackages to ensure consistency with downstream libs that also use blas
+        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
+      run:
+        - python
+        - {{ pin_subpackage('numpy-base', exact=True) }}
 
   # metapackage for things that don't use numpy's C interface, or things
   - name: numpy
@@ -64,7 +69,7 @@ outputs:
         - python
       run:
         - python
-        - {{ pin_subpackage('numpy-base') }}
+        - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
 
     test:
