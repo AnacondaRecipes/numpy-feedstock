@@ -20,7 +20,7 @@ source:
     - 8656.patch  # [ppc64le]
 
 build:
-  number: 7
+  number: 8
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
@@ -45,7 +45,10 @@ outputs:
         - setuptools
       run:
         - python
-
+    test:
+      commands:
+        - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
+        - IF NOT EXIST %SP_DIR%\numpy\distutils\site.cfg exit 1  # [win]
 
   # devel exists mostly to add the run_exports info.
   - name: numpy-devel
