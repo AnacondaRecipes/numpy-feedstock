@@ -20,7 +20,7 @@ source:
     - 8656.patch  # [ppc64le]
 
 build:
-  number: 8
+  number: 9
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
@@ -62,6 +62,7 @@ outputs:
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
       run:
+        - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
 
   # metapackage for things that don't use numpy's C interface, or things
