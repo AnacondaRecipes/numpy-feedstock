@@ -20,7 +20,7 @@ source:
     - 8656.patch  # [ppc64le]
 
 build:
-  number: 9
+  number: 10
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
