@@ -74,6 +74,9 @@ outputs:
         - {{ compiler('fortran') }}
       host:
         - python
+        # these are here to ensure that the appropriate mkl or openblas version gets baked into the hash
+        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
       run:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
