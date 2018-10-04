@@ -18,9 +18,13 @@ source:
     # Power provides high precision longdoubles which causes some test errors
     # see https://github.com/numpy/numpy/pull/8656
     - 8656.patch  # [ppc64le]
+    # Disable LTCG for npymath
+    # xref: https://github.com/statsmodels/statsmodels/issues/4011
+    # xref: https://github.com/numpy/numpy/pull/9965
+    - 9965.patch  # [win]
 
 build:
-  number: 10
+  number: 11
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
