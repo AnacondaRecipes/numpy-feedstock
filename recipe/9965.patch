@@ -1,0 +1,31 @@
+From c9ad22fddfc9c1dd6c209d977f4bd7db3c25364b Mon Sep 17 00:00:00 2001
+From: xoviat <xoviat@users.noreply.github.com>
+Date: Sun, 5 Nov 2017 15:06:58 -0600
+Subject: [PATCH] BLD: [core:setup] disable npymath whole program opt on win32
+ (#9965)
+
+fBLD: Disable npymath whole program opt (LTCG) on win32
+---
+ numpy/core/setup.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/numpy/core/setup.py b/numpy/core/setup.py
+index ae7b4baab..4076f1626 100644
+--- a/numpy/core/setup.py
++++ b/numpy/core/setup.py
+@@ -665,7 +665,11 @@ def configuration(parent_package='',top_path=None):
+                        ]
+     config.add_installed_library('npymath',
+             sources=npymath_sources + [get_mathlib_info],
+-            install_dir='lib')
++            install_dir='lib',
++            build_info={
++                'include_dirs' : [],
++                'extra_compiler_args' : (['/GL-'] if sys.platform == 'win32' else []),
++            })  # empty list required for creating npy_math_internal.h
+     config.add_npy_pkg_config("npymath.ini.in", "lib/npy-pkg-config",
+             subst_dict)
+     config.add_npy_pkg_config("mlib.ini.in", "lib/npy-pkg-config",
+-- 
+2.18.0
+
