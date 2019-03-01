@@ -33,6 +33,7 @@ source:
       - 0014-Rewrite-inlining.patch
       - 0015-Fixes-from-Intel-Distribution.patch
       - 0016-define-__THRESHOLD.patch
+      - 0018-filter-out-warnings-when-importing-mkl_fft.patch
       {%- endif %}
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
