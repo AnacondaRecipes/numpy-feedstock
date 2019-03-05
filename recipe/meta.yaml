@@ -46,7 +46,7 @@ source:
   {% endif %}
 
 build:
-  number: 0
+  number: 1
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
