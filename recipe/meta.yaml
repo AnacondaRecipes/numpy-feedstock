@@ -13,10 +13,14 @@ source:
   - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
     sha256: 951fefe2fb73f84c620bec4e001e80a80ddaa1b84dce244ded7f1e0cbe0ed34a
     patches:
-      - 0001-Skip-test_loss_of_precision.patch  # [ppc64le]
+      - 0001-fix-windows-case-sensitivity.patch
       - 0002-simplify-arch-flags.patch
-      # - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-      # - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
+      - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
+      - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
+      - 0005-disable-broken-tests.patch
+      - 0006-short-circuit-long-double.patch  # [osx]
+      - 0017-mark-known-failing-tests-on-ppc64le.patch
+      # - 0021-intel_distribution.patch
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz

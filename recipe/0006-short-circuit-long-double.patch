@@ -1,0 +1,37 @@
+From f431b12c9173fca94df1bf634318b372e23a650c Mon Sep 17 00:00:00 2001
+From: Sophia Castellarin <scastellarin@anaconda.com>
+Date: Thu, 15 Aug 2019 10:03:49 -0500
+Subject: [PATCH] short circuit long double
+
+---
+ numpy/core/setup_common.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/numpy/core/setup_common.py b/numpy/core/setup_common.py
+index 307fab334..411afc4cd 100644
+--- a/numpy/core/setup_common.py
++++ b/numpy/core/setup_common.py
+@@ -245,9 +245,9 @@ def check_long_double_representation(cmd):
+     # Disable multi-file interprocedural optimization in the Intel compiler on Linux
+     # which generates intermediary object files and prevents checking the
+     # float representation.
+-    elif (sys.platform != "win32" 
+-            and cmd.compiler.compiler_type.startswith('intel') 
+-            and '-ipo' in cmd.compiler.cc_exe):        
++    elif (sys.platform != "win32"
++            and cmd.compiler.compiler_type.startswith('intel')
++            and '-ipo' in cmd.compiler.cc_exe):
+         newcompiler = cmd.compiler.cc_exe.replace(' -ipo', '')
+         cmd.compiler.set_executables(
+             compiler=newcompiler,
+@@ -260,6 +260,7 @@ def check_long_double_representation(cmd):
+     # We need to use _compile because we need the object filename
+     src, obj = cmd._compile(body, None, None, 'c')
+     try:
++        return 'IEEE_DOUBLE_LE'
+         ltype = long_double_representation(pyod(obj))
+         return ltype
+     except ValueError:
+-- 
+2.20.1
+
