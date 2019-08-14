@@ -20,5 +20,5 @@ if [[ ${DEBUG_PY} == yes ]]; then
 fi
 
 ${PYTHON} setup.py config
-${PYTHON} setup.py build --debug -j 1
+${PYTHON} setup.py build
 ${PYTHON} setup.py install --single-version-externally-managed --record=record.txt
