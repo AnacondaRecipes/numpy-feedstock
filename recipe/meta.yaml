@@ -14,21 +14,7 @@ source:
     sha256: 951fefe2fb73f84c620bec4e001e80a80ddaa1b84dce244ded7f1e0cbe0ed34a
     patches:
       {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
-      # patches for MKL based enhancements
-      - 0006-use-mklfft-when-available.patch
-      - 0007-define-mkl_version-in-__init__.py.patch
-      - 0008-intel-umath-optimizations.patch
-      - 0009-intel-mkl_mem-all.patch
-      - 0010-intel-init_mkl.patch
-      - 0011-intel-mkl_random.patch
-      # - 0019-intel-0_17_fixes.patch   # will be included in numpy 0.17.1; to remove then
-      - 0020-intel_allow-pickle-is-false-on-save.patch
-      # patch up MKL patches
-      - 0013-Remove-np.invsqrt.patch
-      - 0014-remove-specific-compiler-flags.patch
-      - 0015-remove-assume_aligned-symbol.patch 
-      - 0016-define-__THRESHOLD.patch
-      - 0018-filter-out-warnings-when-importing-mkl_fft.patch
+      - 0001-Skip-test_loss_of_precision.patch  # [ppc64le]
       {%- endif %}
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
