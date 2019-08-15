@@ -3,7 +3,7 @@
 set -e
 
 cp $PREFIX/site.cfg site.cfg
-cp $RECIPE_DIR/test_fft.py numpy/fft/tests
+# cp $RECIPE_DIR/test_fft.py numpy/fft/tests
 
 # site.cfg should not be defined here.  It is provided by blas devel packages (either mkl-devel or openblas-devel)
 # Urgh ..

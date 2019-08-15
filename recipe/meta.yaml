@@ -1,8 +1,8 @@
 {% set name = "numpy" %}
-{% set version = "1.16.4" %}
-{% set mkl_random_version = "1.0.2" %}
+{% set version = "1.17.0" %}
+{% set mkl_random_version = "1.0.4" %}
 {% set mkl_random_buildnumber = 0 %}
-{% set mkl_fft_version = "1.0.6" %}
+{% set mkl_fft_version = "1.0.14" %}
 {% set mkl_fft_buildnumber = 0 %}
 
 package:
@@ -11,7 +11,7 @@ package:
 
 source:
   - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
-    sha256: 7242be12a58fec245ee9734e625964b97cf7e3f2f7d016603f9e56660ce479c7
+    sha256: 951fefe2fb73f84c620bec4e001e80a80ddaa1b84dce244ded7f1e0cbe0ed34a
     patches:
       - 0001-fix-windows-case-sensitivity.patch
       - 0002-simplify-arch-flags.patch
@@ -19,35 +19,19 @@ source:
       - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
       - 0005-disable-broken-tests.patch
       - 0017-mark-known-failing-tests-on-ppc64le.patch
-      {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
-      # patches for MKL based enhancements
-      - 0006-use-mklfft-when-available.patch
-      - 0007-define-mkl_version-in-__init__.py.patch
-      - 0008-intel-umath-optimizations.patch
-      - 0009-intel-mkl_mem-all.patch
-      - 0010-intel-init_mkl.patch
-      - 0011-intel-mkl_random.patch
-      # patch up MKL patches
-      - 0012-Remove-ICC-specific-flags.patch
-      - 0013-Remove-np.invsqrt.patch
-      - 0014-Rewrite-inlining.patch
-      - 0015-Fixes-from-Intel-Distribution.patch
-      - 0016-define-__THRESHOLD.patch
-      - 0018-filter-out-warnings-when-importing-mkl_fft.patch
-      {%- endif %}
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
-    sha256: 2270ef2834f6552850533aad01500d27c8e056f2cfbdbdb751593000aea1159e
+    sha256: f328d76c30585e8ca63c7bced14185a0dc823bb27fbc11d05655c14fdabd46ed
     folder: mkl_random
   - url: https://github.com/IntelPython/mkl_fft/archive/v{{mkl_fft_version}}.tar.gz
-    sha256: 3c7ed29e203c5b664ecafb11d767d62f9cae4aa56f9a95737e121192a66673bf
+    sha256: 644ed4d845b741f80c6576c94bdbd14d18fce21e6cc725676e979b7f953154a8
     folder: mkl_fft
   {% endif %}
 
 build:
   number: 0
-  skip: True  # [blas_impl == 'openblas' and win]
+  skip: True  # [blas_impl == 'openblas' and win or py2k]
   force_use_keys:
     - python
 
