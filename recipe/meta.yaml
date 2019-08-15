@@ -18,9 +18,7 @@ source:
       - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
       - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
       - 0005-disable-broken-tests.patch
-      - 0006-short-circuit-long-double.patch  # [osx]
       - 0017-mark-known-failing-tests-on-ppc64le.patch
-      # - 0021-intel_distribution.patch
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz

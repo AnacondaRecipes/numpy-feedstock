@@ -5,7 +5,6 @@ import numpy
 import numpy.core.multiarray
 import numpy.core.numeric
 import numpy.core.umath
-import numpy.core.umath_tests
 import numpy.fft.pocketfft
 import numpy.linalg.lapack_lite
 import numpy.random.mtrand
