@@ -1,0 +1,25 @@
+From c0b057ae64aa4422dada00224495d113a9a20fd6 Mon Sep 17 00:00:00 2001
+From: Stuart Archibald <redacted>
+Date: Fri, 22 Feb 2019 14:41:38 +0000
+Subject: [PATCH 19/21] Fixes from Intel Distribution
+
+---
+ numpy/core/tests/test_regression.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/numpy/core/tests/test_regression.py b/numpy/core/tests/test_regression.py
+index f089e68a8..6d24ca874 100644
+--- a/numpy/core/tests/test_regression.py
++++ b/numpy/core/tests/test_regression.py
+@@ -1364,7 +1364,7 @@ class TestRegression(object):
+             np.arange(sz)
+             assert_(np.size == sz)
+ 
+-    @dec.skipif(True, reason="Memory hog. Skip to save infrastructure resources")
++    @pytest.mark.skipif(True, reason="Memory hog. Skip to save infrastructure resources")
+     def test_huge_array_copy(self):
+         #check behavior of altered memcpy/memmove when size of array > 2**sizeof(int)
+         try:
+-- 
+2.20.1
+

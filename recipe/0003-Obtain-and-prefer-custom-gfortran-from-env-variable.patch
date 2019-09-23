@@ -1,17 +1,17 @@
-From 6b0eb476f53a17ab811fbaae1439b04da3939846 Mon Sep 17 00:00:00 2001
+From 68a207703c9130009c1e4b9db40df956d108fce6 Mon Sep 17 00:00:00 2001
 From: Michael Sarahan <msarahan@gmail.com>
 Date: Mon, 11 Jun 2018 16:36:41 -0500
-Subject: [PATCH 03/15] Obtain and prefer custom gfortran from env variable
+Subject: [PATCH 03/21] Obtain and prefer custom gfortran from env variable
 
 ---
  numpy/distutils/fcompiler/gnu.py | 9 ++++++++-
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/numpy/distutils/fcompiler/gnu.py b/numpy/distutils/fcompiler/gnu.py
-index ffab514..0b034be 100644
+index da76d4820..537cf55ba 100644
 --- a/numpy/distutils/fcompiler/gnu.py
 +++ b/numpy/distutils/fcompiler/gnu.py
-@@ -297,7 +297,14 @@ class Gnu95FCompiler(GnuFCompiler):
+@@ -300,7 +300,14 @@ class Gnu95FCompiler(GnuFCompiler):
                      self.executables[key].append('-mno-cygwin')
          return v
  

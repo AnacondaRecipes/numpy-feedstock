@@ -24,6 +24,7 @@ except AttributeError:
 
 if sys.platform == 'darwin':
     os.environ['LDFLAGS'] = ' '.join((os.getenv('LDFLAGS', ''), " -undefined dynamic_lookup"))
+    os.environ['CFLAGS'] = ' '.join((os.getenv('CFLAGS', ''), " -fno-lto"))
 elif sys.platform.startswith('linux'):
     os.environ['LDFLAGS'] = ' '.join((os.getenv('LDFLAGS', ''), '-shared'))
     os.environ['FFLAGS'] = ' '.join((os.getenv('FFLAGS', ''), '-Wl,-shared'))

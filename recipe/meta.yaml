@@ -1,5 +1,5 @@
 {% set name = "numpy" %}
-{% set version = "1.17.0" %}
+{% set version = "1.17.2" %}
 {% set mkl_random_version = "1.0.4" %}
 {% set mkl_random_buildnumber = 0 %}
 {% set mkl_fft_version = "1.0.14" %}
@@ -11,33 +11,33 @@ package:
 
 source:
   - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
-    sha256: 951fefe2fb73f84c620bec4e001e80a80ddaa1b84dce244ded7f1e0cbe0ed34a
+    sha256: 73615d3edc84dd7c4aeb212fa3748fb83217e00d201875a47327f55363cef2df
     patches:
-      # - 0001-fix-windows-case-sensitivity.patch
-      # - 0002-simplify-arch-flags.patch
-      # - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-      # - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
-      # - 0005-disable-broken-tests.patch
-      # - 0017-mark-known-failing-tests-on-ppc64le.patch
+      - 0001-fix-windows-case-sensitivity.patch
+      - 0002-simplify-arch-flags.patch
+      - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
+      - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
+      - 0005-disable-broken-tests.patch
+      - 0006-mark-known-failing-tests-on-ppc64le.patch
       {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
       # patches for MKL based enhancements
-      - 0006-use-mklfft-when-available.patch
-      - 0007-define-mkl_version-in-__init__.py.patch
-      - 0008-intel-umath-optimizations.patch
-      - 0009-intel-mkl_mem-all.patch
-      - 0010-intel-init_mkl.patch
-      - 0011-intel-mkl_random.patch
+      - 0007-use-mklfft-when-available.patch
+      - 0008-define-mkl_version-in-__init__.py.patch
+      - 0009-intel-umath-optimizations.patch
+      - 0010-intel-mkl_mem-all.patch
+      - 0011-intel-init_mkl.patch
+      - 0012-intel-mkl_random.patch
       # - 0019-intel-0_17_fixes.patch   # will be included in numpy 0.17.1; to remove then
-      - 0020-intel_allow-pickle-is-false-on-save.patch
-      # - 0021-intel_distibut ion.patch
-      # - 0022-intel_setup_add_whl_deps.patch
+      - 0013-intel_allow-pickle-is-false-on-save.patch
+      - 0014-intel_distribution.patch
+      - 0015-intel_setup_add_whl_deps.patch
       # patch up MKL patches
-      # - 0012-Remove-ICC-specific-flags.patch
-      # - 0013-Remove-np.invsqrt.patch
-      # - 0014-Rewrite-inlining.patch
-      - 0015-Fixes-from-Intel-Distribution.patch
-      - 0016-define-__THRESHOLD.patch
-      - 0018-filter-out-warnings-when-importing-mkl_fft.patch
+      - 0016-Remove-ICC-specific-flags.patch
+      - 0017-Remove-np.invsqrt.patch
+      - 0018-Rewrite-inlining.patch
+      - 0019-Fixes-from-Intel-Distribution.patch
+      - 0020-define-__THRESHOLD.patch
+      - 0021-filter-out-warnings-when-importing-mkl_fft.patch
       {%- endif %}
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe

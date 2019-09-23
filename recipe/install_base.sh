@@ -10,6 +10,9 @@ cp $RECIPE_DIR/test_fft.py numpy/fft/tests
 export CFLAGS="${CFLAGS} -Wno-implicit-fallthrough -Wno-unused-parameter -Wno-missing-field-initializers"
 if [[ ${target_platform} == osx-64 ]]; then
     export LDFLAGS="$LDFLAGS -undefined dynamic_lookup"
+    # as of python 3.7.4, CFLAGS env variable as well as sysconfig flags are both used
+    # this prevents failures in the numpy long_double tests
+    export CFLAGS="$CFLAGS -fno-lto"
 else
     export LDFLAGS="$LDFLAGS -shared"
     export FFLAGS="$FFLAGS -Wl,-shared"

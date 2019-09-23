@@ -1,7 +1,7 @@
-From 6b4283f3c4173271c6dbad87f08d3b63acaed691 Mon Sep 17 00:00:00 2001
+From b7bef9936c056cc63f7a32d02a244549495f0863 Mon Sep 17 00:00:00 2001
 From: Stuart Archibald <redacted>
 Date: Thu, 21 Feb 2019 18:10:45 +0000
-Subject: [PATCH 05/15] disable broken tests
+Subject: [PATCH 05/21] disable broken tests
 
 MKL messes up this error state, and these tests don't work.
 ---
@@ -10,10 +10,10 @@ MKL messes up this error state, and these tests don't work.
  2 files changed, 14 deletions(-)
 
 diff --git a/numpy/core/tests/test_einsum.py b/numpy/core/tests/test_einsum.py
-index 3be4a8a..af3f95e 100644
+index cfeeb8a90..19e454e5b 100644
 --- a/numpy/core/tests/test_einsum.py
 +++ b/numpy/core/tests/test_einsum.py
-@@ -524,9 +524,6 @@ class TestEinsum(object):
+@@ -529,9 +529,6 @@ class TestEinsum(object):
      def test_einsum_sums_uint8(self):
          self.check_einsum_sums('u1')
  
@@ -24,7 +24,7 @@ index 3be4a8a..af3f95e 100644
          self.check_einsum_sums('u2')
  
 diff --git a/numpy/core/tests/test_errstate.py b/numpy/core/tests/test_errstate.py
-index 670d485..3d43040 100644
+index 0008c4cc8..1b031a394 100644
 --- a/numpy/core/tests/test_errstate.py
 +++ b/numpy/core/tests/test_errstate.py
 @@ -8,17 +8,6 @@ from numpy.testing import assert_, assert_raises

@@ -1,17 +1,17 @@
-From cc73e3f7de479b6337f1a0447d7a7cba7d72f723 Mon Sep 17 00:00:00 2001
+From b2e9620245cff82236853dde71bcd72dd125771e Mon Sep 17 00:00:00 2001
 From: Michael Sarahan <msarahan@gmail.com>
 Date: Mon, 11 Jun 2018 16:36:07 -0500
-Subject: [PATCH 02/15] simplify arch flags
+Subject: [PATCH 02/21] simplify arch flags
 
 ---
  numpy/distutils/fcompiler/gnu.py | 13 +------------
  1 file changed, 1 insertion(+), 12 deletions(-)
 
 diff --git a/numpy/distutils/fcompiler/gnu.py b/numpy/distutils/fcompiler/gnu.py
-index 81769e5..ffab514 100644
+index 965c67041..da76d4820 100644
 --- a/numpy/distutils/fcompiler/gnu.py
 +++ b/numpy/distutils/fcompiler/gnu.py
-@@ -324,20 +324,9 @@ class Gnu95FCompiler(GnuFCompiler):
+@@ -327,20 +327,9 @@ class Gnu95FCompiler(GnuFCompiler):
      g2c = 'gfortran'
  
      def _universal_flags(self, cmd):

@@ -1,0 +1,27 @@
+From 64c1184bc4c88a681a6f634fb7e0e4fe1ed01d40 Mon Sep 17 00:00:00 2001
+From: Jonathan Helmus <jjhelmus@gmail.com>
+Date: Thu, 28 Feb 2019 16:57:00 -0600
+Subject: [PATCH 20/21] define __THRESHOLD
+
+---
+ numpy/core/src/multiarray/item_selection.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/numpy/core/src/multiarray/item_selection.c b/numpy/core/src/multiarray/item_selection.c
+index 80a841399..8b18f6d2f 100644
+--- a/numpy/core/src/multiarray/item_selection.c
++++ b/numpy/core/src/multiarray/item_selection.c
+@@ -31,6 +31,10 @@
+ 
+ #define memmove(src, dst, size) call_mkl_mv(src, dst, size, __FILE__, __func__, __LINE__)
+ 
++#ifndef __THRESHOLD
++#define __THRESHOLD 524288
++#endif
++
+ /*NUMPY_API
+  * Take
+  */
+-- 
+2.20.1
+

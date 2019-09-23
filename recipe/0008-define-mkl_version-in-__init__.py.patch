@@ -1,0 +1,25 @@
+From a0fb0ae7da69902e2c7431f5d8db34a49a3cbbc1 Mon Sep 17 00:00:00 2001
+From: fwaters <fwaters@anaconda.com>
+Date: Mon, 16 Sep 2019 14:07:48 +0000
+Subject: [PATCH 08/21] define mkl_version in __init__.py
+
+---
+ numpy/__init__.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/numpy/__init__.py b/numpy/__init__.py
+index ba88c733f..3723daaf7 100644
+--- a/numpy/__init__.py
++++ b/numpy/__init__.py
+@@ -192,6 +192,8 @@ else:
+     del PytestTester
+ 
+ 
++    __mkl_version__ = "__MKL_VERSION__"
++
+     def _sanity_check():
+         """
+         Quick sanity checks for common bugs caused by environment.
+-- 
+2.20.1
+

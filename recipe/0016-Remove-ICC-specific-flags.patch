@@ -1,0 +1,44 @@
+From 0d1983db70c86db827f3f34dd7274abc8438a448 Mon Sep 17 00:00:00 2001
+From: fwaters <fwaters@anaconda.com>
+Date: Mon, 16 Sep 2019 14:17:27 +0000
+Subject: [PATCH 16/21] Remove ICC specific flags
+
+---
+ numpy/core/setup.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/numpy/core/setup.py b/numpy/core/setup.py
+index fb1c3cdfa..c59766938 100644
+--- a/numpy/core/setup.py
++++ b/numpy/core/setup.py
+@@ -944,12 +944,12 @@ def configuration(parent_package='',top_path=None):
+             join(codegen_dir, 'generate_ufunc_api.py'),
+             ]
+ 
+-    if platform.system() == "Windows":
+-        eca = ['/fp:fast=2', '/Qimf-precision=high', '/Qprec-sqrt', '/Qstd=c99']
+-        if sys.version_info < (3, 0):
+-            eca.append('/Qprec-div')
+-    else:
+-        eca = ['-fp-model', 'fast=2', '-fimf-precision=high', '-prec-sqrt']
++    #if platform.system() == "Windows":
++    #    eca = ['/fp:fast=2', '/Qimf-precision=high', '/Qprec-sqrt', '/Qstd=c99']
++    #    if sys.version_info < (3, 0):
++    #        eca.append('/Qprec-div')
++    #else:
++    #    eca = ['-fp-model', 'fast=2', '-fimf-precision=high', '-prec-sqrt']
+     eca = []
+     config.add_library('loops',
+                        sources=loops_src,
+@@ -970,7 +970,7 @@ def configuration(parent_package='',top_path=None):
+                                   generate_umath_c,
+                                   generate_ufunc_api,
+                                  ] + aligned_alloc_sources,
+-                         extra_compile_args=['/Qstd=c99' if platform.system() == "Windows" else ''],
++                         extra_compile_args=[],
+                          depends=deps + multiarray_deps + umath_deps +
+                                 common_deps,
+                          libraries=['loops', 'npymath', 'npysort', 'mkl_cp'],
+-- 
+2.20.1
+

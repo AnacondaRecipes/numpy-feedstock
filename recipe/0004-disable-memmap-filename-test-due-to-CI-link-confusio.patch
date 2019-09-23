@@ -1,14 +1,14 @@
-From 9aa4f5b38fe609a41e5b7da16d278f1f62d1d3c2 Mon Sep 17 00:00:00 2001
+From 88aa2e207faf4e1a70c4cb0c8ded64bb11dec150 Mon Sep 17 00:00:00 2001
 From: Michael Sarahan <msarahan@gmail.com>
 Date: Mon, 11 Jun 2018 16:39:37 -0500
-Subject: [PATCH 04/15] disable memmap filename test due to CI link confusion
+Subject: [PATCH 04/21] disable memmap filename test due to CI link confusion
 
 ---
  numpy/core/tests/test_memmap.py | 28 ----------------------------
  1 file changed, 28 deletions(-)
 
 diff --git a/numpy/core/tests/test_memmap.py b/numpy/core/tests/test_memmap.py
-index 3d33b47..425d90d 100644
+index b8bc4166c..2f1b80152 100644
 --- a/numpy/core/tests/test_memmap.py
 +++ b/numpy/core/tests/test_memmap.py
 @@ -67,34 +67,6 @@ class TestMemmap(object):
