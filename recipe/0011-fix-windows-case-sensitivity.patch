@@ -1,0 +1,55 @@
+From 1a120be14930fbba35092a509eec0db5f8c5abed Mon Sep 17 00:00:00 2001
+From: Michael Sarahan <msarahan@gmail.com>
+Date: Mon, 11 Jun 2018 16:37:27 -0500
+Subject: [PATCH 11/22] fix windows case sensitivity
+
+---
+ numpy/core/tests/test_memmap.py | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/numpy/core/tests/test_memmap.py b/numpy/core/tests/test_memmap.py
+index d2ae564b2..b8bc4166c 100644
+--- a/numpy/core/tests/test_memmap.py
++++ b/numpy/core/tests/test_memmap.py
+@@ -27,7 +27,10 @@ class TestMemmap(object):
+ 
+     def teardown(self):
+         self.tmpfp.close()
+-        shutil.rmtree(self.tempdir)
++        try:
++            shutil.rmtree(self.tempdir)
++        except:
++            pass
+ 
+     def test_roundtrip(self):
+         # Write data to file
+@@ -68,11 +71,11 @@ class TestMemmap(object):
+         tmpname = mktemp('', 'mmap', dir=self.tempdir)
+         fp = memmap(tmpname, dtype=self.dtype, mode='w+',
+                        shape=self.shape)
+-        abspath = os.path.abspath(tmpname)
++        abspath = os.path.realpath(os.path.abspath(tmpname))
+         fp[:] = self.data[:]
+-        assert_equal(abspath, fp.filename)
++        assert_equal(abspath.lower(), str(fp.filename.resolve()).lower())
+         b = fp[:1]
+-        assert_equal(abspath, b.filename)
++        assert_equal(abspath.lower(), str(b.filename.resolve()).lower())
+         del b
+         del fp
+ 
+@@ -86,9 +89,9 @@ class TestMemmap(object):
+         # use Path.resolve, just as memmap class does internally
+         abspath = str(Path(tmpname).resolve())
+         fp[:] = self.data[:]
+-        assert_equal(abspath, str(fp.filename.resolve()))
++        assert_equal(abspath.lower(), str(fp.filename.resolve()).lower())
+         b = fp[:1]
+-        assert_equal(abspath, str(b.filename.resolve()))
++        assert_equal(abspath.lower(), str(b.filename.resolve()).lower())
+         del b
+         del fp
+ 
+-- 
+2.20.1
+

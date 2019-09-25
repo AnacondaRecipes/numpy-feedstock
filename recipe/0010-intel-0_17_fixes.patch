@@ -1,0 +1,67 @@
+From 1ff7315f1e3676908037e514291206b938abc31e Mon Sep 17 00:00:00 2001
+From: fwaters <fwaters@anaconda.com>
+Date: Mon, 23 Sep 2019 18:59:35 +0000
+Subject: [PATCH 10/22] intel-0_17_fixes
+
+---
+ numpy/core/setup.py              | 4 ++--
+ numpy/core/src/umath/loops.c.src | 2 +-
+ numpy/random/setup.py            | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/numpy/core/setup.py b/numpy/core/setup.py
+index b2a73e50e..930383a4a 100644
+--- a/numpy/core/setup.py
++++ b/numpy/core/setup.py
+@@ -945,11 +945,11 @@ def configuration(parent_package='',top_path=None):
+             ]
+ 
+     if platform.system() == "Windows":
+-        eca = ['/fp:fast=2', '/Qimf-precision=high', '/Qprec-sqrt', '/Qstd=c99']
++        eca = ['/fp:fast=2', '/Qimf-precision=high', '/Qprec-sqrt', '/Qstd=c99', '/Qprotect-parens']
+         if sys.version_info < (3, 0):
+             eca.append('/Qprec-div')
+     else:
+-        eca = ['-fp-model', 'fast=2', '-fimf-precision=high', '-prec-sqrt']
++        eca = ['-fp-model', 'fast=2', '-fimf-precision=high', '-prec-sqrt', '-fprotect-parens']
+     config.add_library('loops',
+                        sources=loops_src,
+                        include_dirs=[],
+diff --git a/numpy/core/src/umath/loops.c.src b/numpy/core/src/umath/loops.c.src
+index a121472fe..739f71157 100644
+--- a/numpy/core/src/umath/loops.c.src
++++ b/numpy/core/src/umath/loops.c.src
+@@ -1720,7 +1720,7 @@ NPY_NO_EXPORT void
+             DISJOINT_OR_SAME(args[0], args[1], dimensions[0], sizeof(@type@))
+             ,
+             const @type@ in1 = *(@type@ *)ip1;
+-            if(1 == 1) {//if(in1 == -NPY_INFINITY@A@){
++            if(in1 == -NPY_INFINITY@A@){
+                 ignore_fpstatus = 1;
+             }
+             *(@type@ *)op1 = @scalarf@(in1);
+diff --git a/numpy/random/setup.py b/numpy/random/setup.py
+index a820d326e..23b8a9458 100644
+--- a/numpy/random/setup.py
++++ b/numpy/random/setup.py
+@@ -45,7 +45,7 @@ def configuration(parent_package='', top_path=None):
+ 
+     if is_msvc and platform_bits == 32:
+         # 32-bit windows requires explicit sse2 option
+-        EXTRA_COMPILE_ARGS += ['/arch:SSE2']
++        EXTRA_COMPILE_ARGS += [] # ['/arch:SSE2']
+     elif not is_msvc:
+         # Some bit generators require c99
+         EXTRA_COMPILE_ARGS += ['-std=c99']
+@@ -53,7 +53,7 @@ def configuration(parent_package='', top_path=None):
+                          for arch in ('x86', 'i686', 'i386', 'amd64'))
+         if INTEL_LIKE:
+             # Assumes GCC or GCC-like compiler
+-            EXTRA_COMPILE_ARGS += ['-msse2']
++            EXTRA_COMPILE_ARGS += [] # ['-msse2']
+ 
+     # Use legacy integer variable sizes
+     LEGACY_DEFS = [('NP_RANDOM_LEGACY', '1')]
+-- 
+2.20.1
+

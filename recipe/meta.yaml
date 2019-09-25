@@ -13,31 +13,33 @@ source:
   - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
     sha256: 73615d3edc84dd7c4aeb212fa3748fb83217e00d201875a47327f55363cef2df
     patches:
-      - 0001-fix-windows-case-sensitivity.patch
-      - 0002-simplify-arch-flags.patch
-      - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-      - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
-      - 0005-disable-broken-tests.patch
-      - 0006-mark-known-failing-tests-on-ppc64le.patch
+      # patches in this if block are pulled in from https://github.com/IntelPython/numpy/tree/intel/1.17.0/conda-recipe/v1.17-patches
       {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
-      # patches for MKL based enhancements
-      - 0007-use-mklfft-when-available.patch
-      - 0008-define-mkl_version-in-__init__.py.patch
-      - 0009-intel-umath-optimizations.patch
-      - 0010-intel-mkl_mem-all.patch
-      - 0011-intel-init_mkl.patch
-      - 0012-intel-mkl_random.patch
-      # - 0019-intel-0_17_fixes.patch   # will be included in numpy 0.17.1; to remove then
-      - 0013-intel_allow-pickle-is-false-on-save.patch
-      - 0014-intel_distribution.patch
-      - 0015-intel_setup_add_whl_deps.patch
-      # patch up MKL patches
-      - 0016-Remove-ICC-specific-flags.patch
-      - 0017-Remove-np.invsqrt.patch
-      - 0018-Rewrite-inlining.patch
-      - 0019-Fixes-from-Intel-Distribution.patch
-      - 0020-define-__THRESHOLD.patch
-      - 0021-filter-out-warnings-when-importing-mkl_fft.patch
+      - 0001-intel_mkl-version.patch
+      - 0002-intel_use_mkl_fft.patch
+      - 0003-intel_distribution.patch
+      - 0004-intel_umath_optimizations.patch
+      - 0005-intel_mkl_mem_all.patch
+      - 0006-intel_init_mkl.patch
+      - 0007-intel_mkl_random.patch
+      - 0008-intel_setup_add_whl_deps.patch
+      - 0009-intel_allow-pickle-is-false-on-save.patch
+      - 0010-intel-0_17_fixes.patch
+      {%- endif %}
+      - 0011-fix-windows-case-sensitivity.patch
+      - 0012-simplify-arch-flags.patch
+      - 0013-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
+      - 0014-disable-memmap-filename-test-due-to-CI-link-confusio.patch
+      - 0015-disable-broken-tests.patch
+      - 0016-mark-known-failing-tests-on-ppc64le.patch
+      # remaining patches are to get Intel's stuff to work with our compilers
+      {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
+      - 0017-Remove-ICC-specific-flags.patch
+      - 0018-Remove-np.invsqrt.patch
+      - 0019-Rewrite-inlining.patch
+      - 0020-Fixes-from-Intel-Distribution.patch
+      - 0021-define-__THRESHOLD.patch
+      - 0022-filter-out-warnings-when-importing-mkl_fft.patch
       {%- endif %}
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe

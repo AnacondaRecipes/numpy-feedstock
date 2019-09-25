@@ -1,0 +1,38 @@
+From 9c81c0afeff3d2d43f902250cd9407ba0923ebd5 Mon Sep 17 00:00:00 2001
+From: Michael Sarahan <msarahan@gmail.com>
+Date: Mon, 11 Jun 2018 16:36:07 -0500
+Subject: [PATCH 12/22] simplify arch flags
+
+---
+ numpy/distutils/fcompiler/gnu.py | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/numpy/distutils/fcompiler/gnu.py b/numpy/distutils/fcompiler/gnu.py
+index 965c67041..da76d4820 100644
+--- a/numpy/distutils/fcompiler/gnu.py
++++ b/numpy/distutils/fcompiler/gnu.py
+@@ -327,20 +327,9 @@ class Gnu95FCompiler(GnuFCompiler):
+     g2c = 'gfortran'
+ 
+     def _universal_flags(self, cmd):
+-        """Return a list of -arch flags for every supported architecture."""
+         if not sys.platform == 'darwin':
+             return []
+-        arch_flags = []
+-        # get arches the C compiler gets.
+-        c_archs = self._c_arch_flags()
+-        if "i386" in c_archs:
+-            c_archs[c_archs.index("i386")] = "i686"
+-        # check the arches the Fortran compiler supports, and compare with
+-        # arch flags from C compiler
+-        for arch in ["ppc", "i686", "x86_64", "ppc64"]:
+-            if _can_target(cmd, arch) and arch in c_archs:
+-                arch_flags.extend(["-arch", arch])
+-        return arch_flags
++        return ['-m' + platform.architecture()[0][:2]]
+ 
+     def get_flags(self):
+         flags = GnuFCompiler.get_flags(self)
+-- 
+2.20.1
+
