@@ -1,25 +1,26 @@
-From 821a9035d61675e9436229f089c41183d852a16e Mon Sep 17 00:00:00 2001
-From: fwaters <fwaters@anaconda.com>
-Date: Mon, 23 Sep 2019 18:29:38 +0000
-Subject: [PATCH 01/22] intel_mkl-version
+From a38471fac237e5912d3abd3a72e70be6c87d2c04 Mon Sep 17 00:00:00 2001
+From: Mike Sarahan <msarahan@gmail.com>
+Date: Wed, 25 Sep 2019 12:50:24 -0500
+Subject: [PATCH] intel_mkl version
 
 ---
- numpy/__init__.py | 2 ++
- 1 file changed, 2 insertions(+)
+ numpy/__init__.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/numpy/__init__.py b/numpy/__init__.py
-index ba88c733f..3723daaf7 100644
+index ba88c73..c3456b8 100644
 --- a/numpy/__init__.py
 +++ b/numpy/__init__.py
-@@ -192,6 +192,8 @@ else:
+@@ -191,6 +191,9 @@ else:
+     test = PytestTester(__name__)
      del PytestTester
  
- 
-+    __mkl_version__ = "__MKL_VERSION__"
++    import mkl
++    __mkl_version__ = "{MajorVersion}.{UpdateVersion}".format(**mkl.get_version())
 +
+ 
      def _sanity_check():
          """
-         Quick sanity checks for common bugs caused by environment.
 -- 
 2.20.1
 

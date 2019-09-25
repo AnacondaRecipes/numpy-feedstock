@@ -1,17 +1,13 @@
 {% set name = "numpy" %}
-{% set version = "1.17.2" %}
-{% set mkl_random_version = "1.0.4" %}
-{% set mkl_random_buildnumber = 0 %}
-{% set mkl_fft_version = "1.0.14" %}
-{% set mkl_fft_buildnumber = 0 %}
+# version and sha defined in centralized conda_build_config.yml
 
 package:
-  name: numpy_and_dev
-  version: {{ version }}
+  name: numpy_base_and_dev
+  version: {{ numpy_version }}
 
 source:
-  - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
-    sha256: 73615d3edc84dd7c4aeb212fa3748fb83217e00d201875a47327f55363cef2df
+  - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ numpy_version }}.zip
+    sha256: {{ numpy_sha }}
     patches:
       # patches in this if block are pulled in from https://github.com/IntelPython/numpy/tree/intel/1.17.0/conda-recipe/v1.17-patches
       {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
@@ -41,19 +37,10 @@ source:
       - 0021-define-__THRESHOLD.patch
       - 0022-filter-out-warnings-when-importing-mkl_fft.patch
       {%- endif %}
-  {% if blas_impl == "mkl" %}
-  # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
-  - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
-    sha256: f328d76c30585e8ca63c7bced14185a0dc823bb27fbc11d05655c14fdabd46ed
-    folder: mkl_random
-  - url: https://github.com/IntelPython/mkl_fft/archive/v{{mkl_fft_version}}.tar.gz
-    sha256: 644ed4d845b741f80c6576c94bdbd14d18fce21e6cc725676e979b7f953154a8
-    folder: mkl_fft
-  {% endif %}
 
 build:
   number: 0
-  skip: True  # [blas_impl == 'openblas' and win or py2k]
+  skip: True  # [(blas_impl == 'openblas' and win) or py2k]
   force_use_keys:
     - python
 
@@ -85,7 +72,7 @@ outputs:
   - name: numpy-devel
     build:
       run_exports:
-        - {{ pin_subpackage('numpy') }}
+        - {{ pin_subpackage('numpy-base') }}
     requirements:
       host:
         - python
@@ -96,140 +83,19 @@ outputs:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
 
-  # metapackage for things that don't use numpy's C interface, or things
-  - name: numpy
-    requirements:
-      build:
-        # for runtime alignment
-        - {{ compiler('c') }}
-        - {{ compiler('fortran') }}
-      host:
-        - python
-        # these import blas metapackages to ensure consistency with downstream libs that also use blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
-        - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
-      run:
-        - python
-        - {{ pin_subpackage('numpy-base', exact=True) }}
-        # openblas or mkl runtime included with run_exports
-        - {{ pin_subpackage("mkl_fft") }}  # [blas_impl == 'mkl']
-        - {{ pin_subpackage("mkl_random") }} # [blas_impl == 'mkl' and (not win or vc>=14)]
+  # NOTE: "numpy" metapackage is defined in numpy-metapackage feedstock to avoid cycles
 
-    test:
-      script: numpy_test.py
-      requires:
-        - pytest
-        - {{ compiler('c') }}
-        - {{ compiler('fortran') }}
-        - nomkl  # [x86 and blas_impl != 'mkl']
-      commands:
-        - f2py -h
-        - python -c "import numpy; numpy.show_config()"
-      imports:
-        - numpy
-        - numpy.linalg.lapack_lite
+about:
+  home: http://numpy.scipy.org/
+  license: BSD 3-Clause
+  license_file: LICENSE.txt
+  summary: 'Array processing for numbers, strings, records, and objects.'
+  description: |
+    NumPy is the fundamental package needed for scientific computing with Python.
+  doc_url: https://docs.scipy.org/doc/numpy-{{ numpy_version }}/reference/
+  dev_url: https://github.com/numpy/numpy
+  dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
-    about:
-      home: http://numpy.scipy.org/
-      license: BSD 3-Clause
-      license_file: LICENSE.txt
-      summary: 'Array processing for numbers, strings, records, and objects.'
-      description: |
-        NumPy is the fundamental package needed for scientific computing with Python.
-      doc_url: https://docs.scipy.org/doc/numpy-{{ version }}/reference/
-      dev_url: https://github.com/numpy/numpy
-      dev_source_url: https://github.com/numpy/numpy/tree/master/doc
-
-  {% if blas_impl == "mkl" %}
-  - name: mkl_random
-    version: {{ mkl_random_version }}
-    script: install_mkl_extra.sh   # [not win]
-    script: install_mkl_extra.bat  # [win]
-    build:
-        number: {{mkl_random_buildnumber}}
-        # not compatible with vs2008.
-        skip: True  # [blas_impl != "mkl" or (win and vc<14)]
-
-    requirements:
-        build:
-          - {{ compiler('c') }}
-          - {{ compiler('cxx') }}
-        host:
-          - python
-          - setuptools
-          - mkl-devel  {{ mkl }}
-          - cython
-          - numpy-base  {{ numpy }}
-        run:
-          - python
-          - {{ pin_compatible("numpy-base") }}
-
-    test:
-        commands:
-          - nosetests -v mkl_random
-        requires:
-          - nose
-          - numpy-base >=1.13
-        imports:
-          - mkl_random
-          - mkl_random.mklrand
-
-    about:
-        home: http://github.com/IntelPython/mkl_random
-        license: BSD 3-Clause
-        license_file: mkl_random/LICENSE.txt
-        description:
-            NumPy-based implementation of random number generation sampling using Intel (R) Math Kernel Library,
-            mirroring numpy.random, but exposing all choices of sampling algorithms available in MKL.
-        summary:
-            Intel (R) MKL-powered package for sampling from common probability distributions into NumPy arrays.
-
-  - name: mkl_fft
-    version: {{ mkl_fft_version }}
-    script: install_mkl_extra.sh   # [not win]
-    script: install_mkl_extra.bat  # [win]
-    source:
-        url: https://github.com/IntelPython/mkl_fft/archive/v{{mkl_fft_version}}.tar.gz
-        sha256: 3c7ed29e203c5b664ecafb11d767d62f9cae4aa56f9a95737e121192a66673bf
-
-    build:
-      number: {{ mkl_fft_buildnumber }}
-      skip: True  # [blas_impl != "mkl"]
-
-    requirements:
-        build:
-          - {{ compiler('c') }}
-          - {{ compiler('cxx') }}
-        host:
-          - python
-          - setuptools
-          - mkl-devel  {{ mkl }}
-          - cython
-          - numpy-base  {{ numpy }}
-        run:
-          - python
-          - {{ pin_compatible("numpy-base") }}
-
-    test:
-        commands:
-          - nosetests -v mkl_fft
-        requires:
-          - nose
-        imports:
-          - mkl_fft
-          - mkl_fft._numpy_fft
-          - mkl_fft._scipy_fft
-
-    about:
-        home: http://github.com/IntelPython/mkl_fft
-        license: BSD 3-Clause
-        license_file: LICENSE.txt
-        description:
-            NumPy-based implementation of Fast Fourier Transform using Intel (R) Math Kernel Library.
-            Supports in-place and out-of-place, 1D and ND complex FFT on arrays of single and double precision
-            with arbitrary memory layout, so long as array strides are multiples of its itemsize.
-        summary: NumPy-based implementation of Fast Fourier Transform using Intel (R) Math Kernel Library.
-  {% endif %}
 
 extra:
   recipe-maintainers:
