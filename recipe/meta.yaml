@@ -1,16 +1,17 @@
-{% set version = "1.19.1" %}
+{% set version = "1.19.2" %}
 
 package:
   name: numpy_and_numpy_base
   version: {{ version }}
 
 source:
-  - url: https://pypi.io/packages/source/n/numpy/numpy-{{ version }}.zip
-    sha256: b8456987b637232602ceb4d663cb34106f7eb780e247d51a260b84760fd8f491
-    patches:
-      - 0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-      - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
-      - 0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
+  url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
+  sha256: 74d0cf50aa28af81874aca3e67560945afd783b2a006913577d6cddc35a824a6
+  patches:
+    - 0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
+    - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
+    - 0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
+    - 0004-disable-autorun-for-cmd-test.patch   # [win]
 
 build:
   number: 0
@@ -82,6 +83,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64]
     test:
       requires:
+        - pip     # force installation or `test_api_importable` will fail
         - pytest
         - hypothesis
         - {{ compiler('c') }}  # [not osx]
@@ -115,3 +117,4 @@ extra:
     - pelson
     - rgommers
     - ocefpaf
+    - chenghlee
