@@ -1,5 +1,5 @@
 {% set name = "numpy" %}
-{% set version = "1.16.0" %}
+{% set version = "1.16.6" %}
 {% set mkl_random_version = "1.0.2" %}
 {% set mkl_random_buildnumber = 0 %}
 {% set mkl_fft_version = "1.0.6" %}
@@ -11,7 +11,7 @@ package:
 
 source:
   - url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
-    sha256: cb189bd98b2e7ac02df389b6212846ab20661f4bafe16b5a70a6f1728c1cc7cb
+    sha256: e5cf3fdf13401885e8eea8170624ec96225e2174eb0c611c6f26dd33b489e3ff
     patches:
       - 0001-fix-windows-case-sensitivity.patch
       - 0002-simplify-arch-flags.patch
@@ -19,6 +19,7 @@ source:
       - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
       - 0005-disable-broken-tests.patch
       - 0017-mark-known-failing-tests-on-ppc64le.patch
+      - 0019-disable-test-scalar-exception-propagation.patch
       {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
       # patches for MKL based enhancements
       - 0006-use-mklfft-when-available.patch
@@ -125,7 +126,7 @@ outputs:
 
     about:
       home: http://numpy.scipy.org/
-      license: BSD 3-Clause
+      license: BSD-3-Clause
       license_file: LICENSE.txt
       summary: 'Array processing for numbers, strings, records, and objects.'
       description: |
