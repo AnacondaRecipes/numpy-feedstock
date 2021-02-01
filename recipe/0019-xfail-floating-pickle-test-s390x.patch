@@ -1,7 +1,15 @@
 diff -ur numpy-1.16.6.orig/numpy/core/tests/test_multiarray.py numpy-1.16.6/numpy/core/tests/test_multiarray.py
 --- numpy-1.16.6.orig/numpy/core/tests/test_multiarray.py	2019-12-27 17:24:44.000000000 -0500
-+++ numpy-1.16.6/numpy/core/tests/test_multiarray.py	2021-02-01 16:22:27.000000000 -0500
-@@ -3884,6 +3884,8 @@
++++ numpy-1.16.6/numpy/core/tests/test_multiarray.py	2021-02-01 16:33:45.000000000 -0500
+@@ -6,6 +6,7 @@
+     import collections.abc as collections_abc
+ except ImportError:
+     import collections as collections_abc
++import platform
+ import tempfile
+ import sys
+ import shutil
+@@ -3884,6 +3885,8 @@
      
          assert_equal(original.dtype, new.dtype)
  
