@@ -1,0 +1,12 @@
+diff -ur numpy-1.16.6.orig/numpy/core/tests/test_multiarray.py numpy-1.16.6/numpy/core/tests/test_multiarray.py
+--- numpy-1.16.6.orig/numpy/core/tests/test_multiarray.py	2019-12-27 17:24:44.000000000 -0500
++++ numpy-1.16.6/numpy/core/tests/test_multiarray.py	2021-02-01 16:22:27.000000000 -0500
+@@ -3884,6 +3884,8 @@
+     
+         assert_equal(original.dtype, new.dtype)
+ 
++    @pytest.mark.xfail(condition=platform.machine().startswith("s390x"),
++                       reason="Tests against hard-coded pickled floating point")
+     def test_py2_can_load_py3_pickle_with_dtype_field_names(self):
+         # gh-2407 and PR #14275
+         # Py2 should be able to load a pickle that was created in PY3

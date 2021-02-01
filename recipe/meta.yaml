@@ -35,6 +35,8 @@ source:
       - 0016-define-__THRESHOLD.patch
       - 0018-filter-out-warnings-when-importing-mkl_fft.patch
       {%- endif %}
+      # test fails due to hard-coded floating point in pickled data.
+      - 0019-xfail-floating-pickle-test-s390x.patch   # [s390x]
       # borrowing these from conda-forge to fix loss_of_precision & test_random
       - skip_test_loss_of_precision.diff  # [aarch64 or s390x]
       - backport_13558.patch
