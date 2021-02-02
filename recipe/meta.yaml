@@ -18,7 +18,7 @@ source:
       - 0003-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
       - 0004-disable-memmap-filename-test-due-to-CI-link-confusio.patch
       - 0005-disable-broken-tests.patch
-      - 0017-mark-known-failing-tests-on-ppc64le.patch
+      - 0017-mark-known-failing-tests-on-ppc64le.patch    # [ppc64le]
       {% if blas_impl == "mkl" and (not win or vc|int >= 14) -%}
       # patches for MKL based enhancements
       - 0006-use-mklfft-when-available.patch
@@ -35,7 +35,11 @@ source:
       - 0016-define-__THRESHOLD.patch
       - 0018-filter-out-warnings-when-importing-mkl_fft.patch
       {%- endif %}
-      - 0001-skip-test-from-test_random.py.patch  # [py==38]
+      # test fails due to hard-coded floating point in pickled data.
+      - 0019-xfail-floating-pickle-test-s390x.patch   # [s390x]
+      # borrowing these from conda-forge to fix loss_of_precision & test_random
+      - skip_test_loss_of_precision.diff  # [aarch64 or s390x]
+      - backport_13558.patch
   {% if blas_impl == "mkl" %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
@@ -47,7 +51,7 @@ source:
   {% endif %}
 
 build:
-  number: 0
+  number: 2
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
