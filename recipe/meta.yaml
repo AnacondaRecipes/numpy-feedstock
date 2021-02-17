@@ -80,7 +80,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
-    {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64]
+    {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
