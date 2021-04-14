@@ -1,4 +1,4 @@
-{% set version = "1.19.2" %}
+{% set version = "1.20.1" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,16 +6,18 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 74d0cf50aa28af81874aca3e67560945afd783b2a006913577d6cddc35a824a6
+  sha256: 9bf51d69ebb4ca9239e55bedc2185fe2c0ec222da0adee7ece4125414676846d
   patches:
-    - 0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-    - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
-    - 0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
-    - 0004-disable-autorun-for-cmd-test.patch   # [win]
+    - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
+    - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
+    - patches/0003-intel_init_mkl.patch                 # [blas_impl == "mkl"]
+    - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
+    - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
+    - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
   number: 0
-  skip: True  # [(blas_impl == 'openblas' and win) or py2k]
+  skip: True  # [(blas_impl == 'openblas' and win) or py2k or py<37]
   force_use_keys:
     - python
 
@@ -35,13 +37,13 @@ outputs:
       host:
         - python
         - pip
-        - cython
+        - cython >=0.29.21
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
     # When building out the initial package set for a new Python version the
-    # recommendataion is to build numpy-base but not numpy, then build
+    # recommendation is to build numpy-base but not numpy, then build
     # mkl_fft and mkl_random, and then numpy.
     # The false line will build numpy-base only
     # {% if false %}
@@ -70,6 +72,7 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
+        # - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
     # Seems to fail with current version of blas for large numbers
@@ -94,7 +97,7 @@ outputs:
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
-        - pytest --verbose --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
+        - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
         - numpy.linalg.lapack_lite
