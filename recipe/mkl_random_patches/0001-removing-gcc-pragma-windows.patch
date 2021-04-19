@@ -1,0 +1,13 @@
+diff --git a/mkl_random/src/mkl_distributions.cpp b/mkl_random/src/mkl_distributions.cpp
+index c606beb..2ab0448 100644
+--- a/mkl_random/src/mkl_distributions.cpp
++++ b/mkl_random/src/mkl_distributions.cpp
+@@ -45,7 +45,7 @@
+ #define DIST_PRAGMA_NOVECTOR _Pragma("novector")
+ #define DIST_ASSUME_ALIGNED(p, b) __assume_aligned((p), (b));
+ #else
+-#define DIST_PRAGMA_VECTOR _Pragma("GCC ivdep")
++#define DIST_PRAGMA_VECTOR __pragma(ivdep)
+ #define DIST_PRAGMA_NOVECTOR
+ #define DIST_ASSUME_ALIGNED(p, b)
+ #endif
