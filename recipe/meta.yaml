@@ -44,13 +44,11 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-    # When building out the initial package set for a new Python version the
+    # When building out the initial package set for a new Python version / MKL version the
     # recommendation is to build numpy-base but not numpy, then build
     # mkl_fft and mkl_random, and then numpy.
-    # The false line will build numpy-base only
-    # {% if false %}
-    # The true line will build numpy-base and numpy
-    {% if true %}
+    # If only_build_numpy_base: "yes", build numpy-base only; otherwise build all the outputs.
+    {% if only_build_numpy_base != 'yes' %}
     test:
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
