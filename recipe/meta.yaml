@@ -6,12 +6,6 @@
 {% set mkl_fft_version = "1.2.1" %}
 {% set mkl_fft_buildnumber = 1 %}
 
-# When building out the initial package set for a new Python version the
-# recommendation is to build numpy-base but not numpy, then build
-# mkl_fft and mkl_random, and then numpy.
-# if full_build is false: build numpy-base only; otherwise build numpy-base and numpy
-{% set full_build = true %}
-
 package:
   name: numpy_and_dev
   version: {{ version }}
@@ -47,7 +41,7 @@ source:
       # borrowing these from conda-forge to fix loss_of_precision & test_random
       - skip_test_loss_of_precision.diff  # [aarch64 or s390x]
       - backport_13558.patch
-  {% if blas_impl == "mkl" and full_build %}
+  {% if blas_impl == "mkl" and only_build_numpy_base != 'yes' %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
     sha256: 722d3e383a1501749a7ba1f759e7cd1e1ecd7b0298fe6f7591e17102cf67484c
@@ -84,7 +78,7 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-    {% if full_build %}
+    {% if only_build_numpy_base != 'yes' %}
     test:
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
