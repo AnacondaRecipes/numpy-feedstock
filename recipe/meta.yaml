@@ -1,9 +1,10 @@
 {% set name = "numpy" %}
 {% set version = "1.16.6" %}
-{% set mkl_random_version = "1.0.2" %}
-{% set mkl_random_buildnumber = 0 %}
-{% set mkl_fft_version = "1.0.6" %}
-{% set mkl_fft_buildnumber = 0 %}
+{% set mkl_random_version = "1.2.1" %}
+{% set mkl_random_buildnumber = 1 %}
+# this is the latest version of mkl_fft I could find that supported numpy 1.16 through testing.
+{% set mkl_fft_version = "1.2.1" %}
+{% set mkl_fft_buildnumber = 1 %}
 
 package:
   name: numpy_and_dev
@@ -40,18 +41,20 @@ source:
       # borrowing these from conda-forge to fix loss_of_precision & test_random
       - skip_test_loss_of_precision.diff  # [aarch64 or s390x]
       - backport_13558.patch
-  {% if blas_impl == "mkl" %}
+  {% if blas_impl == "mkl" and only_build_numpy_base != 'yes' %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
-    sha256: 2270ef2834f6552850533aad01500d27c8e056f2cfbdbdb751593000aea1159e
+    sha256: 722d3e383a1501749a7ba1f759e7cd1e1ecd7b0298fe6f7591e17102cf67484c
     folder: mkl_random
+    patches:                                                        # [win]
+      - mkl_random_patches/0001-removing-gcc-pragma-windows.patch   # [win]
   - url: https://github.com/IntelPython/mkl_fft/archive/v{{mkl_fft_version}}.tar.gz
-    sha256: 3c7ed29e203c5b664ecafb11d767d62f9cae4aa56f9a95737e121192a66673bf
+    sha256: 623204eb896b78d741080f667cb22cba96713677ffa6fe93a97d7f7bb6815697
     folder: mkl_fft
   {% endif %}
 
 build:
-  number: 2
+  number: 3
   skip: True  # [blas_impl == 'openblas' and win]
   force_use_keys:
     - python
@@ -75,6 +78,7 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
+    {% if only_build_numpy_base != 'yes' %}
     test:
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
@@ -113,6 +117,7 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - {{ pin_subpackage("mkl_fft") }}  # [blas_impl == 'mkl']
         - {{ pin_subpackage("mkl_random") }} # [blas_impl == 'mkl' and (not win or vc>=14)]
+    {% endif %}
 
     test:
       script: numpy_test.py
@@ -127,7 +132,6 @@ outputs:
       imports:
         - numpy
         - numpy.linalg.lapack_lite
-
     about:
       home: http://numpy.scipy.org/
       license: BSD 3-Clause
