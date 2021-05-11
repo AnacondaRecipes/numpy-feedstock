@@ -1,4 +1,4 @@
-{% set version = "1.20.1" %}
+{% set version = "1.20.3" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 9bf51d69ebb4ca9239e55bedc2185fe2c0ec222da0adee7ece4125414676846d
+  sha256: b7340f0628ce1823c151e3d2a2a8cba2a3ff1357fba4475a24b1816e75c21f90
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
