@@ -41,6 +41,7 @@ outputs:
         - {{ compiler("c") }}
         # libllvm10 10.0.0 build 1 has an issue building numpy, use build 0
         - libllvm10 10.0.0 h21ff451_0  # [osx]
+        - armpl #[aarch64]
       host:
         - python
         - pip
@@ -66,6 +67,7 @@ outputs:
       build:
         # for runtime alignment
         - {{ compiler('c') }}
+        - armpl # [aarch64]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
