@@ -1,0 +1,16 @@
+There is an issue with numpy v1.21 and GCC 7 on linux-ppc64le.
+See: https://github.com/numpy/numpy/issues/19017#issuecomment-895741316
+& https://github.com/numpy/numpy/issues/19643
+--- a/numpy/core/src/common/simd/vsx/operators.h
++++ b/numpy/core/src/common/simd/vsx/operators.h
+@@ -48,8 +48,8 @@
+     NPY_FINLINE npyv_##SFX npyv_##INTRIN##_##SFX(npyv_##SFX a, npyv_##SFX b) \
+     { return (npyv_##SFX)vec_##INTRIN((CAST)a, (CAST)b); }
+ 
+-// Up to GCC 6 logical intrinsics don't support bool long long
+-#if defined(__GNUC__) && __GNUC__ <= 6
++// Up to GCC 6 and old version of GCC-7 logical intrinsics don't support bool long long
++#if defined(__GNUC__) && __GNUC__ <= 7
+     #define NPYV_IMPL_VSX_BIN_B64(INTRIN) NPYV_IMPL_VSX_BIN_CAST(INTRIN, b64, npyv_u64)
+ #else
+     #define NPYV_IMPL_VSX_BIN_B64(INTRIN) NPYV_IMPL_VSX_BIN_CAST(INTRIN, b64, npyv_b64)

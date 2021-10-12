@@ -14,6 +14,8 @@ source:
     - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
     - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
+    # support GCC 7 as many components have not been built with GCC 8
+    - patches/0007-ppc64le-gcc-7-fix.patch              # [linux and ppc64le]
 
 build:
   number: 0
