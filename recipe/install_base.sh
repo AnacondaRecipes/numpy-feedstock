@@ -2,6 +2,12 @@
 
 set -e
 
+# numpy distutils don't use the env variables.
+if [[ ! -f $BUILD_PREFIX/bin/ranlib ]]; then
+    ln -s $RANLIB $BUILD_PREFIX/bin/ranlib
+    ln -s $AR $BUILD_PREFIX/bin/ar
+fi
+
 # site.cfg is provided by blas devel packages (either mkl-devel or openblas-devel)
 case $( uname -m ) in
 aarch64) cp $PREFIX/aarch_site.cfg site.cfg;;
