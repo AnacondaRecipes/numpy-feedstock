@@ -1,0 +1,255 @@
+From 5ec9f1751b0513ba056d705d2301fa9bef087cc1 Mon Sep 17 00:00:00 2001
+From: Paul Yim <paul.j.yim@gmail.com>
+Date: Tue, 12 Oct 2021 21:17:42 -0400
+Subject: [PATCH] Changes for armpl build.
+
+---
+ numpy/distutils/armccompiler.py       | 23 +++++++++
+ numpy/distutils/ccompiler.py          |  2 +
+ numpy/distutils/fcompiler/__init__.py |  2 +-
+ numpy/distutils/fcompiler/arm.py      | 72 +++++++++++++++++++++++++++
+ numpy/distutils/system_info.py        | 60 ++++++++++++++++++++--
+ 5 files changed, 155 insertions(+), 4 deletions(-)
+ create mode 100644 numpy/distutils/armccompiler.py
+ create mode 100644 numpy/distutils/fcompiler/arm.py
+
+diff --git a/numpy/distutils/armccompiler.py b/numpy/distutils/armccompiler.py
+new file mode 100644
+index 000000000..4b58e6033
+--- /dev/null
++++ b/numpy/distutils/armccompiler.py
+@@ -0,0 +1,23 @@
++from __future__ import division, absolute_import, print_function
++ 
++from distutils.unixccompiler import UnixCCompiler
++ 
++class ArmCCompiler(UnixCCompiler):
++ 
++    """
++    Arm compiler.
++    """
++ 
++    compiler_type = 'arm'
++    cc_exe = 'armclang'
++    cxx_exe = 'armclang++'
++ 
++    def __init__ (self, verbose=0, dry_run=0, force=0):
++        UnixCCompiler.__init__ (self, verbose, dry_run, force)
++        cc_compiler = self.cc_exe
++        cxx_compiler = self.cxx_exe
++        self.set_executables(compiler=cc_compiler + ' -mcpu=native -O3',
++                             compiler_so=cc_compiler + ' -mcpu=native -O3',
++                             compiler_cxx=cxx_compiler + ' -mcpu=native -O3',
++                             linker_exe=cc_compiler + ' -lamath',
++                             linker_so=cc_compiler + ' -lamath -shared')
+diff --git a/numpy/distutils/ccompiler.py b/numpy/distutils/ccompiler.py
+index 106436e64..f1998f1a3 100644
+--- a/numpy/distutils/ccompiler.py
++++ b/numpy/distutils/ccompiler.py
+@@ -695,6 +695,8 @@ compiler_class['intelemw'] = ('intelccompiler', 'IntelEM64TCCompilerW',
+                               "Intel C Compiler for 64-bit applications on Windows")
+ compiler_class['pathcc'] = ('pathccompiler', 'PathScaleCCompiler',
+                             "PathScale Compiler for SiCortex-based applications")
++compiler_class['arm'] = ('armccompiler', 'ArmCCompiler',
++                           "Arm C Compiler")
+ ccompiler._default_compilers += (('linux.*', 'intel'),
+                                  ('linux.*', 'intele'),
+                                  ('linux.*', 'intelem'),
+diff --git a/numpy/distutils/fcompiler/__init__.py b/numpy/distutils/fcompiler/__init__.py
+index b64417576..0034628cc 100644
+--- a/numpy/distutils/fcompiler/__init__.py
++++ b/numpy/distutils/fcompiler/__init__.py
+@@ -743,7 +743,7 @@ _default_compilers = (
+     ('win32', ('gnu', 'intelv', 'absoft', 'compaqv', 'intelev', 'gnu95', 'g95',
+                'intelvem', 'intelem', 'flang')),
+     ('cygwin.*', ('gnu', 'intelv', 'absoft', 'compaqv', 'intelev', 'gnu95', 'g95')),
+-    ('linux.*', ('gnu95', 'intel', 'lahey', 'pg', 'nv', 'absoft', 'nag', 'vast', 'compaq',
++    ('linux.*', ('arm', 'gnu95', 'intel', 'lahey', 'pg', 'nv', 'absoft', 'nag', 'vast', 'compaq',
+                  'intele', 'intelem', 'gnu', 'g95', 'pathf95', 'nagfor', 'fujitsu')),
+     ('darwin.*', ('gnu95', 'nag', 'absoft', 'ibm', 'intel', 'gnu', 'g95', 'pg')),
+     ('sunos.*', ('sun', 'gnu', 'gnu95', 'g95')),
+diff --git a/numpy/distutils/fcompiler/arm.py b/numpy/distutils/fcompiler/arm.py
+new file mode 100644
+index 000000000..fd51d2627
+--- /dev/null
++++ b/numpy/distutils/fcompiler/arm.py
+@@ -0,0 +1,72 @@
++from __future__ import division, absolute_import, print_function
++ 
++import sys
++ 
++from numpy.distutils.fcompiler import FCompiler, dummy_fortran_file
++from sys import platform
++from os.path import join, dirname, normpath
++ 
++compilers = ['ArmFlangCompiler']
++ 
++import functools
++ 
++class ArmFlangCompiler(FCompiler):
++    compiler_type = 'arm'
++    description = 'Arm Compiler'
++    version_pattern = r'\s*Arm.*version (?P<version>[\d.-]+).*'
++
++    ar_exe = 'lib.exe'
++    possible_executables = ['armflang']
++
++    executables = {
++        'version_cmd': ["", "--version"], 
++        'compiler_f77': ["armflang"],
++        'compiler_fix': ["armflang", "-ffixed-form"],
++        'compiler_f90': ["armflang"],
++        'linker_so': ["armflang", "-fPIC", "-shared"],
++        'archiver': ["ar", "-cr"],
++        'ranlib':  None
++    }
++
++    pic_flags = ["-fPIC", "-DPIC"]
++    c_compiler = 'arm'
++    module_dir_switch = '-module '  # Don't remove ending space!
++
++    def get_libraries(self):
++        opt = FCompiler.get_libraries(self)
++        opt.extend(['flang', 'flangrti', 'ompstub'])
++        return opt
++ 
++    @functools.lru_cache(maxsize=128)
++    def get_library_dirs(self):
++        """List of compiler library directories."""
++        opt = FCompiler.get_library_dirs(self)
++        flang_dir = dirname(self.executables['compiler_f77'][0])
++        opt.append(normpath(join(flang_dir, '..', 'lib')))
++ 
++        return opt
++ 
++    def get_flags(self):
++        return []
++ 
++    def get_flags_free(self):
++        return []
++ 
++    def get_flags_debug(self):
++        return ['-g']
++ 
++    def get_flags_opt(self):
++        return ['-O3']
++ 
++    def get_flags_arch(self):
++        return []
++ 
++    def runtime_library_dir_option(self, dir):
++        return '-Wl,-rpath=%s' % dir
++ 
++ 
++if __name__ == '__main__':
++    from distutils import log
++    log.set_verbosity(2)
++    from numpy.distutils import customized_fcompiler
++    print(customized_fcompiler(compiler='armflang').get_version())
+diff --git a/numpy/distutils/system_info.py b/numpy/distutils/system_info.py
+index d0a585985..9bfa69f85 100644
+--- a/numpy/distutils/system_info.py
++++ b/numpy/distutils/system_info.py
+@@ -505,7 +505,11 @@ def get_info(name, notfound_action=0):
+       1 - display warning message
+       2 - raise error
+     """
+-    cl = {'atlas': atlas_info,  # use lapack_opt or blas_opt instead
++    cl = {'armpl': armpl_info,
++          'blas_armpl': blas_armpl_info,
++          'lapack_armpl': lapack_armpl_info,
++          'fftw3_armpl' : fftw3_armpl_info,
++          'atlas': atlas_info,  # use lapack_opt or blas_opt instead
+           'atlas_threads': atlas_threads_info,                # ditto
+           'atlas_blas': atlas_blas_info,
+           'atlas_blas_threads': atlas_blas_threads_info,
+@@ -1159,6 +1163,17 @@ class fftw3_info(fftw_info):
+                   ]
+ 
+ 
++class fftw3_armpl_info(fftw_info):
++    section = 'fftw3'
++    dir_env_var = 'PREFIX'
++    notfounderror = FFTWNotFoundError
++    ver_info = [{'name':'fftw3',
++                    'libs':['armpl_lp64_mp'],
++                    'includes':['fftw3.h'],
++                    'macros':[('SCIPY_FFTW3_H', None)]},
++                  ]
++
++
+ class dfftw_info(fftw_info):
+     section = 'fftw'
+     dir_env_var = 'FFTW'
+@@ -1317,6 +1332,31 @@ class blas_mkl_info(mkl_info):
+     pass
+ 
+ 
++class armpl_info(system_info):
++    section = 'armpl'
++    dir_env_var = 'ARMPL_DIR'
++    _lib_armpl = ['armpl_lp64_mp']
++
++    def calc_info(self):
++        lib_dirs = self.get_lib_dirs()
++        incl_dirs = self.get_include_dirs()
++        armpl_libs = self.get_libs('armpl_libs', self._lib_armpl)
++        info = self.check_libs2(lib_dirs, armpl_libs)
++        if info is None:
++            return
++        dict_append(info,
++                    define_macros=[('SCIPY_MKL_H', None),
++                                   ('HAVE_CBLAS', None)],
++                    include_dirs=incl_dirs)
++        self.set_info(**info)
++
++class lapack_armpl_info(armpl_info):
++    pass
++
++class blas_armpl_info(armpl_info):
++    pass
++
++
+ class atlas_info(system_info):
+     section = 'atlas'
+     dir_env_var = 'ATLAS'
+@@ -1752,9 +1792,16 @@ def get_atlas_version(**config):
+ class lapack_opt_info(system_info):
+     notfounderror = LapackNotFoundError
+     # List of all known LAPACK libraries, in the default order
+-    lapack_order = ['mkl', 'openblas', 'flame', 'atlas', 'lapack']
++    lapack_order = ['armpl', 'mkl', 'openblas', 'flame', 'atlas', 'lapack']
+     order_env_var_name = 'NPY_LAPACK_ORDER'
+ 
++    def _calc_info_armpl(self):
++        info = get_info('lapack_armpl')
++        if info:
++            self.set_info(**info)
++            return True
++        return False
++
+     def _calc_info_mkl(self):
+         info = get_info('lapack_mkl')
+         if info:
+@@ -1911,9 +1958,16 @@ class lapack64__opt_info(lapack_ilp64_opt_info):
+ class blas_opt_info(system_info):
+     notfounderror = BlasNotFoundError
+     # List of all known BLAS libraries, in the default order
+-    blas_order = ['mkl', 'blis', 'openblas', 'atlas', 'blas']
++    blas_order = ['armpl', 'mkl', 'blis', 'openblas', 'atlas', 'blas']
+     order_env_var_name = 'NPY_BLAS_ORDER'
+ 
++    def _calc_info_armpl(self):
++        info = get_info('blas_armpl')
++        if info:
++            self.set_info(**info)
++            return True
++        return False
++
+     def _calc_info_mkl(self):
+         info = get_info('blas_mkl')
+         if info:
+-- 
+2.24.3 (Apple Git-128)
+
+

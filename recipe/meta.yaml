@@ -14,6 +14,7 @@ source:
     - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
     - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
+    - patches/0007-armpl-build.patch                    # [blas_impl == "armpl"]
 
 build:
   number: 0
@@ -41,15 +42,16 @@ outputs:
         - {{ compiler("c") }}
         # libllvm10 10.0.0 build 1 has an issue building numpy, use build 0
         - libllvm10 10.0.0 h21ff451_0  # [osx]
-        - armpl #[aarch64]
       host:
         - python
         - pip
         - cython >=0.29.21
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel {{ mkl }}            # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
+        - armpl {{ armpl }}              # [blas_impl == "armpl"]
       run:
         - python
+        - armpl {{ armpl }}              # [blas_impl == "armpl"]
     # When building out the initial package set for a new Python version / MKL version the
     # recommendation is to build numpy-base but not numpy, then build
     # mkl_fft and mkl_random, and then numpy.
@@ -67,19 +69,20 @@ outputs:
       build:
         # for runtime alignment
         - {{ compiler('c') }}
-        - armpl # [aarch64]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - mkl-devel {{ mkl }}            # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
+        - armpl {{ armpl }}              # [blas_impl == "armpl"]
       run:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
-        - mkl_fft  # [blas_impl == 'mkl']
-        - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-        # - mkl_umath  # [blas_impl == 'mkl']
+        - mkl_fft       # [blas_impl == 'mkl']
+        - mkl_random    # [blas_impl == 'mkl' and (not win or vc>=14)]
+        # - mkl_umath    # [blas_impl == 'mkl']
+        - armpl         # [blas_impl == "armpl"]
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
     # Seems to fail with current version of blas for large numbers
@@ -91,6 +94,8 @@ outputs:
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
+    # ArmPL BLAS implementation requires us to add additional Arm modules.
+    {% set tests_to_skip = tests_to_skip + " or test_all_modules_are_expected" %}  # [blas_impl == "armpl"]
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
