@@ -10,7 +10,7 @@ fi
 
 # site.cfg is provided by blas devel packages (either mkl-devel or openblas-devel)
 case $( uname -m ) in
-aarch64) cp $PREFIX/aarch_site.cfg site.cfg;;
+aarch64) cp $RECIPE_DIR/aarch_site.cfg site.cfg;;
 *)       cp $PREFIX/site.cfg site.cfg;;
 esac
 
