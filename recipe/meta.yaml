@@ -39,7 +39,7 @@ outputs:
     requirements:
       build:
         - {{ compiler("c") }}
-        - {{ compiler("fortran) }}  # [unix]
+        - {{ compiler("fortran") }}  # [unix]
         - armpl  # [aarch64]
       host:
         - python
