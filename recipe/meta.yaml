@@ -39,7 +39,8 @@ outputs:
     requirements:
       build:
         - {{ compiler("c") }}
-        - armpl #[aarch64]
+        - {{ compiler("fortran) }}  # [unix]
+        - armpl  # [aarch64]
       host:
         - python
         - pip
@@ -65,7 +66,8 @@ outputs:
       build:
         # for runtime alignment
         - {{ compiler('c') }}
-        - armpl # [aarch64]
+        - {{ compiler('fortran') }}
+        - armpl  # [aarch64]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
