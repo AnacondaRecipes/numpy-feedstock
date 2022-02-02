@@ -99,7 +99,7 @@ outputs:
         - pytest
         - hypothesis
         - {{ compiler('c') }}  # [not osx]
-        - - {{ compiler('cxx') }}  # [not osx]
+        - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
       commands:
