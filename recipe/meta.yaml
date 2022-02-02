@@ -38,7 +38,8 @@ outputs:
         - f2py = numpy.f2py.f2py2e:main  # [win]
     requirements:
       build:
-        - {{ compiler("c") }}
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}  # [unix]
         - armpl  # [aarch64]
       host:
@@ -66,6 +67,7 @@ outputs:
       build:
         # for runtime alignment
         - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}  # [unix]
         - armpl  # [aarch64]
       host:
@@ -97,6 +99,7 @@ outputs:
         - pytest
         - hypothesis
         - {{ compiler('c') }}  # [not osx]
+        - - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
       commands:
