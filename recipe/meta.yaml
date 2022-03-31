@@ -91,6 +91,11 @@ outputs:
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
+    # see: https://github.com/numpy/numpy/issues/20637
+    # failure to raise FloatingPointError on osx for reciprocal
+    {% set tests_to_skip = tests_to_skip + " or test_unary_PyUFunc_O_O_method_full[reciprocal]" %}  # [osx]
+    {% set tests_to_skip = tests_to_skip + " or test_scalar_coercion_same_as_cast_and_assignment[float32]" %}  # [ppc64le]
+
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
