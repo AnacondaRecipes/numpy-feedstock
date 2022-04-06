@@ -99,7 +99,14 @@ outputs:
     # see: https://github.com/numpy/numpy/issues/20637
     # failure to raise FloatingPointError on osx for reciprocal
     {% set tests_to_skip = tests_to_skip + " or test_unary_PyUFunc_O_O_method_full[reciprocal]" %}  # [osx]
-    {% set tests_to_skip = tests_to_skip + " or test_scalar_coercion_same_as_cast_and_assignment[float32]" %}  # [ppc64le]
+    # any test that uses `sys.executable` has a chance to fail...
+    # this seems to be the related cause: https://github.com/conda/conda/issues/8305
+    # essentially older kernel versions + overlayfs = chance for corruption?
+    {% set tests_to_skip = tests_to_skip + " or test_sdot_bug_8577" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_import_lazy_import" %}     # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
 
     test:
       requires:
