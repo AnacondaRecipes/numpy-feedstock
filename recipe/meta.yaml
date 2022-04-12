@@ -47,6 +47,7 @@ outputs:
         - python
         - pip
         - cython >=0.29.21
+        - setuptools <60.0.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
@@ -75,6 +76,7 @@ outputs:
         - armpl  # [aarch64]
       host:
         - python
+        - setuptools <60.0.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
@@ -116,6 +118,7 @@ outputs:
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
+        - setuptools <60.0.0
         - pytest
         - hypothesis
         - {{ compiler('c') }}  # [not osx]
