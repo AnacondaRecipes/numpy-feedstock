@@ -1,4 +1,4 @@
-{% set version = "1.21.2" %}
+{% set version = "1.21.5" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 76af194fbc117934ec5bbe2ff15177adbd05aeed23f18ee209ed88edcd777e05
+  sha256: 1a7ee0ffb35dc7489aebe5185a483f4c43b0d2cf784c3c9940f975a7dde56506
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 0
+  number: 1
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
   skip: True  # [(blas_impl == 'openblas' and win) or py2k or py<37]
@@ -36,10 +36,13 @@ outputs:
     build:
       entry_points:
         - f2py = numpy.f2py.f2py2e:main  # [win]
+      missing_dso_whitelist:  # [s390x]
+        - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
-        - {{ compiler("c") }}
-        - armpl #[aarch64]
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - armpl  # [aarch64]
       host:
         - python
         - pip
@@ -61,11 +64,15 @@ outputs:
   # numpy is a metapackage that may include mkl_fft and mkl_random both of
   # which require numpy-base to build
   - name: numpy
+    build:
+      missing_dso_whitelist:  # [s390x]
+        - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
         # for runtime alignment
         - {{ compiler('c') }}
-        - armpl # [aarch64]
+        - {{ compiler('cxx') }}
+        - armpl  # [aarch64]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
@@ -89,12 +96,30 @@ outputs:
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
+    # see: https://github.com/numpy/numpy/issues/20637
+    # failure to raise FloatingPointError on osx for reciprocal
+    {% set tests_to_skip = tests_to_skip + " or test_unary_PyUFunc_O_O_method_full[reciprocal]" %}  # [osx]
+    # Arrays are not equal?:
+    # E            x: array(2.236068, dtype=float32)
+    # E            y: array(2.236068, dtype=float32)
+    {% set tests_to_skip = tests_to_skip + " or test_scalar_coercion_same_as_cast_and_assignment[float32]" %} # [ppc64le]
+    {% set tests_to_skip = tests_to_skip + " or test_memory_store" %} # [ppc64le]
+    # any test that uses `sys.executable` has a chance to fail...
+    # this seems to be the related cause: https://github.com/conda/conda/issues/8305
+    # essentially older kernel versions + overlayfs = chance for corruption?
+    {% set tests_to_skip = tests_to_skip + " or test_sdot_bug_8577" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_import_lazy_import" %}     # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - pytest
         - hypothesis
         - {{ compiler('c') }}  # [not osx]
+        - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
       commands:
@@ -108,8 +133,8 @@ outputs:
         - numpy.linalg.lapack_lite
 
 about:
-  home: http://numpy.scipy.org/
-  license: BSD 3-Clause
+  home: https://numpy.org/
+  license: BSD-3-Clause
   license_file: LICENSE.txt
   summary: Array processing for numbers, strings, records, and objects.
   description: |
