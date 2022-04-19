@@ -130,7 +130,7 @@ outputs:
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
-        - pytest -vvv --pyargs numpy --durations=0
+        - pytest -vvv --pyargs numpy --durations=0 || true
       imports:
         - numpy
         - numpy.linalg.lapack_lite
