@@ -16,10 +16,10 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 1
+  number: 2
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
-  skip: True  # [(blas_impl == 'openblas' and win) or py2k or py<37]
+  skip: True  # [(blas_impl == 'openblas' and win) or py<37 or py>311]
   force_use_keys:
     - python
 
@@ -46,8 +46,10 @@ outputs:
       host:
         - python
         - pip
-        - cython >=0.29.21
+        - packaging  # [osx and arm64]
+        - cython >=0.29.24
         - setuptools <60.0.0
+        - wheel 0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
@@ -76,7 +78,10 @@ outputs:
         - armpl  # [aarch64]
       host:
         - python
+        - packaging  # [osx and arm64]
+        - cython >=0.29.24
         - setuptools <60.0.0
+        - wheel 0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
@@ -133,7 +138,16 @@ outputs:
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
+        - numpy.core.multiarray
+        - numpy.core._multiarray_tests
+        - numpy.core.numeric
+        - numpy.core._operand_flag_tests
+        - numpy.core._struct_ufunc_tests
+        - numpy.core._rational_tests
+        - numpy.core.umath
+        - numpy.core._umath_tests
         - numpy.linalg.lapack_lite
+        - numpy.random.mtrand
 
 about:
   home: https://numpy.org/
