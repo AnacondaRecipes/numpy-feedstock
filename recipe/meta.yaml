@@ -19,6 +19,7 @@ build:
   number: 2
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
+  # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
   skip: True  # [(blas_impl == 'openblas' and win) or py<37 or py>311]
   force_use_keys:
     - python
@@ -35,7 +36,7 @@ outputs:
     script: install_base.bat  # [win]
     build:
       entry_points:
-        - f2py = numpy.f2py.f2py2e:main  # [win]
+        - f2py = numpy.f2py.f2py2e:main
       missing_dso_whitelist:  # [s390x]
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
@@ -49,7 +50,7 @@ outputs:
         - packaging  # [osx and arm64]
         - cython >=0.29.24
         - setuptools <60.0.0
-        - wheel 0.37.0
+        - wheel >=0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
@@ -81,7 +82,7 @@ outputs:
         - packaging  # [osx and arm64]
         - cython >=0.29.24
         - setuptools <60.0.0
-        - wheel 0.37.0
+        - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
