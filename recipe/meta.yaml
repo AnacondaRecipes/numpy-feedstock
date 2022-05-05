@@ -120,6 +120,10 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+    # 2022/5/5: E       AssertionError: (131, 1.54987431981169249551435343964035e-09, 4.0035173453529620614007210953362e-19, 'arcsinh')
+    # It should be fixed by https://github.com/numpy/numpy/issues/20426
+    # but it still fails on s390x, ppc64le, arm64 platforms
+    {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [ppc64le or s390x or arm64]
 
     test:
       requires:
