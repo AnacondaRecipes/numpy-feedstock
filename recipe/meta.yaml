@@ -124,6 +124,8 @@ outputs:
     # It should be fixed by https://github.com/numpy/numpy/issues/20426
     # but it still fails on s390x, ppc64le, arm64 platforms
     {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [ppc64le or s390x or arm64]
+    # On osx-arm64: FAILED core/tests/test_limited_api.py::test_limited_api - subprocess.CalledProcessor
+    {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [(osx and arm64)]
 
     test:
       requires:
