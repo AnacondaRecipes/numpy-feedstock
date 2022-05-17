@@ -1,4 +1,4 @@
-{% set version = "1.21.5" %}
+{% set version = "1.22.3" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 1a7ee0ffb35dc7489aebe5185a483f4c43b0d2cf784c3c9940f975a7dde56506
+  sha256: a906c0b4301a3d62ccf66d058fe779a65c1c34f6719ef2058f96e1856f48bca5
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -16,11 +16,11 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 2
+  number: 0
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
-  skip: True  # [(blas_impl == 'openblas' and win) or py<37 or py>311]
+  skip: True  # [(blas_impl == 'openblas' and win) or py<38]
   force_use_keys:
     - python
 
@@ -120,6 +120,12 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+    # 2022/5/5: E       AssertionError: (131, 1.54987431981169249551435343964035e-09, 4.0035173453529620614007210953362e-19, 'arcsinh')
+    # It should be fixed by https://github.com/numpy/numpy/issues/20426
+    # but it still fails on s390x, ppc64le, arm64 platforms
+    {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [ppc64le or s390x or arm64]
+    # On osx-arm64: FAILED core/tests/test_limited_api.py::test_limited_api - subprocess.CalledProcessor
+    {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [(osx and arm64)]
 
     test:
       requires:
@@ -148,6 +154,7 @@ outputs:
 about:
   home: https://numpy.org/
   license: BSD-3-Clause
+  lisense_family: BSD
   license_file: LICENSE.txt
   summary: Array processing for numbers, strings, records, and objects.
   description: |
