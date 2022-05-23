@@ -14,7 +14,7 @@ source:
     - 0004-disable-autorun-for-cmd-test.patch   # [win]
 
 build:
-  number: 0
+  number: 1
   skip: True  # [(blas_impl == 'openblas' and win) or py2k]
   force_use_keys:
     - python
