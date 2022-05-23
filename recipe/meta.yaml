@@ -59,6 +59,11 @@ build:
   force_use_keys:
     - python
 
+requirements:
+  build:
+    - patch  # [not win]
+    - m2-patch  # [win]
+
 outputs:
   # this one has all the actual contents
   - name: numpy-base
