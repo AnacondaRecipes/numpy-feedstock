@@ -120,6 +120,14 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+    # Specific to M1, possibly related:
+    # https://github.com/numpy/numpy/issues/21322
+    # https://github.com/numpy/numpy/issues/20023
+    {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}              # [osx and arm64]
+    # Seems to be a long-standing issue:
+    # https://github.com/numpy/numpy/issues/16046
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
 
     test:
       requires:
