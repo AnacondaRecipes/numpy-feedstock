@@ -35,8 +35,7 @@ outputs:
     requirements:
       build:
         - {{ compiler("c") }}
-        # libllvm10 10.0.0 build 1 has an issue building numpy, use build 0
-        - libllvm10 10.0.0 h21ff451_0  # [osx]
+        - {{ compiler("fortran") }}
       host:
         - python
         - pip
