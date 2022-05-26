@@ -73,8 +73,6 @@ outputs:
       build:
         - {{ compiler("c") }}
         - {{ compiler("fortran") }}
-        # HACK: need this for libquadmath.  Should fix the gcc package
-        - libgcc-ng                  # [linux]
       host:
         - cython
         - python
