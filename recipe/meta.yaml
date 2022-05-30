@@ -15,7 +15,7 @@ source:
 
 build:
   number: 1
-  skip: True  # [(blas_impl == 'openblas' and win) or py2k]
+  skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39]
   force_use_keys:
     - python
 
@@ -79,6 +79,9 @@ outputs:
     # Seems to fail with current version of blas for large numbers
     # https://github.com/conda-forge/numpy-feedstock/pull/179#issuecomment-569591828
     {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
+    # Unresolved issue around OpenBLAS:
+    # https://github.com/numpy/numpy/pull/18943
+    {% set tests_to_skip = tests_to_skip + " or test_nan" %}  # [linux64]
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
