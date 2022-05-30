@@ -3,6 +3,30 @@
 set -e
 
 # site.cfg is provided by blas devel packages (either mkl-devel or openblas-devel)
-cp $PREFIX/site.cfg site.cfg
+cp "${PREFIX}/site.cfg" site.cfg
+
+# For reasons unknown, numpy insists on using the system "gcc" for linking and
+# while doing so sets the sysroot to '/', which we undo below.
+if [ $(uname -s) = Linux ]; then
+    # Wrap the conda compiler in a script called "gcc".
+    cat << EOF > "${BUILD_PREFIX}/bin/gcc"
+#!/bin/bash
+
+for arg do
+    shift
+
+    # Remove -Wl,--sysroot=/ from the argument list
+    if [ "\$arg" = "-Wl,--sysroot=/" ]; then
+        continue
+    else
+        set -- "\$@" "\$arg"
+    fi
+done
+
+# Invoke the conda compiler with the modified argument list.
+exec "${BUILD_PREFIX}/bin/${BUILD}-gcc" "\$@"
+EOF
+    chmod +x "${BUILD_PREFIX}/bin/gcc"
+fi
 
 ${PYTHON} -m pip install --no-deps --ignore-installed -v .
