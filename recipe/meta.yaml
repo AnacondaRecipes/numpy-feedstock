@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 2
+  number: 3
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
@@ -120,6 +120,14 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+    # Specific to M1, possibly related:
+    # https://github.com/numpy/numpy/issues/21322
+    # https://github.com/numpy/numpy/issues/20023
+    {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}              # [osx and arm64]
+    # Seems to be a long-standing issue:
+    # https://github.com/numpy/numpy/issues/16046
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
 
     test:
       requires:
