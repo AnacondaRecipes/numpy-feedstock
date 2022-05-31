@@ -81,7 +81,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
     # Unresolved issue around OpenBLAS:
     # https://github.com/numpy/numpy/pull/18943
-    {% set tests_to_skip = tests_to_skip + " or test_nan" %}  # [linux64]
+    {% set tests_to_skip = tests_to_skip + " or test_nan" %}  # [linux]
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
