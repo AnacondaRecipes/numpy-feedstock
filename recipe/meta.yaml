@@ -90,6 +90,11 @@ outputs:
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
+    # Specific to M1, possibly related:
+    # https://github.com/numpy/numpy/issues/21322
+    # https://github.com/numpy/numpy/issues/20023
+    {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}              # [osx and arm64]
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
