@@ -95,6 +95,10 @@ outputs:
     # https://github.com/numpy/numpy/issues/20023
     {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
     {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}              # [osx and arm64]
+    # Upstream decided to skip these:
+    # https://github.com/numpy/numpy/issues/17635
+    {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_scalar_type" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_array_type" %}   # [osx and arm64]
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
