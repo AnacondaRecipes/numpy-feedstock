@@ -69,6 +69,9 @@ outputs:
   - name: numpy-base
     script: install_base.sh   # [unix]
     script: install_base.bat  # [win]
+    build:
+      ignore_run_exports:
+        - libgfortran5  # [osx]
     requirements:
       build:
         - {{ compiler("c") }}
