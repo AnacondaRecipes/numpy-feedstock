@@ -79,7 +79,7 @@ outputs:
       host:
         - cython
         - python
-        - setuptools
+        - setuptools  <50
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
@@ -165,7 +165,7 @@ outputs:
           - {{ compiler('cxx') }}
         host:
           - python
-          - setuptools
+          - setuptools  <50
           - mkl-devel  {{ mkl }}
           - cython
           - numpy-base  {{ numpy }}
