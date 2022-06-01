@@ -54,7 +54,7 @@ source:
   {% endif %}
 
 build:
-  number: 5
+  number: 4
   skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39]
   force_use_keys:
     - python
