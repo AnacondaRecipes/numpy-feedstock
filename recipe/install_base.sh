@@ -4,8 +4,15 @@ set -e
 
 # site.cfg is provided by blas devel packages (either mkl-devel or openblas-devel)
 case $( uname -m ) in
-aarch64) cp $RECIPE_DIR/aarch_site.cfg site.cfg;;
-*)       cp $PREFIX/site.cfg site.cfg;;
+    aarch64)
+        cp $RECIPE_DIR/aarch_site.cfg site.cfg
+        ;;
+    s390x)
+        export CFLAGS="$CFLAGS -march=z196"
+        ;;
+    *)
+        cp $PREFIX/site.cfg site.cfg
+        ;;
 esac
 
 # For reasons unknown, numpy insists on using the system "gcc" for linking and
