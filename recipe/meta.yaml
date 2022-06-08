@@ -12,6 +12,7 @@ source:
     - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
     - 0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
     - 0004-disable-autorun-for-cmd-test.patch   # [win]
+    - 0005-test-ctypeslib-py37.patch  # [win]
 
 build:
   number: 1
@@ -102,9 +103,9 @@ outputs:
     # https://github.com/numpy/numpy/issues/17635
     {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_scalar_type" %}  # [osx and arm64]
     {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_array_type" %}   # [osx and arm64]
-    # numpy's get_shared_lib_extension returns the plain .pyd extension without
-    # platform/version identifier under Python <3.8.
-    {% set tests_to_skip = tests_to_skip + " or test_ctypeslib" %}  # [win and py<38]
+    # Reported here but never resolved?
+    # https://github.com/numpy/numpy/issues/16046
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
