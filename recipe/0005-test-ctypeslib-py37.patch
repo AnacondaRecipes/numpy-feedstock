@@ -1,0 +1,15 @@
+diff -urN a/numpy/tests/test_ctypeslib.py b/numpy/tests/test_ctypeslib.py
+--- a/numpy/tests/test_ctypeslib.py	2020-09-03 22:22:06.428542900 +0300
++++ b/numpy/tests/test_ctypeslib.py	2022-06-08 15:37:00.730477760 +0300
+@@ -24,9 +24,9 @@
+         except OSError:
+             pass
+     if cdll is None:
+-        cdll = load_library('_multiarray_umath', np.core._multiarray_umath.__file__)
++        cdll = load_library('_multiarray_umath.cp37-win_amd64.pyd', np.core._multiarray_umath.__file__)
+     if test_cdll is None:
+-        test_cdll = load_library('_multiarray_tests', np.core._multiarray_tests.__file__)
++        test_cdll = load_library('_multiarray_testsi.cp37-win_amd64.pyd', np.core._multiarray_tests.__file__)
+ 
+     c_forward_pointer = test_cdll.forward_pointer
+ 

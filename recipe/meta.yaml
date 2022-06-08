@@ -12,7 +12,7 @@ source:
     - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
     - 0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
     - 0004-disable-autorun-for-cmd-test.patch   # [win]
-    - 0005-test-ctypeslib-py37.patch  # [win]
+    - 0005-test-ctypeslib-py37.patch  # [win and py<38]
 
 build:
   number: 1
