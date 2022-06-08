@@ -34,6 +34,8 @@ outputs:
         - f2py = numpy.f2py.f2py2e:main  # [win]
       ignore_run_exports:
         - libgfortran5  # [osx]
+      missing_dso_whitelist:
+        - '$RPATH/ld64.so.1'  # [s390x]
     requirements:
       build:
         - {{ compiler("c") }}
