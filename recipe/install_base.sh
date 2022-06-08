@@ -7,11 +7,16 @@ case $( uname -m ) in
     aarch64)
         cp $RECIPE_DIR/aarch_site.cfg site.cfg
         ;;
-    s390x)
-        export CFLAGS="$CFLAGS -march=z196"
-        ;;
     *)
         cp $PREFIX/site.cfg site.cfg
+        ;;
+esac
+
+# gcc default arch for s390x is z900 where we run into an internal compiler
+# error, using the slightly more modern z196 this doesn't happen.
+case $( uname -m ) in
+    s390x)
+        export CFLAGS="$CFLAGS -march=z196"
         ;;
 esac
 
