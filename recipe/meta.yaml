@@ -46,6 +46,7 @@ outputs:
       host:
         - python
         - pip
+        - setuptools  # [not win]
         - setuptools <=51  # [win]
         - cython
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
