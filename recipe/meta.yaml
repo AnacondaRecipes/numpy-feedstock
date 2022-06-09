@@ -181,7 +181,7 @@ outputs:
 
     test:
         commands:
-          - nosetests -v mkl_random || true  # [linux]
+          - nosetests -v mkl_random  # [linux]
         requires:
           - nose
           - numpy-base >=1.13
@@ -228,7 +228,7 @@ outputs:
 
     test:
         commands:
-          - nosetests -v mkl_fft || true  # [linux]
+          - nosetests -v mkl_fft  # [linux]
         requires:
           - nose
         imports:
