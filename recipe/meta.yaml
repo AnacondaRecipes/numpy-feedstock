@@ -168,7 +168,7 @@ outputs:
           - {{ compiler('cxx') }}
         host:
           - python
-          - setuptools  <50
+          - setuptools <=51  # [win]
           - mkl-devel  {{ mkl }}
           - cython
           - numpy-base  {{ numpy }}
@@ -214,7 +214,7 @@ outputs:
           - {{ compiler('cxx') }}
         host:
           - python
-          - setuptools
+          - setuptools <=51  # [win]
           - mkl-devel  {{ mkl }}
           - cython
           - numpy-base  {{ numpy }}
