@@ -89,7 +89,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
     # Unresolved issue around OpenBLAS:
     # https://github.com/numpy/numpy/pull/18943
-    {% set tests_to_skip = tests_to_skip + " or test_nan" %}  # [linux or osx]
+    {% set tests_to_skip = tests_to_skip + " or test_nan" %}  # [blas_impl == 'openblas' and (linux or osx)]
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
@@ -107,7 +107,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_array_type" %}   # [osx and arm64]
     # Reported here but never resolved?
     # https://github.com/numpy/numpy/issues/16046
-    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
