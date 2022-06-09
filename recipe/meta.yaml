@@ -55,7 +55,8 @@ source:
 
 build:
   number: 4
-  skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39]
+  # Note: 1.16 was never built for osx-arm64
+  skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39 or (osx and arm64)]
   force_use_keys:
     - python
 
