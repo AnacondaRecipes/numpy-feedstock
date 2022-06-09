@@ -77,9 +77,10 @@ outputs:
         - {{ compiler("c") }}
         - {{ compiler("fortran") }}
       host:
-        - cython
         - python
-        - setuptools  <50
+        - pip
+        - setuptools <=51  # [win]
+        - cython
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
