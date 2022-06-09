@@ -81,6 +81,7 @@ outputs:
       host:
         - python
         - pip
+        - setuptools  # [not win]
         - setuptools <=51  # [win]
         - cython
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -168,6 +169,7 @@ outputs:
           - {{ compiler('cxx') }}
         host:
           - python
+          - setuptools  # [not win]
           - setuptools <=51  # [win]
           - mkl-devel  {{ mkl }}
           - cython
@@ -214,6 +216,7 @@ outputs:
           - {{ compiler('cxx') }}
         host:
           - python
+          - setuptools  # [not win]
           - setuptools <=51  # [win]
           - mkl-devel  {{ mkl }}
           - cython
