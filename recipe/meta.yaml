@@ -150,8 +150,9 @@ outputs:
         - numpy
         - numpy.linalg.lapack_lite
     about:
-      home: http://numpy.scipy.org/
-      license: BSD 3-Clause
+      home: https://numpy.org/
+      license: BSD-3-Clause
+      license_family: BSD
       license_file: LICENSE.txt
       summary: 'Array processing for numbers, strings, records, and objects.'
       description: |
@@ -196,8 +197,9 @@ outputs:
           - mkl_random.mklrand
 
     about:
-        home: http://github.com/IntelPython/mkl_random
-        license: BSD 3-Clause
+        home: https://github.com/IntelPython/mkl_random
+        license: BSD-3-Clause
+        license_family: BSD
         license_file: mkl_random/LICENSE.txt
         description:
             NumPy-based implementation of random number generation sampling using Intel (R) Math Kernel Library,
@@ -243,8 +245,9 @@ outputs:
           - mkl_fft._scipy_fft
 
     about:
-        home: http://github.com/IntelPython/mkl_fft
-        license: BSD 3-Clause
+        home: https://github.com/IntelPython/mkl_fft
+        license: BSD-3-Clause
+        license_family: BSD
         license_file: LICENSE.txt
         description:
             NumPy-based implementation of Fast Fourier Transform using Intel (R) Math Kernel Library.
