@@ -12,12 +12,20 @@ source:
     - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
     - 0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
     - 0004-disable-autorun-for-cmd-test.patch   # [win]
+    # Loading .pyd files with a version/platform identifier doesn't work correctly
+    # with Python <38, this is not a regression, previous builds exhibit the same behavior.
+    - 0005-test-ctypeslib-py37.patch  # [win and py<38]
 
 build:
-  number: 0
-  skip: True  # [(blas_impl == 'openblas' and win) or py2k]
+  number: 1
+  skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39]
   force_use_keys:
     - python
+
+requirements:
+  build:
+    - patch  # [not win]
+    - m2-patch  # [win]
 
 outputs:
   # this one has all the actual contents
@@ -27,14 +35,19 @@ outputs:
     build:
       entry_points:
         - f2py = numpy.f2py.f2py2e:main  # [win]
+      ignore_run_exports:
+        - libgfortran5  # [osx]
+      missing_dso_whitelist:
+        - '$RPATH/ld64.so.1'  # [s390x]
     requirements:
       build:
         - {{ compiler("c") }}
-        # libllvm10 10.0.0 build 1 has an issue building numpy, use build 0
-        - libllvm10 10.0.0 h21ff451_0  # [osx]
+        - {{ compiler("fortran") }}
       host:
         - python
         - pip
+        - setuptools  # [not win]
+        - setuptools <=51  # [win]
         - cython
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
@@ -75,12 +88,27 @@ outputs:
     # Seems to fail with current version of blas for large numbers
     # https://github.com/conda-forge/numpy-feedstock/pull/179#issuecomment-569591828
     {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
+    # Unresolved issue around OpenBLAS:
+    # https://github.com/numpy/numpy/pull/18943
+    {% set tests_to_skip = tests_to_skip + " or test_nan" %}  # [blas_impl == 'openblas' and (linux or osx)]
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
+    # Specific to M1, possibly related:
+    # https://github.com/numpy/numpy/issues/21322
+    # https://github.com/numpy/numpy/issues/20023
+    {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}              # [osx and arm64]
+    # Upstream decided to skip these:
+    # https://github.com/numpy/numpy/issues/17635
+    {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_scalar_type" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_inplace_floor_division_array_type" %}   # [osx and arm64]
+    # Reported here but never resolved?
+    # https://github.com/numpy/numpy/issues/16046
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
@@ -100,8 +128,9 @@ outputs:
         - numpy.linalg.lapack_lite
 
 about:
-  home: http://numpy.scipy.org/
-  license: BSD 3-Clause
+  home: https://numpy.org/
+  license: BSD-3-Clause
+  license_family: BSD
   license_file: LICENSE.txt
   summary: Array processing for numbers, strings, records, and objects.
   description: |
