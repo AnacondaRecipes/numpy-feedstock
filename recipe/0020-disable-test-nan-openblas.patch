@@ -1,0 +1,11 @@
+diff -urN a/numpy/linalg/tests/test_linalg.py b/numpy/linalg/tests/test_linalg.py
+--- a/numpy/linalg/tests/test_linalg.py	2019-12-27 17:24:44.000000000 +0300
++++ b/numpy/linalg/tests/test_linalg.py	2022-06-10 10:50:52.570115076 +0300
+@@ -740,6 +740,7 @@
+         for A, p in itertools.product(As, p_neg):
+             linalg.cond(A, p)
+ 
++    @pytest.mark.skip(reason="Unresolved issue around OpenBLAS: https://github.com/numpy/numpy/pull/18943")
+     def test_nan(self):
+         # nans should be passed through, not converted to infs
+         ps = [None, 1, -1, 2, -2, 'fro']
