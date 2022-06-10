@@ -44,6 +44,9 @@ source:
       # Unresolved issue around OpenBLAS:
       # https://github.com/numpy/numpy/pull/18943
       - 0020-disable-test-nan-openblas.patch  # [blas_impl == 'openblas' and (linux or osx)]
+      # Reported here but never resolved?
+      # https://github.com/numpy/numpy/issues/16046
+      - 0021-disable-test-gcd-overflow-s390x.patch  # [s390x]
   {% if blas_impl == "mkl" and only_build_numpy_base != 'yes' %}
   # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
   - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
