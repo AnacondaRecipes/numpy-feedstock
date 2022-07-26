@@ -95,28 +95,21 @@ outputs:
         # - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
-    # Seems to fail with current version of blas for large numbers
-    # https://github.com/conda-forge/numpy-feedstock/pull/179#issuecomment-569591828
-     #{% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
-    # Only the complex256 system is failing, but I don't know how to skip it on its own
-    # see: https://github.com/numpy/numpy/issues/20637
-    # failure to raise FloatingPointError on osx for reciprocal
-     #{% set tests_to_skip = tests_to_skip + " or test_unary_PyUFunc_O_O_method_full[reciprocal]" %}  # [osx]
     # Arrays are not equal?:
     # E            x: array(2.236068, dtype=float32)
     # E            y: array(2.236068, dtype=float32)
      #{% set tests_to_skip = tests_to_skip + " or test_scalar_coercion_same_as_cast_and_assignment[float32]" %} # [ppc64le]
      #{% set tests_to_skip = tests_to_skip + " or test_memory_store" %} # [ppc64le]
+     #
     # any test that uses `sys.executable` has a chance to fail...
     # this seems to be the related cause: https://github.com/conda/conda/issues/8305
     # essentially older kernel versions + overlayfs = chance for corruption?
-     #{% set tests_to_skip = tests_to_skip + " or test_sdot_bug_8577" %}          # [ppc64le or s390x]
-     #{% set tests_to_skip = tests_to_skip + " or test_import_lazy_import" %}     # [ppc64le or s390x]
-     #{% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
-     #{% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
-     #{% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_sdot_bug_8577" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_import_lazy_import" %}     # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
     # 2022/5/5: E       AssertionError: (131, 1.54987431981169249551435343964035e-09, 4.0035173453529620614007210953362e-19, 'arcsinh')
-
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
