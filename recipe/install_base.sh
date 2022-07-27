@@ -22,7 +22,7 @@ esac
 
 case "$UNAME_M" in
     ppc64*)
-        /* Optimizations trigger compiler bug. */
+        # Optimizations trigger compiler bug.
         EXTRA_OPTS="--global-option=--cpu-dispatch=min"
         ;;
     *)
