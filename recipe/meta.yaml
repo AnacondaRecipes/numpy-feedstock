@@ -126,7 +126,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}  # [osx and arm64]
     {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
     # ?
-    {% set tests_to_skip = tests_to_skip + " or test_partial_iteration_cleanup" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_partial_iteration_cleanup" %}  # [osx and arm64 or (win64 and py=310)]
 
     test:
       requires:
