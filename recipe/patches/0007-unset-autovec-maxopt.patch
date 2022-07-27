@@ -1,0 +1,12 @@
+diff -urN a/numpy/distutils/ccompiler_opt.py b/numpy/distutils/ccompiler_opt.py
+--- a/numpy/distutils/ccompiler_opt.py	2022-07-09 02:01:04.708376200 +0300
++++ b/numpy/distutils/ccompiler_opt.py	2022-07-27 15:21:11.947621135 +0300
+@@ -1764,7 +1764,7 @@
+             ),
+             AUTOVEC = (
+                 self._parse_policy_autovec, None,
+-                ["MAXOPT"]
++                []
+             )
+         )
+         if hasattr(self, "parse_is_cached"):

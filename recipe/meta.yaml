@@ -14,6 +14,8 @@ source:
     - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
     - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
+    # Disable MAXOPT policy for vectorization causing an internal compiler error.
+    - patches/0007-unset-autovec-maxopt.patch           # [ppc64le]
 
 build:
   number: 0
