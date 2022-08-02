@@ -1,4 +1,4 @@
-{% set version = "1.22.3" %}
+{% set version = "1.23.1" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: a906c0b4301a3d62ccf66d058fe779a65c1c34f6719ef2058f96e1856f48bca5
+  sha256: d748ef349bfef2e1194b59da37ed5a29c19ea8d7e6342019921ba2ba4fd8b624
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -48,7 +48,7 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.30
         - setuptools <60.0.0
         - wheel >=0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -95,23 +95,12 @@ outputs:
         # - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
-    # Seems to fail with current version of blas for large numbers
-    # https://github.com/conda-forge/numpy-feedstock/pull/179#issuecomment-569591828
-    {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
-    # Flawed test when using MKL
-    # https://github.com/numpy/numpy/issues/16769
-    {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
-    # Only the complex256 system is failing, but I don't know how to skip it on its own
-    # https://github.com/numpy/numpy/issues/15243
-    {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
-    # see: https://github.com/numpy/numpy/issues/20637
-    # failure to raise FloatingPointError on osx for reciprocal
-    {% set tests_to_skip = tests_to_skip + " or test_unary_PyUFunc_O_O_method_full[reciprocal]" %}  # [osx]
     # Arrays are not equal?:
     # E            x: array(2.236068, dtype=float32)
     # E            y: array(2.236068, dtype=float32)
-    {% set tests_to_skip = tests_to_skip + " or test_scalar_coercion_same_as_cast_and_assignment[float32]" %} # [ppc64le]
-    {% set tests_to_skip = tests_to_skip + " or test_memory_store" %} # [ppc64le]
+     #{% set tests_to_skip = tests_to_skip + " or test_scalar_coercion_same_as_cast_and_assignment[float32]" %} # [ppc64le]
+     #{% set tests_to_skip = tests_to_skip + " or test_memory_store" %} # [ppc64le]
+     #
     # any test that uses `sys.executable` has a chance to fail...
     # this seems to be the related cause: https://github.com/conda/conda/issues/8305
     # essentially older kernel versions + overlayfs = chance for corruption?
@@ -121,11 +110,23 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
     {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
     # 2022/5/5: E       AssertionError: (131, 1.54987431981169249551435343964035e-09, 4.0035173453529620614007210953362e-19, 'arcsinh')
+    # Flawed test when using MKL
+    # https://github.com/numpy/numpy/issues/16769
+    {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
+    # https://github.com/numpy/numpy/issues/15243
+    {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [s390x or ppc64le]
     # It should be fixed by https://github.com/numpy/numpy/issues/20426
-    # but it still fails on s390x, ppc64le, arm64 platforms
-    {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [ppc64le or s390x or arm64]
+    # but it still fails on some platforms.
+    {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [s390x or ppc64le or (osx and arm64)]
     # On osx-arm64: FAILED core/tests/test_limited_api.py::test_limited_api - subprocess.CalledProcessor
-    {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [(osx and arm64)]
+    {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [osx and arm64]
+    # ?
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
+    # ?
+    {% set tests_to_skip = tests_to_skip + " or test_herm_cases" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_generalized_herm_cases" %}  # [osx and arm64]
+    # ?
+    {% set tests_to_skip = tests_to_skip + " or test_partial_iteration_cleanup" %}  # [osx or win64]
 
     test:
       requires:
@@ -161,7 +162,7 @@ about:
     NumPy is the fundamental package needed for scientific computing with Python.
   doc_url: https://docs.scipy.org/doc/numpy/reference/
   dev_url: https://github.com/numpy/numpy
-  dev_source_url: https://github.com/numpy/numpy/tree/master/doc
+  doc_source_url: https://github.com/numpy/numpy/tree/master/doc
 
 extra:
   recipe-maintainers:
