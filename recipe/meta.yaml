@@ -141,6 +141,7 @@ outputs:
         - nomkl  # [x86 and blas_impl != 'mkl']
       commands:
         - f2py -h
+        - pip check
       imports:
         - numpy
         - numpy.linalg.lapack_lite
