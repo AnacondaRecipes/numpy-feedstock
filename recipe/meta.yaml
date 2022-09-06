@@ -107,16 +107,16 @@ outputs:
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
         # - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
-   # {% set tests_to_skip = "_not_a_real_test" %}
+    {% set tests_to_skip = "_not_a_real_test" %}
     # Seems to fail with current version of blas for large numbers
     # https://github.com/conda-forge/numpy-feedstock/pull/179#issuecomment-569591828
-   # {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
+    {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
-   # {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
+    {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
     # Only the complex256 system is failing, but I don't know how to skip it on its own
     # https://github.com/numpy/numpy/issues/15243
-   # {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [ppc64le or aarch64 or s390x]
     # see: https://github.com/numpy/numpy/issues/20637
     # failure to raise FloatingPointError on osx for reciprocal
    # {% set tests_to_skip = tests_to_skip + " or test_unary_PyUFunc_O_O_method_full[reciprocal]" %}  # [osx]
@@ -128,11 +128,11 @@ outputs:
     # any test that uses `sys.executable` has a chance to fail...
     # this seems to be the related cause: https://github.com/conda/conda/issues/8305
     # essentially older kernel versions + overlayfs = chance for corruption?
-   # {% set tests_to_skip = tests_to_skip + " or test_sdot_bug_8577" %}          # [ppc64le or s390x]
-   # {% set tests_to_skip = tests_to_skip + " or test_import_lazy_import" %}     # [ppc64le or s390x]
-   # {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
-   # {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
-   # {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_sdot_bug_8577" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_import_lazy_import" %}     # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_full_reimport" %}          # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_pep338" %}                 # [ppc64le or s390x]
+    {% set tests_to_skip = tests_to_skip + " or test_no_typing_extensions" %}   # [ppc64le or s390x]
 
     test:
       requires:
