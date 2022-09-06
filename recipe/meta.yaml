@@ -132,18 +132,22 @@ outputs:
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
+        - cython >=0.29.30,<3.0
+        - wheel
         - setuptools <60.0.0
-        - pytest
-        - pytest-timeout  # added for testing
-        - pytest-xdist  # added for testing
-        - cffi  # added for testing
         - hypothesis
-        - pytz  # added for testing
+        - pytest
+        - pytz
+        - pytest-cov
+        # - pytest-timeout  # added for testing
+        # - pytest-xdist  # added for testing
+        - cffi  # [py<310]
+        - mypy
         - typing_extensions  # added for testing
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
-        - nomkl  # [x86 and blas_impl != 'mkl']
+        # - nomkl  # [x86 and blas_impl != 'mkl']
       commands:
         - f2py -h
         - pip check
