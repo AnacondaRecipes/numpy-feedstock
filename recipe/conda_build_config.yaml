@@ -3,9 +3,3 @@
 # mkl_fft and mkl_random, and then numpy.
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
 only_build_numpy_base: no
-c_compiler_version:        # [ppc64le]
-  - 8.2.0                  # [ppc64le]
-cxx_compiler_version:      # [ppc64le]
-  - 8.2.0                  # [ppc64le]
-fortran_compiler_version:  # [ppc64le]
-  - 8.2.0                  # [ppc64le]
