@@ -9,11 +9,11 @@ source:
   sha256: b78d00e48261fbbd04aa0d7427cf78d18401ee0abd89c7559bbf422e5b1c7d01
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
-    # - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
-    # - patches/0003-intel_init_mkl.patch                 # [blas_impl == "mkl"]
-    # - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
-    # - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
-    # - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
+    - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
+    - patches/0003-intel_init_mkl.patch                 # [blas_impl == "mkl"]
+    - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
+    - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
+    - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
   number: 0
