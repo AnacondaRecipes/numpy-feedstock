@@ -134,7 +134,12 @@ outputs:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
         - pytest
+        - pytest-timeout  # added for testing
+        - pytest-xdist  # added for testing
+        - cffi  # added for testing
         - hypothesis
+        - pytz  # added for testing
+        - typing_extensions  # added for testing
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
