@@ -144,15 +144,9 @@ outputs:
         - pytest
         - pytz
         - pytest-cov
-        # - pytest-timeout  # added for testing
-        # - pytest-xdist  # added for testing
         - cffi  # [py<310]
         - mypy
-        - typing_extensions  # added for testing
-        # - {{ compiler('c') }}  # [not osx]
-        # - {{ compiler('cxx') }}  # [not osx]
-        # - {{ compiler('fortran') }}  # [not osx]
-        # - nomkl  # [x86 and blas_impl != 'mkl']
+        - typing_extensions
       commands:
         - f2py -h
         - pip check
