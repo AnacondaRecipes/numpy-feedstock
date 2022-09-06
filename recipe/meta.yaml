@@ -149,9 +149,9 @@ outputs:
         - cffi  # [py<310]
         - mypy
         - typing_extensions  # added for testing
-        - {{ compiler('c') }}  # [not osx]
-        - {{ compiler('cxx') }}  # [not osx]
-        - {{ compiler('fortran') }}  # [not osx]
+        # - {{ compiler('c') }}  # [not osx]
+        # - {{ compiler('cxx') }}  # [not osx]
+        # - {{ compiler('fortran') }}  # [not osx]
         # - nomkl  # [x86 and blas_impl != 'mkl']
       commands:
         - f2py -h
