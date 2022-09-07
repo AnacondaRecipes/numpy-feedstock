@@ -151,7 +151,7 @@ outputs:
         - f2py -h
         - pip check
       imports:
-        - numpy 
+        - numpy
         - numpy.core.multiarray
         - numpy.core.numeric
         - numpy.core.umath
