@@ -137,16 +137,13 @@ outputs:
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
-        - cython >=0.29.30,<3.0
-        - wheel
-        - setuptools <60.0.0
         - hypothesis
+        - {{ compiler('c') }}  # [not osx]
+        - {{ compiler('cxx') }}  # [not osx]
+        - {{ compiler('fortran') }}  # [not osx]
         - pytest
-        - pytz
         - pytest-cov
-        - cffi  # [py<310]
-        - mypy
-        - typing_extensions
+        - pytest-xdist
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
