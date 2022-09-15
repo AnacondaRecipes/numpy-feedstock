@@ -91,7 +91,7 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-        # - mkl_umath  # [blas_impl == 'mkl']
+        - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
     # Seems to fail with current version of blas for large numbers
@@ -132,7 +132,7 @@ outputs:
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
-        - hypothesis =6.29.3
+        - hypothesis >=6.29.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
