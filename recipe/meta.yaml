@@ -92,7 +92,6 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-        # - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
     # Arrays are not equal?:
@@ -133,8 +132,8 @@ outputs:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
         - pytest
-        - pytest-cov   # added for testing
-        - pytest-xdist # added for testing
+        - pytest-cov
+        - pytest-xdist
         - hypothesis >=6.29.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
@@ -149,38 +148,6 @@ outputs:
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
-        - numpy.array_api                 # added for testing
-        - numpy.array_api.linalg          # added for testing
-        - numpy.ctypeslib                 # added for testing
-        - numpy.distutils                 # added for testing
-        - numpy.doc                       # added for testing
-        - numpy.doc.constants             # added for testing
-        - numpy.doc.ufuncs                # added for testing
-        - numpy.f2py                      # added for testing
-        - numpy.fft                       # added for testing
-        - numpy.lib                       # added for testing
-        - numpy.lib.mixins                # added for testing
-        - numpy.lib.recfunctions          # added for testing
-        - numpy.lib.scimath               # added for testing
-        - numpy.linalg                    # added for testing
-        - numpy.ma                        # added for testing
-        - numpy.ma.extras                 # added for testing
-        - numpy.ma.mrecords               # added for testing
-        - numpy.matlib                    # added for testing
-        - numpy.polynomial                # added for testing
-        - numpy.random                    # added for testing
-        - numpy.testing                   # added for testing
-        - numpy.typing                    # added for testing
-        - numpy.version                   # added for testing
-        - numpy.core._multiarray_tests    # added for testing
-        - numpy.core.numeric              # added for testing
-        - numpy.core._operand_flag_tests  # added for testing
-        - numpy.core._struct_ufunc_tests  # added for testing
-        - numpy.core._rational_tests      # added for testing
-        - numpy.core.umath                # added for testing
-        - numpy.core._umath_tests         # added for testing
-        - numpy.linalg.lapack_lite        # added for testing
-        - numpy.random.mtrand             # added for testing
         - numpy.core.multiarray
         - numpy.core.numeric
         - numpy.core.umath
