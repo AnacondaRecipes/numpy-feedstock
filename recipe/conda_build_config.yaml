@@ -4,5 +4,3 @@
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
 only_build_numpy_base: no
 
-mkl:
-  - 2021.*
