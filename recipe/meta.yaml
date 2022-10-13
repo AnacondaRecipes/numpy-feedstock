@@ -48,7 +48,7 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.30
+        - cython >=0.29.30,<3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -135,6 +135,7 @@ outputs:
         - pytest-cov
         - pytest-xdist
         - hypothesis >=6.29.3
+        - pytz >=2021.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
