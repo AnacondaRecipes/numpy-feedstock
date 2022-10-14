@@ -1,4 +1,4 @@
-{% set version = "1.23.3" %}
+{% set version = "1.23.1" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 51bf49c0cd1d52be0a240aa66f3458afc4b95d8993d2d04f0d91fa60c10af6cd
+  sha256: d748ef349bfef2e1194b59da37ed5a29c19ea8d7e6342019921ba2ba4fd8b624
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -48,7 +48,7 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.30,<3.0
+        - cython >=0.29.30
         - setuptools <60.0.0
         - wheel >=0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -92,6 +92,7 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
+        # - mkl_umath  # [blas_impl == 'mkl']
     {% endif %}
     {% set tests_to_skip = "_not_a_real_test" %}
     # Arrays are not equal?:
@@ -132,15 +133,11 @@ outputs:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
         - pytest
-        - pytest-cov
-        - pytest-xdist
-        - hypothesis >=6.29.3
-        - pytz >=2021.3
+        - hypothesis
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
-        - typing-extensions >=4.2.0
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
@@ -158,14 +155,14 @@ outputs:
 about:
   home: https://numpy.org/
   license: BSD-3-Clause
-  license_family: BSD
+  lisense_family: BSD
   license_file: LICENSE.txt
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://numpy.org/doc/stable/reference/
+  doc_url: https://docs.scipy.org/doc/numpy/reference/
   dev_url: https://github.com/numpy/numpy
-  doc_source_url: https://github.com/numpy/numpy/tree/main/doc 
+  doc_source_url: https://github.com/numpy/numpy/tree/master/doc
 
 extra:
   recipe-maintainers:
