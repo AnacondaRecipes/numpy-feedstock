@@ -147,6 +147,7 @@ outputs:
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export CPU_COUNT=4 # [linux and ppc64le]
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
