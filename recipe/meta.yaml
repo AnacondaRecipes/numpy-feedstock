@@ -1,4 +1,4 @@
-{% set version = "1.23.3" %}
+{% set version = "1.23.4" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 51bf49c0cd1d52be0a240aa66f3458afc4b95d8993d2d04f0d91fa60c10af6cd
+  sha256: ed2cc92af0efad20198638c69bb0fc2870a58dabfba6eb722c933b48556c686c
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 1
+  number: 0
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
@@ -141,11 +141,13 @@ outputs:
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
+        - mypy >=0.981
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export CPU_COUNT=4  # [linux and ppc64le]
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
