@@ -36,9 +36,9 @@ outputs:
     script: install_base.bat  # [win]
     build:
       entry_points:
-        - f2py = numpy.f2py.f2py2e:main
+        - f2py = numpy.f2py.f2py2e:main  # [win]
       missing_dso_whitelist:  # [s390x]
-        - $RPATH/ld64.so.1    # [s390x]
+  - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -135,6 +135,8 @@ outputs:
         - pytest-cov
         - pytest-xdist
         - hypothesis >=6.29.3
+        # workaround for python/cpython#98706
+        - importlib_metadata >=4.13  # [py==311]
         - pytz >=2021.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
@@ -152,6 +154,7 @@ outputs:
       imports:
         - numpy
         - numpy.core.multiarray
+        - numpy.core.multiarray_tests  #testing
         - numpy.core.numeric
         - numpy.core.umath
         - numpy.linalg.lapack_lite
