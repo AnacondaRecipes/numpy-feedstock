@@ -135,8 +135,6 @@ outputs:
         - pytest-cov
         - pytest-xdist
         - hypothesis >=6.29.3
-        # workaround for python/cpython#98706
-        - importlib_metadata >=4.13  # [py==311]
         - pytz >=2021.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
