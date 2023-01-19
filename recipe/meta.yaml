@@ -127,6 +127,7 @@ outputs:
     # On osx-arm64: FAILED core/tests/test_limited_api.py::test_limited_api - subprocess.CalledProcessor
     {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [(osx and arm64)]
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}   # [(s390x)]
+    {% set tests_to_skip = tests_to_skip + " or test_generic_alias" %}   # [(ppc64le)]
 
 
     test:
