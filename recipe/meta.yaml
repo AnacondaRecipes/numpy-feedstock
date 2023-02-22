@@ -137,7 +137,7 @@ about:
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://docs.scipy.org/doc/numpy/reference/
+  doc_url: https://numpy.org/doc
   dev_url: https://github.com/numpy/numpy
   dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
