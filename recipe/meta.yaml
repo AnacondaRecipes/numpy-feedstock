@@ -47,11 +47,11 @@ outputs:
       host:
         - python
         - pip
-        - setuptools  # [not win]
-        - setuptools <=51  # [win]
-        - cython
+        - cython  >=0.29.21,<3.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
+        - setuptools  <=52.0.0
+        - wheel  <=0.35.1
       run:
         - python
     # When building out the initial package set for a new Python version the
