@@ -9,6 +9,8 @@ c_compiler_version:        # [linux or osx]
 cxx_compiler_version:      # [linux or osx]
   - 11.2.0                 # [linux]
   - 12                     # [osx]
+c_compiler:                # [win]
+  - vs2015                 # [win]
 fortran_compiler_version:  # [linux or osx]
   - 11.2.0                 # [linux or osx]
 openblas:
