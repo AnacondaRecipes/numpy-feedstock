@@ -44,8 +44,8 @@ EOF
     chmod +x "${BUILD_PREFIX}/bin/gcc"
 fi
 
-PIP_ARGS="--no-deps --ignore-installed -v ."
-if [ ${target_platform} = "osx-64" ]; then
+PIP_ARGS="--no-deps --ignore-installed -v"
+if [[ "${target_platform}" == "osx-arm64" ]]; then
     PIP_ARGS="${PIP_ARGS} --no-use-pep517"
 fi
-${PYTHON} -m pip install ${PIP_ARGS}
+${PYTHON} -m pip install ${PIP_ARGS} .
