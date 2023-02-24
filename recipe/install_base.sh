@@ -45,6 +45,7 @@ EOF
 fi
 
 PIP_ARGS="--no-deps --ignore-installed -v"
+# wheels don't build on osx-arm64 with pep517
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     PIP_ARGS="${PIP_ARGS} --no-use-pep517"
 fi
