@@ -1,4 +1,4 @@
-{% set version = "1.19.2" %}
+{% set version = "1.19.5" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 74d0cf50aa28af81874aca3e67560945afd783b2a006913577d6cddc35a824a6
+  sha256: d1654047d75fb9d55cc3d46f312d5247eec5f4999039874d2f571bb8021d8f0b
   patches:
     - 0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - 0002-intel_mkl-version.patch  # [blas_impl == "mkl"]
@@ -17,7 +17,7 @@ source:
     - 0005-test-ctypeslib-py37.patch  # [win and py<38]
 
 build:
-  number: 1
+  number: 4
   # trigger 1
   skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39]
   force_use_keys:
@@ -47,11 +47,11 @@ outputs:
       host:
         - python
         - pip
-        - setuptools  # [not win]
-        - setuptools <=51  # [win]
-        - cython
+        - cython  >=0.29.21,<3.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
+        - setuptools  <49.2.0
+        - wheel  <=0.35.1
       run:
         - python
     # When building out the initial package set for a new Python version the
@@ -85,7 +85,8 @@ outputs:
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
     {% endif %}
-    {% set tests_to_skip = "_not_a_real_test" %}
+    # test_all_modules_are_expected_2: https://github.com/numpy/numpy/issues/22827
+    {% set tests_to_skip = "_not_a_real_test or test_all_modules_are_expected_2" %}
     # Seems to fail with current version of blas for large numbers
     # https://github.com/conda-forge/numpy-feedstock/pull/179#issuecomment-569591828
     {% set tests_to_skip = tests_to_skip + " or test_sincos_float32" %}  # [linux64]
@@ -136,7 +137,7 @@ about:
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://docs.scipy.org/doc/numpy/reference/
+  doc_url: https://numpy.org/doc
   dev_url: https://github.com/numpy/numpy
   dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
