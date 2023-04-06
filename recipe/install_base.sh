@@ -21,10 +21,9 @@ case "$UNAME_M" in
 esac
 
 case "$UNAME_M" in
-    s390x*)
-        # Try to disable z14.
-        CFLAGS="-march=native"
-        CXXFLAGS="-march=native"
+    ppc64*)
+        # Optimizations trigger compiler bug.
+        EXTRA_OPTS="--no-use-pep517 --global-option=build --global-option=--cpu-dispatch=min"
         ;;
     *)
         EXTRA_OPTS=""
