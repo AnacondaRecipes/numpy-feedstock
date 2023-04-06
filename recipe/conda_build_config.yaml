@@ -3,3 +3,9 @@
 # mkl_fft and mkl_random, and then numpy.
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
 only_build_numpy_base: no
+
+# Use gcc 9 for s390x
+c_compiler_version:            # [s390x]
+  - 9                          # [s390x]
+cxx_compiler_version:          # [s390x]
+  - 9                          # [s390x]
