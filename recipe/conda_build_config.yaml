@@ -4,8 +4,14 @@
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
 only_build_numpy_base: no
 
-# Use gcc 9 for s390x
-c_compiler_version:            # [s390x]
+# Use gcc 9 for s390x (due to a compiler bug with gcc 11), along with the same fortran compiler version.
+# Remove this when gcc 12 is introduced. Also use VS2019 for Windows, because of a few directives
+# not available in older versions.
+c_compiler_version:            # [s390x or win]
   - 9                          # [s390x]
-cxx_compiler_version:          # [s390x]
+  - vs2019                     # [win]
+cxx_compiler_version:          # [s390x or win]
+  - 9                          # [s390x]
+  - vs2019                     # [win]
+fortran_compiler_version:      # [s390x]
   - 9                          # [s390x]
