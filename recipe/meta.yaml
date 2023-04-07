@@ -43,6 +43,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }} 
         - armpl  # [aarch64]
       host:
         - python
@@ -76,6 +77,7 @@ outputs:
         # for runtime alignment
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }} 
         - armpl  # [aarch64]
       host:
         - python
