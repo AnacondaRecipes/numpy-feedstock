@@ -2,7 +2,7 @@
 # recommendation is to build numpy-base but not numpy, then build
 # mkl_fft and mkl_random, and then numpy.
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
-only_build_numpy_base: yes
+only_build_numpy_base: no
 
 # Use gcc 9 for s390x (due to a compiler bug with gcc 11), along with the same fortran compiler version.
 # Remove this when gcc 12 is introduced. Also use VS2019 for Windows, because of a few directives
