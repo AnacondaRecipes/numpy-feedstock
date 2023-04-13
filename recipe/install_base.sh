@@ -25,6 +25,11 @@ case "$UNAME_M" in
         # Optimizations trigger compiler bug.
         EXTRA_OPTS="--no-use-pep517 --global-option=build --global-option=--cpu-dispatch=min"
         ;;
+    s390x*)
+        # gcc 11 has issue with vectorization on s390x
+        export CFLAGS="${CFLAGS} -mno-vx"
+        export CXXFLAGS="${CXXFLAGS} -mno-vx"
+        ;;
     *)
         EXTRA_OPTS=""
         ;;
