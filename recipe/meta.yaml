@@ -1,4 +1,4 @@
-{% set version = "1.23.5" %}
+{% set version = "1.24.2" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 1b1766d6f397c18153d40015ddfc79ddb715cabadc04d2d228d4e5a8bc4ded1a 
+  sha256: 003a9f530e880cb2cd177cba1af7220b9aa42def9c4afc2a2fc3ee6be7eb2b22  
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -17,10 +17,9 @@ source:
 
 build:
   number: 0
-  # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
-  # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
-  # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
-  skip: True  # [(blas_impl == 'openblas' and win) or py<38]
+  # numpy 1.24.2 no longer supports Python 3.7: https://numpy.org/devdocs/release/1.24.0-notes.html
+  # "This release supports Python versions 3.8-3.11"
+  skip: True  # [(blas_impl == 'openblas' and win)]
   force_use_keys:
     - python
 
@@ -114,6 +113,13 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [s390x or ppc64le]
+    # https://github.com/numpy/numpy/issues/3858 - could be related
+    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x or ppc64le]
+
+    #skip simd tests because  -mno-vx option for s390
+    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
+
+
     # It should be fixed by https://github.com/numpy/numpy/issues/20426
     # but it still fails on some platforms.
     {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [s390x or ppc64le or (osx and arm64)]
