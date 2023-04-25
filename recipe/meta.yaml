@@ -114,7 +114,7 @@ outputs:
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [s390x or ppc64le]
     # https://github.com/numpy/numpy/issues/3858 - could be related
-    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x or ppc64le or linux64]
+    # {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x or ppc64le or linux64]
 
     #skip simd tests because  -mno-vx option for s390
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
