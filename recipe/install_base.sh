@@ -19,7 +19,7 @@ case "$UNAME_M" in
         # gcc 11 has issue with vectorization on s390x
         export CFLAGS="${CFLAGS} -mno-vx"
         export CXXFLAGS="${CXXFLAGS} -mno-vx"
-        cp $RECIPE_DIR/s390x_site.cfg site.cfg
+        cp $PREFIX/site.cfg site.cfg
         ;;
     *)
         cp $PREFIX/site.cfg site.cfg
