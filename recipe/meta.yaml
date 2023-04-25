@@ -1,4 +1,4 @@
-{% set version = "1.24.2" %}
+{% set version = "1.24.3" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 003a9f530e880cb2cd177cba1af7220b9aa42def9c4afc2a2fc3ee6be7eb2b22  
+  sha256: ab344f1bf21f140adab8e47fdbc7c35a477dc01408791f8ba00d018dd0bc5155  
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -47,7 +47,7 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.30,<3.0
+        - cython >=0.29.30, <3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -79,7 +79,7 @@ outputs:
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.30, <3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
@@ -114,7 +114,7 @@ outputs:
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [s390x or ppc64le]
     # https://github.com/numpy/numpy/issues/3858 - could be related
-    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x or ppc64le]
+    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x or ppc64le or linux64]
 
     #skip simd tests because  -mno-vx option for s390
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
