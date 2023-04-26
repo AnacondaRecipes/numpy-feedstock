@@ -15,6 +15,12 @@ case "$UNAME_M" in
     aarch64)
         cp $RECIPE_DIR/aarch_site.cfg site.cfg
         ;;
+    s390x*)
+        # gcc 11 has issue with vectorization on s390x
+        export CFLAGS="${CFLAGS} -mno-vx"
+        export CXXFLAGS="${CXXFLAGS} -mno-vx"
+        cp $PREFIX/site.cfg site.cfg
+        ;;
     *)
         cp $PREFIX/site.cfg site.cfg
         ;;
@@ -30,4 +36,4 @@ case "$UNAME_M" in
         ;;
 esac
 
-${PYTHON} -m pip install --no-deps --ignore-installed $EXTRA_OPTS -v .
+${PYTHON} -m pip install --no-deps  --no-build-isolation --ignore-installed $EXTRA_OPTS -v .
