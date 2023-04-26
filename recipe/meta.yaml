@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 0
+  number: 1
   # numpy 1.24.2 no longer supports Python 3.7: https://numpy.org/devdocs/release/1.24.0-notes.html
   # "This release supports Python versions 3.8-3.11"
   skip: True  # [(blas_impl == 'openblas' and win)]
