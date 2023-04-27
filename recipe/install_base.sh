@@ -44,7 +44,7 @@ EOF
     chmod +x "${BUILD_PREFIX}/bin/gcc"
 fi
 
-PIP_ARGS="--no-deps --ignore-installed -v"
+PIP_ARGS="--no-deps --no-deps --no-build-isolation --ignore-installed -v"
 # wheels don't build on osx-arm64 with pep517
 if [[ "${target_platform}" == "osx-arm64" ]]; then
     PIP_ARGS="${PIP_ARGS} --no-use-pep517"
