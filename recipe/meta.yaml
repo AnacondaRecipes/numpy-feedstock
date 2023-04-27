@@ -1,10 +1,5 @@
 {% set name = "numpy" %}
 {% set version = "1.16.6" %}
-{% set mkl_random_version = "1.2.1" %}
-{% set mkl_random_buildnumber = 1 %}
-# this is the latest version of mkl_fft I could find that supported numpy 1.16 through testing.
-{% set mkl_fft_version = "1.2.1" %}
-{% set mkl_fft_buildnumber = 1 %}
 
 package:
   name: numpy_and_dev
@@ -121,8 +116,8 @@ outputs:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
-        - {{ pin_subpackage("mkl_fft") }}  # [blas_impl == 'mkl']
-        - {{ pin_subpackage("mkl_random") }} # [blas_impl == 'mkl' and (not win or vc>=14)]
+        - mkl_fft  # [blas_impl == 'mkl']
+        - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
     {% endif %}
 
     test:
