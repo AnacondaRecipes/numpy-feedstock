@@ -9,5 +9,5 @@ c_compiler:    # [win]
 cxx_compiler:  # [win]
   - vs2019     # [win]
 
-  mkl:
+mkl:
   - 2023.*
