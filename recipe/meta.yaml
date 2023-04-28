@@ -124,6 +124,8 @@ outputs:
     # behaviour change in MKL 2022, see
     # https://github.com/numpy/numpy/issues/18914
     {% set tests_to_skip = tests_to_skip + " or (test_linalg and TestCond and test_nan)" %}
+    # warnings.filterwarnings("ignore", ...) from patch 0018 fails test_warning_calls
+    {% set tests_to_skip = tests_to_skip + " or test_warning_calls" %}
 
     test:
       requires:
