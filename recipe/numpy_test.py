@@ -28,5 +28,8 @@ if sys.platform == 'darwin':
 elif sys.platform.startswith('linux'):
     os.environ['LDFLAGS'] = ' '.join((os.getenv('LDFLAGS', ''), '-shared'))
     os.environ['FFLAGS'] = ' '.join((os.getenv('FFLAGS', ''), '-Wl,-shared'))
-result = numpy.test()
+
+# behaviour change in MKL 2022, see
+# https://github.com/numpy/numpy/issues/18914
+result = numpy.test(extra_argv=['-k not ( (test_linalg and TestCond and test_nan) )'])
 sys.exit(not result)
