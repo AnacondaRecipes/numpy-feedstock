@@ -1,10 +1,5 @@
 {% set name = "numpy" %}
 {% set version = "1.16.6" %}
-{% set mkl_random_version = "1.2.1" %}
-{% set mkl_random_buildnumber = 1 %}
-# this is the latest version of mkl_fft I could find that supported numpy 1.16 through testing.
-{% set mkl_fft_version = "1.2.1" %}
-{% set mkl_fft_buildnumber = 1 %}
 
 package:
   name: numpy_and_dev
@@ -47,20 +42,9 @@ source:
       # Reported here but never resolved?
       # https://github.com/numpy/numpy/issues/16046
       - 0021-disable-test-gcd-overflow-s390x.patch  # [s390x]
-  {% if blas_impl == "mkl" and only_build_numpy_base != 'yes' %}
-  # because of the cyclical nature of numpy and mkl_fft/mkl_random, they all need to be built in this one recipe
-  - url: https://github.com/IntelPython/mkl_random/archive/v{{mkl_random_version}}.tar.gz
-    sha256: 722d3e383a1501749a7ba1f759e7cd1e1ecd7b0298fe6f7591e17102cf67484c
-    folder: mkl_random
-    patches:                                                        # [win]
-      - mkl_random_patches/0001-removing-gcc-pragma-windows.patch   # [win]
-  - url: https://github.com/IntelPython/mkl_fft/archive/v{{mkl_fft_version}}.tar.gz
-    sha256: 623204eb896b78d741080f667cb22cba96713677ffa6fe93a97d7f7bb6815697
-    folder: mkl_fft
-  {% endif %}
 
 build:
-  number: 4
+  number: 5
   # Note: 1.16 was never built for osx-arm64
   skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39 or (osx and arm64)]
   force_use_keys:
@@ -132,12 +116,21 @@ outputs:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
-        - {{ pin_subpackage("mkl_fft") }}  # [blas_impl == 'mkl']
-        - {{ pin_subpackage("mkl_random") }} # [blas_impl == 'mkl' and (not win or vc>=14)]
+        - mkl_fft  # [blas_impl == 'mkl']
+        - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
     {% endif %}
 
+    {% set tests_to_skip = "_not_a_real_test" %}
+    # behaviour change in MKL 2022, see
+    # https://github.com/numpy/numpy/issues/18914
+    {% set tests_to_skip = tests_to_skip + " or (test_linalg and TestCond and test_nan)" %}
+    # behaviour change in MKL 2022? 
+    # Arrays are not equal x: array([ 55, 145, 235,  69], dtype=uint8) vs y: array([ 55, 145, 235, 255], dtype=uint8)
+    {% set tests_to_skip = tests_to_skip + " or (test_einsum_sums_uint8)" %} # [osx and blas_impl == 'mkl']
+    # warnings.filterwarnings("ignore", ...) from patch 0018 fails test_warning_calls
+    {% set tests_to_skip = tests_to_skip + " or test_warning_calls" %}
+
     test:
-      script: numpy_test.py
       requires:
         - pytest
         - {{ compiler('c') }}
@@ -146,9 +139,13 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
+        - export OPENBLAS_NUM_THREADS=1  # [unix]
+        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - pytest --verbose --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
         - numpy.linalg.lapack_lite
+
     about:
       home: https://numpy.org/
       license: BSD-3-Clause
@@ -160,101 +157,6 @@ outputs:
       doc_url: https://docs.scipy.org/doc/numpy-{{ version }}/reference/
       dev_url: https://github.com/numpy/numpy
       dev_source_url: https://github.com/numpy/numpy/tree/master/doc
-
-  {% if blas_impl == "mkl" %}
-  - name: mkl_random
-    version: {{ mkl_random_version }}
-    script: install_mkl_extra.sh   # [not win]
-    script: install_mkl_extra.bat  # [win]
-    build:
-        number: {{mkl_random_buildnumber}}
-        # not compatible with vs2008.
-        skip: True  # [blas_impl != "mkl" or (win and vc<14)]
-
-    requirements:
-        build:
-          - {{ compiler('c') }}
-          - {{ compiler('cxx') }}
-        host:
-          - python
-          - setuptools  # [not win]
-          - setuptools <=51  # [win]
-          - mkl-devel  {{ mkl }}
-          - cython
-          - numpy-base  {{ numpy }}
-        run:
-          - python
-          - {{ pin_compatible("numpy-base") }}
-
-    test:
-        commands:
-          - nosetests -v mkl_random  # [linux]
-        requires:
-          - nose
-          - numpy-base >=1.13
-        imports:
-          - mkl_random
-          - mkl_random.mklrand
-
-    about:
-        home: https://github.com/IntelPython/mkl_random
-        license: BSD-3-Clause
-        license_family: BSD
-        license_file: mkl_random/LICENSE.txt
-        description:
-            NumPy-based implementation of random number generation sampling using Intel (R) Math Kernel Library,
-            mirroring numpy.random, but exposing all choices of sampling algorithms available in MKL.
-        summary:
-            Intel (R) MKL-powered package for sampling from common probability distributions into NumPy arrays.
-
-  - name: mkl_fft
-    version: {{ mkl_fft_version }}
-    script: install_mkl_extra.sh   # [not win]
-    script: install_mkl_extra.bat  # [win]
-    source:
-        url: https://github.com/IntelPython/mkl_fft/archive/v{{mkl_fft_version}}.tar.gz
-        sha256: 3c7ed29e203c5b664ecafb11d767d62f9cae4aa56f9a95737e121192a66673bf
-
-    build:
-      number: {{ mkl_fft_buildnumber }}
-      skip: True  # [blas_impl != "mkl"]
-
-    requirements:
-        build:
-          - {{ compiler('c') }}
-          - {{ compiler('cxx') }}
-        host:
-          - python
-          - setuptools  # [not win]
-          - setuptools <=51  # [win]
-          - mkl-devel  {{ mkl }}
-          - cython
-          - numpy-base  {{ numpy }}
-        run:
-          - python
-          - {{ pin_compatible("numpy-base") }}
-
-    test:
-        commands:
-          - nosetests -v mkl_fft  # [linux]
-        requires:
-          - nose
-        imports:
-          - mkl_fft
-          - mkl_fft._numpy_fft
-          - mkl_fft._scipy_fft
-
-    about:
-        home: https://github.com/IntelPython/mkl_fft
-        license: BSD-3-Clause
-        license_family: BSD
-        license_file: LICENSE.txt
-        description:
-            NumPy-based implementation of Fast Fourier Transform using Intel (R) Math Kernel Library.
-            Supports in-place and out-of-place, 1D and ND complex FFT on arrays of single and double precision
-            with arbitrary memory layout, so long as array strides are multiples of its itemsize.
-        summary: NumPy-based implementation of Fast Fourier Transform using Intel (R) Math Kernel Library.
-  {% endif %}
 
 extra:
   recipe-maintainers:

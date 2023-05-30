@@ -3,7 +3,6 @@
 set -e
 
 cp $PREFIX/site.cfg site.cfg
-cp $RECIPE_DIR/test_fft.py numpy/fft/tests
 
 # gcc default arch for s390x is z900 where we run into an internal compiler
 # error, using the slightly more modern z196 this doesn't happen.
