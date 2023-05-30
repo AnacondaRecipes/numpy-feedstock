@@ -8,4 +8,4 @@ aarch64) cp $PREFIX/aarch_site.cfg site.cfg;;
 *)       cp $PREFIX/site.cfg site.cfg;;
 esac
 
-${PYTHON} -m pip install --no-deps --ignore-installed -v .
+${PYTHON} -m pip install --no-deps --no-build-isolation --ignore-installed -v .
