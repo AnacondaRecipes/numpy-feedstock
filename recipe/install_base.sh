@@ -30,4 +30,4 @@ case "$UNAME_M" in
         ;;
 esac
 
-${PYTHON} -m pip install --no-deps --ignore-installed $EXTRA_OPTS -v .
+${PYTHON} -m pip install --no-deps --no-build-isolation --ignore-installed $EXTRA_OPTS -v .
