@@ -17,8 +17,7 @@ source:
     - 0005-test-ctypeslib-py37.patch  # [win and py<38]
 
 build:
-  number: 4
-  # trigger 1
+  number: 5
   skip: True  # [(blas_impl == 'openblas' and win) or py<36 or py>39]
   force_use_keys:
     - python
@@ -57,10 +56,7 @@ outputs:
     # When building out the initial package set for a new Python version the
     # recommendataion is to build numpy-base but not numpy, then build
     # mkl_fft and mkl_random, and then numpy.
-    # The false line will build numpy-base only
-    # {% if false %}
-    # The true line will build numpy-base and numpy
-    {% if true %}
+    {% if only_build_numpy_base != 'yes' %}
     test:
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
@@ -111,6 +107,12 @@ outputs:
     # Reported here but never resolved?
     # https://github.com/numpy/numpy/issues/16046
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
+    # behaviour change in MKL 2022, see
+    # https://github.com/numpy/numpy/issues/18914
+    {% set tests_to_skip = tests_to_skip + " or (test_linalg and TestCond and test_nan)" %}
+    # behaviour change in MKL 2022? 
+    # Arrays are not equal x: array([ 55, 145, 235,  69], dtype=uint8) vs y: array([ 55, 145, 235, 255], dtype=uint8)
+    {% set tests_to_skip = tests_to_skip + " or (test_einsum_sums_uint8)" %} # [osx and blas_impl == 'mkl']
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
