@@ -82,9 +82,10 @@ outputs:
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.30,<3.0
-        - setuptools <60.0.0
-        - wheel >=0.37.0
+        - cython >=0.29.34,<3.0
+        - setuptools <60.0.0  # [py<=311]
+        - meson-python >=0.10.0 # [py>=312]
+        - wheel
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
