@@ -1,0 +1,32 @@
+From a7218a2df4164b56ffddfb14edd322fe94ab179e Mon Sep 17 00:00:00 2001
+From: Charles Bousseau <cbousseau@anaconda.com>
+Date: Wed, 14 Jun 2023 11:31:27 -0400
+Subject: [PATCH] enable meson build
+See: https://github.com/numpy/numpy/blob/v1.25.0rc1/building_with_meson.md
+---
+ pyproject.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 759b538fb..6df577847 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -4,13 +4,13 @@
+ #build-backend = "mesonpy"
+ requires = [
+     # setuptools, wheel and Cython are needed for the setup.py based build
+-    "setuptools==59.2.0",
++    # "setuptools==59.2.0",
+     # `wheel` is needed for non-isolated builds, given that `meson-python`
+     # doesn't list it as a runtime requirement (at least in 0.11.0) - it's
+     # likely to be removed as a dependency in meson-python 0.12.0.
+     "wheel==0.38.1",
+     "Cython>=0.29.34,<3.0",
+-#    "meson-python>=0.10.0",
++    "meson-python>=0.10.0",
+ ]
+ 
+ #[project]
+-- 
+2.32.1 (Apple Git-133)
+
