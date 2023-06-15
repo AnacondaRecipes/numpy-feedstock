@@ -99,6 +99,23 @@ outputs:
 
     {% set tests_to_skip = "_not_a_real_test" %}
 
+    # Flawed test when using MKL
+    # https://github.com/numpy/numpy/issues/16769
+    {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
+    # https://github.com/numpy/numpy/issues/15243
+    {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [s390x]
+    # https://github.com/numpy/numpy/issues/3858 - could be related
+    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x]
+
+    #skip simd tests because  -mno-vx option for s390
+    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
+
+    # It should be fixed by https://github.com/numpy/numpy/issues/20426
+    # but it still fails on some platforms.
+    {% set tests_to_skip = tests_to_skip + " or test_new_policy" %}   # [s390x]
+    # ?
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
+    
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
