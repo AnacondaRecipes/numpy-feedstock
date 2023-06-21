@@ -1,4 +1,4 @@
-{% set version = "1.25.0rc1" %}
+{% set version = "1.25.0" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 224e8862a1cd357eede831b270b9e6c51d2cbc2bb5cc2e2b8d0c76d52cbd1edc  
+  sha256: f1accae9a28dc3cda46a91de86acf69de0d1b5f4edd44a9b0c3ceb8036dfff19  
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -14,7 +14,7 @@ source:
     - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
     - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
-    - patches/0007-enable-meson-build.patch             # [py>311] https://github.com/numpy/numpy/blob/v1.25.0rc1/building_with_meson.md
+    - patches/0007-enable-meson-build.patch             # [py>311] https://github.com/numpy/numpy/blob/v1.25.0/building_with_meson.md
 
 build:
   number: 0
