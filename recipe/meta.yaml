@@ -48,7 +48,6 @@ outputs:
       host:
         - python
         - pip
-        - packaging  # [osx and arm64]
         - cython >=0.29.34,<3.0
         - setuptools <60.0.0  # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
@@ -81,7 +80,6 @@ outputs:
         - armpl  # [aarch64]
       host:
         - python
-        - packaging  # [osx and arm64]
         - cython >=0.29.34,<3.0
         - setuptools <60.0.0  # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
