@@ -14,7 +14,7 @@ source:
     - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
     - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
-    - patches/0007-enable-meson-build.patch             # [py>311] https://github.com/numpy/numpy/blob/v1.25.0/building_with_meson.md
+    - patches/0007-enable-meson-build.patch             # [py>=312] https://github.com/numpy/numpy/blob/v1.25.0/building_with_meson.md
 
 build:
   number: 0
@@ -49,8 +49,9 @@ outputs:
         - python
         - pip
         - cython >=0.29.34,<3.0
-        - setuptools <60.0.0  # [py<=311]
+        - setuptools <60.0.0    # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
+        - meson >=1.1.0         # [py>=312]
         - wheel
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
@@ -63,8 +64,8 @@ outputs:
     {% if only_build_numpy_base != 'yes' %}
     test:
       commands:
-        - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
-        - IF NOT EXIST %SP_DIR%\numpy\distutils\site.cfg exit 1  # [win]
+        - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix and py<=311]
+        - IF NOT EXIST %SP_DIR%\numpy\distutils\site.cfg exit 1  # [win and py<=311]
 
   # numpy is a metapackage that may include mkl_fft and mkl_random both of
   # which require numpy-base to build
@@ -81,8 +82,9 @@ outputs:
       host:
         - python
         - cython >=0.29.34,<3.0
-        - setuptools <60.0.0  # [py<=311]
+        - setuptools <60.0.0    # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
+        - meson >=1.1.0         # [py>=312]
         - wheel
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
