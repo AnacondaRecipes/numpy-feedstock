@@ -50,9 +50,9 @@ outputs:
         - pip
         - cython >=0.29.34,<3.0
         - setuptools <60.0.0    # [py<=311]
+        - wheel                 # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
         - meson >=1.1.0         # [py>=312]
-        - wheel
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
@@ -83,9 +83,9 @@ outputs:
         - python
         - cython >=0.29.34,<3.0
         - setuptools <60.0.0    # [py<=311]
+        - wheel                 # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
         - meson >=1.1.0         # [py>=312]
-        - wheel
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
