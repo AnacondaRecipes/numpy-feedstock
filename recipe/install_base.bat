@@ -1,6 +1,3 @@
-:: site.cfg should not be defined here.  It is provided by blas devel packages (either mkl-devel or openblas-devel)
-
-COPY %PREFIX%\site.cfg site.cfg
 
 %PYTHON% -m pip install --no-deps --ignore-installed --no-build-isolation -v .
 if errorlevel 1 exit 1

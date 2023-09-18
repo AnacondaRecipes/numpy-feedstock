@@ -1,4 +1,4 @@
-{% set version = "1.25.2" %}
+{% set version = "1.26.0" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,29 +6,24 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: fd608e19c8d7c55021dffd43bfe5492fab8cc105cc8986f813f8c3c048b38760  
-  patches:
-    - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
+  sha256: f93fc78fe8bf15afe2b8d6b6499f1c73953169fad1e9a8dd086cdff3190e7fdf  
+  patches:                                              # [blas_impl == "mkl"]
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
     - patches/0003-intel_init_mkl.patch                 # [blas_impl == "mkl"]
-    - patches/0004-disable-autorun-for-cmd-test.patch   # [win]
-    - patches/0005-array_coercion_fix.patch             # [blas_impl == "mkl" and win]
-    - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
-    - patches/0007-enable-meson-build.patch             # [py>=312] https://github.com/numpy/numpy/blob/v1.25.0/building_with_meson.md
 
 build:
   number: 0
-  # numpy 1.25 no longer supports Python 3.8: https://numpy.org/devdocs/release/1.25.0-notes.html
-  # "This release supports Python versions 3.9-3.11"
+  # numpy 1.26 no longer supports Python 3.8: https://numpy.org/devdocs/release/1.26.0-notes.html
+  # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
-  skip: True  # [py<39]
+  skip: True  # [py<39 or py>=313]
   force_use_keys:
     - python
 
 requirements:
   build:
-    - patch     # [not win]
-    - m2-patch  # [win]
+    - patch     # [(blas_impl == "mkl") and not win]
+    - m2-patch  # [blas_impl == "mkl" and win]
 
 outputs:
   # this one has all the actual contents
@@ -44,29 +39,29 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - armpl  # [aarch64]
+        - armpl  # [aarch64]        
+        - ninja-base
+        - pkg-config
       host:
         - python
         - pip
-        - cython >=0.29.34,<3.0
-        - setuptools <60.0.0    # [py<=311]
-        - wheel                 # [py<=311]
-        - meson-python >=0.10.0 # [py>=312]
-        - meson >=1.1.0         # [py>=312]
+        - cython >=0.29.34,<3.1
+        # dependencies of vendored meson-python
+        - pyproject-metadata >=0.7.1
+        - tomli >=1.0.0         # [py<311]
+        - setuptools >=60.0     # [py>=312]
+        - colorama              # [win]
+        # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-    # When building out the initial package set for a new Python version / MKL version the
-    # recommendation is to build numpy-base but not numpy, then build
-    # mkl_fft and mkl_random, and then numpy.
-    # If only_build_numpy_base: "yes", build numpy-base only; otherwise build all the outputs.
-    {% if only_build_numpy_base != 'yes' %}
-    test:
-      commands:
-        - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix and py<=311]
-        - IF NOT EXIST %SP_DIR%\numpy\distutils\site.cfg exit 1  # [win and py<=311]
-
+  
+  # When building out the initial package set for a new Python version / MKL version the
+  # recommendation is to build numpy-base but not numpy, then build
+  # mkl_fft and mkl_random, and then numpy.
+  # If only_build_numpy_base: "yes build numpy-base only; otherwise build all the outputs.
+  {% if only_build_numpy_base != 'yes' %}
   # numpy is a metapackage that may include mkl_fft and mkl_random both of
   # which require numpy-base to build
   - name: numpy
@@ -81,11 +76,6 @@ outputs:
         - armpl  # [aarch64]
       host:
         - python
-        - cython >=0.29.34,<3.0
-        - setuptools <60.0.0    # [py<=311]
-        - wheel                 # [py<=311]
-        - meson-python >=0.10.0 # [py>=312]
-        - meson >=1.1.0         # [py>=312]
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
@@ -119,20 +109,21 @@ outputs:
     
     test:
       requires:
-        - pip     # force installation or `test_api_importable` will fail
-        - pytz
-        - pytest
-        - pytest-cov
+        - pip
+        - pytest >=7.4.0
+        - pytest-cov >=4.1.0
         - pytest-xdist
-        - hypothesis >=6.29.3
-        - pytz >=2021.3
+        - hypothesis >=6.81.1
+        - pytz >=2023.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
-        - mypy >=0.981
+        - mypy >=1.5.1
         - cffi  # [py<310]
+        - charset-normalizer
+        - meson
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
@@ -147,6 +138,41 @@ outputs:
         - numpy.core.umath
         - numpy.linalg.lapack_lite
         - numpy.random.mtrand
+        # from numpy/tests/test_public_api.py
+        - numpy.array_api
+        - numpy.array_api.linalg
+        - numpy.ctypeslib
+        - numpy.doc
+        - numpy.doc.constants
+        - numpy.doc.ufuncs
+        - numpy.dtypes
+        - numpy.exceptions
+        - numpy.f2py
+        - numpy.fft
+        - numpy.lib
+        - numpy.lib.format  # was this meant to be public?
+        - numpy.lib.mixins
+        - numpy.lib.recfunctions
+        - numpy.lib.scimath
+        - numpy.lib.stride_tricks
+        - numpy.linalg
+        - numpy.ma
+        - numpy.ma.extras
+        - numpy.ma.mrecords
+        - numpy.matlib
+        - numpy.polynomial
+        - numpy.polynomial.chebyshev
+        - numpy.polynomial.hermite
+        - numpy.polynomial.hermite_e
+        - numpy.polynomial.laguerre
+        - numpy.polynomial.legendre
+        - numpy.polynomial.polynomial
+        - numpy.random
+        - numpy.testing
+        - numpy.testing.overrides
+        - numpy.typing
+        - numpy.typing.mypy_plugin
+        - numpy.version  # Should be removed for NumPy 2.0
 
 about:
   home: https://numpy.org/
