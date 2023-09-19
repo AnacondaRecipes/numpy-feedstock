@@ -1,17 +1,20 @@
 #!/bin/bash
 
-set -e
+set -ex
 
-UNAME_M=$(uname -m)
+cd ${SRC_DIR}
 
-case "$UNAME_M" in
-    ppc64*)
-        # Optimizations trigger compiler bug.
-        EXTRA_OPTS="--no-use-pep517 --global-option=build --global-option=--cpu-dispatch=min"
-        ;;
-    *)
-        EXTRA_OPTS=""
-        ;;
-esac
+if [[ ${blas_impl} == openblas ]]; then
+    BLAS=openblas
+else
+    BLAS=mkl-sdl
+fi
 
-${PYTHON} -m pip install --no-deps  --no-build-isolation --ignore-installed $EXTRA_OPTS -v .
+mkdir builddir
+# -wnx flags mean: --wheel --no-isolation --skip-dependency-check
+$PYTHON -m build -w -n -x \
+    -Cbuilddir=builddir \
+    -Csetup-args=-Dblas=${BLAS} \
+    -Csetup-args=-Dlapack=${BLAS} \
+    || (cat builddir/meson-logs/meson-log.txt && exit 1)
+$PYTHON -m pip install dist/numpy*.whl
