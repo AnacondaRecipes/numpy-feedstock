@@ -8,7 +8,7 @@ UNAME_M=$(uname -m)
 case "$UNAME_M" in
     ppc64*)
         # Optimizations trigger compiler bug.
-        EXTRA_OPTS="-Dcpu-dispatch=min"
+        EXTRA_OPTS="-Csetup-args=-Dcpu-dispatch=min"
         ;;
     *)
         EXTRA_OPTS=""
