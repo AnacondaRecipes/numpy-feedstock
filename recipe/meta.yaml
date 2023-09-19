@@ -8,7 +8,6 @@ source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
   sha256: f93fc78fe8bf15afe2b8d6b6499f1c73953169fad1e9a8dd086cdff3190e7fdf  
   patches:                                              # [blas_impl == "mkl"]
-    - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
     - patches/0003-intel_init_mkl.patch                 # [blas_impl == "mkl"]
 
 build:
