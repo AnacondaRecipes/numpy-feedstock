@@ -1,5 +1,0 @@
-channels:
-  - https://staging.continuum.io/prefect/fs/mypy_extensions-feedstock/pr3/564465f
-  - https://staging.continuum.io/prefect/fs/mypy-feedstock/pr10/9235ddc
-  - https://staging.continuum.io/prefect/fs/pytz-feedstock/pr8/a5e2364
-  - https://staging.continuum.io/prefect/fs/pytest-cov-feedstock/pr4/95a5be0
