@@ -6,12 +6,6 @@ cd ${SRC_DIR}
 
 UNAME_M=$(uname -m)
 case "$UNAME_M" in
-    s390x*)
-        # gcc 11 has issue with vectorization on s390x
-        export CFLAGS="${CFLAGS} -mno-vx"
-        export CXXFLAGS="${CXXFLAGS} -mno-vx"
-        EXTRA_OPTS=""
-        ;;
     ppc64*)
         # Optimizations trigger compiler bug.
         EXTRA_OPTS="-Csetup-args=-Dcpu-dispatch=min"
