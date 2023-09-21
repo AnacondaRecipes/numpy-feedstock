@@ -1,0 +1,26 @@
+From a5f57e40a081b6b9b1c70fde4d331515c41d8883 Mon Sep 17 00:00:00 2001
+From: Charles Bousseau <cbousseau@anaconda.com>
+Date: Thu, 21 Sep 2023 14:50:57 -0400
+Subject: [PATCH] align test_dispatcher with _umath_tests_mtargets
+
+---
+ numpy/core/tests/test_cpu_dispatcher.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/numpy/core/tests/test_cpu_dispatcher.py b/numpy/core/tests/test_cpu_dispatcher.py
+index 2f7eac7e8..41a60d5c3 100644
+--- a/numpy/core/tests/test_cpu_dispatcher.py
++++ b/numpy/core/tests/test_cpu_dispatcher.py
+@@ -9,7 +9,8 @@ def test_dispatcher():
+     targets = (
+         "SSE2", "SSE41", "AVX2",
+         "VSX", "VSX2", "VSX3",
+-        "NEON", "ASIMD", "ASIMDHP"
++        "NEON", "ASIMD", "ASIMDHP",
++        "VX", "VXE"
+     )
+     highest_sfx = "" # no suffix for the baseline
+     all_sfx = []
+-- 
+2.40.1
+

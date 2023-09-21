@@ -10,12 +10,6 @@ case "$UNAME_M" in
         # Optimizations trigger compiler bug.
         EXTRA_OPTS="-Csetup-args=-Dcpu-dispatch=min"
         ;;
-    s390x)
-        # gcc 11 has issue with vectorization on s390x
-        export CFLAGS="${CFLAGS} -mno-vx"
-        export CXXFLAGS="${CXXFLAGS} -mno-vx"
-        EXTRA_OPTS="-Csetup-args=-Dcpu-dispatch=min"
-        ;;
     *)
         EXTRA_OPTS=""
         ;;

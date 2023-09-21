@@ -10,6 +10,7 @@ source:
   patches:                                                # [s390x or (blas_impl == "mkl")]
     - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
     - patches/0004_fix_SIMD_f32_trunc_test_on_s390x.patch # [s390x]
+    - patches/0005_align_test_dispatcher_targets.patch    # [s390x]
 
 build:
   number: 0
@@ -90,6 +91,11 @@ outputs:
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
+
+    # https://github.com/numpy/numpy/issues/3858 - could be related
+    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x]
+    # https://github.com/numpy/numpy/issues/16046
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]    
 
     test:
       requires:
