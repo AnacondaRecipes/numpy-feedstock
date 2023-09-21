@@ -95,7 +95,9 @@ outputs:
     # https://github.com/numpy/numpy/issues/3858 - could be related
     {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/16046
-    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]    
+    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
+    # skip simd tests because vxe2 feature is not detected when running from prefect
+    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]   
 
     test:
       requires:
