@@ -122,7 +122,7 @@ outputs:
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
         - export CPU_COUNT=4  # [linux and ppc64le]
-        - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
+        - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
         - numpy
         - numpy.core.multiarray
