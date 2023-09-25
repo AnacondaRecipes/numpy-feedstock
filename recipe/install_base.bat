@@ -9,8 +9,7 @@ else (
 )
 
 mkdir builddir
-REM -wnx flags mean: --wheel --no-isolation --skip-dependency-check
-"%PYTHON%" -m build -w -n -x ^
+"%PYTHON%" -m build --wheel --no-isolation --skip-dependency-check ^
     -Cbuilddir=builddir ^
     -Csetup-args=-Dblas=%BLAS% ^
     -Csetup-args=-Dlapack=%BLAS%
