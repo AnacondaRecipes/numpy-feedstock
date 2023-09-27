@@ -1,9 +1,29 @@
-:: site.cfg should not be defined here.  It is provided by blas devel packages (either mkl-devel or openblas-devel)
+@echo on
 
-COPY %PREFIX%\site.cfg site.cfg
+set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig;%BUILD_PREFIX%\Library\lib\pkgconfig"
+if "%blas_impl%" == "openblas" (
+    set "BLAS=openblas"
+)
+else (
+    set "BLAS=mkl-sdl"
+)
 
-%PYTHON% -m pip install --no-deps --ignore-installed --no-build-isolation -v .
-if errorlevel 1 exit 1
+mkdir builddir
+"%PYTHON%" -m build --wheel --no-isolation --skip-dependency-check ^
+    -Cbuilddir=builddir ^
+    -Csetup-args=-Dblas=%BLAS% ^
+    -Csetup-args=-Dlapack=%BLAS%
+if errorlevel 1 (
+  type builddir\meson-logs\meson-log.txt
+  exit /b 1
+)
+
+:: `pip install dist\numpy*.whl` does not work on windows,
+:: so use a loop; there's only one wheel in dist/ anyway
+for /f %%f in ('dir /b /S .\dist') do (
+    pip install %%f
+    if %ERRORLEVEL% neq 0 exit 1
+)
 
 XCOPY %RECIPE_DIR%\f2py.bat %SCRIPTS% /s /e
 if errorlevel 1 exit 1
