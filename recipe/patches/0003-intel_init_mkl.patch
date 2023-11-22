@@ -8,17 +8,18 @@ Subject: [PATCH 3/3] intel_init_mkl
  1 file changed, 11 insertions(+)
 
 diff --git a/numpy/_distributor_init.py b/numpy/_distributor_init.py
-index d893ba377..cbdd4ec18 100644
+index 25b0eed79..2dc0e9ce2 100644
 --- a/numpy/_distributor_init.py
 +++ b/numpy/_distributor_init.py
-@@ -8,3 +8,14 @@
- The numpy standard source distribution will not put code in this file, so you
- can safely replace this file with your own version.
+@@ -10,6 +10,13 @@
  """
-+try:
+ 
+ try:
+-    from . import _distributor_init_local
 +    import mkl
 +    __mkl_version__ = "{MajorVersion}.{MinorVersion}.{UpdateVersion}".format(**mkl.get_version())
-+except ImportError:
+ except ImportError:
+-    pass
 +    import warnings
 +    warnings.warn(
 +        "mkl-service package failed to import, therefore Intel(R) MKL "
@@ -26,4 +27,3 @@ index d893ba377..cbdd4ec18 100644
 +        "condition when Gnu OpenMP had already been loaded by Python process "
 +        "is not assured. Please install mkl-service package, see "
 +        "http://github.com/IntelPython/mkl-service", stacklevel=2)
-\ No newline at end of file
