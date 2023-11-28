@@ -11,6 +11,7 @@ else (
 mkdir builddir
 "%PYTHON%" -m build --wheel --no-isolation --skip-dependency-check ^
     -Cbuilddir=builddir ^
+    -Csetup-args=-Dallow-noblas=false ^
     -Csetup-args=-Dblas=%BLAS% ^
     -Csetup-args=-Dlapack=%BLAS%
 if errorlevel 1 (
