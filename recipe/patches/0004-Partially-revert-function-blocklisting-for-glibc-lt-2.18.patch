@@ -1,0 +1,51 @@
+From bd078c6e649d777d5b4fdad53b8b6b7686637553 Mon Sep 17 00:00:00 2001
+From: Charles Bousseau <cbousseau@anaconda.com>
+Date: Tue, 28 Nov 2023 15:17:57 -0500
+Subject: Partially revert function blocklisting for glibc<2.18 introduced in numpy 1.26.2
+
+See: 
+https://github.com/numpy/numpy/pull/25093
+https://github.com/numpy/numpy/issues/25087
+
+This patch results in using system catanhf and casinhf functions instead of numpy provided npy_casinhf and npy_catanhf.
+On some corner cases, this will result in different return values.
+
+Compiling on s390x without this patch results in compilation error when dealing with npy_casinhf or npy_catanhf.
+
+[12/421] Compiling C object numpy/core/libnpymath.a.p/meson-generated_npy_math_complex.c.o
+FAILED: numpy/core/libnpymath.a.p/meson-generated_npy_math_complex.c.o 
+/work/croot/numpy_and_numpy_base_1701188041571/_build_env/bin/s390x-conda-linux-gnu-cc -Inumpy/core/libnpymath.a.p -Inumpy/core -I../numpy/core -Inumpy/core/include -I../numpy/core/include -I../numpy/core/src/npymath -I../numpy/core/src/common -I/work/croot/numpy_and_numpy_base_1701188041571/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_p/include/python3.12 -I/work/croot/numpy_and_numpy_base_1701188041571/work/builddir/meson_cpu -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c99 -O3 -fno-strict-aliasing -march=z14 -mtune=z14 -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O3 -pipe -isystem /work/croot/numpy_and_numpy_base_1701188041571/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_p/include -fdebug-prefix-map=/work/croot/numpy_and_numpy_base_1701188041571/work=/usr/local/src/conda/numpy-base-1.26.2 -fdebug-prefix-map=/work/croot/numpy_and_numpy_base_1701188041571/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_p=/usr/local/src/conda-prefix -DNDEBUG -D_FORTIFY_SOURCE=2 -O2 -isystem /work/croot/numpy_and_numpy_base_1701188041571/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_p/include -fPIC -MD -MQ numpy/core/libnpymath.a.p/meson-generated_npy_math_complex.c.o -MF numpy/core/libnpymath.a.p/meson-generated_npy_math_complex.c.o.d -o numpy/core/libnpymath.a.p/meson-generated_npy_math_complex.c.o -c numpy/core/libnpymath.a.p/npy_math_complex.c
+../numpy/core/src/npymath/npy_math_complex.c.src: In function 'npy_casinhf':
+../numpy/core/src/npymath/npy_math_complex.c.src:1485:1: error: unrecognizable insn:
+ 1485 | }
+      | ^
+(insn 223 222 224 46 (set (reg:V2SF 108 [ vect__14.535 ])
+        (ior:V2SF (and:V2SF (reg:V2SF 70 [ vect_z_30.534 ])
+                (reg:V2SF 133))
+            (and:V2SF (not:V2SF (reg:V2SF 133))
+                (reg:V2SF 132)))) "../numpy/core/src/npymath/npy_math_complex.c.src":1462:16 -1
+     (nil))
+during RTL pass: vregs
+../numpy/core/src/npymath/npy_math_complex.c.src:1485:1: internal compiler error: in extract_insn, at recog.c:2770
+Please submit a full bug report,
+with preprocessed source if appropriate.
+See <https://gcc.gnu.org/bugs/> for instructions.
+
+diff --git a/numpy/core/src/common/npy_config.h b/numpy/core/src/common/npy_config.h
+index e59036688..4337f95ce 100644
+--- a/numpy/core/src/common/npy_config.h
++++ b/numpy/core/src/common/npy_config.h
+@@ -144,13 +144,11 @@
+ #undef HAVE_CASINF
+ #undef HAVE_CASINL
+ #undef HAVE_CASINH
+-#undef HAVE_CASINHF
+ #undef HAVE_CASINHL
+ #undef HAVE_CATAN
+ #undef HAVE_CATANF
+ #undef HAVE_CATANL
+ #undef HAVE_CATANH
+-#undef HAVE_CATANHF
+ #undef HAVE_CATANHL
+ #undef HAVE_CACOS
+ #undef HAVE_CACOSF
