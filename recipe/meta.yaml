@@ -131,7 +131,12 @@ outputs:
     # Arrays are not equal x: array([ 55, 145, 235,  69], dtype=uint8) vs y: array([ 55, 145, 235, 255], dtype=uint8)
     {% set tests_to_skip = tests_to_skip + " or (test_einsum_sums_uint8)" %} # [osx and blas_impl == 'mkl']
     # test_lerp_symmetric returns small error in precision on all platforms but Windows.
+    # see: https://github.com/numpy/numpy/issues/22073
     {% set tests_to_skip = tests_to_skip + " or test_lerp_symmetric" %}  # [not win]
+    # Bug with int8 einsums with clang/osx-64.
+    # see: https://github.com/numpy/numpy/issues/24732
+    {% set tests_to_skip = tests_to_skip + " or test_einsum_sums_uint8" %}  # [osx and x86]
+    
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
