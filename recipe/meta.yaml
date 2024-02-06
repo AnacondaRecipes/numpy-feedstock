@@ -1,4 +1,4 @@
-{% set version = "1.21.5" %}
+{% set version = "1.21.6" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 1a7ee0ffb35dc7489aebe5185a483f4c43b0d2cf784c3c9940f975a7dde56506
+  sha256: d4efc6491a1cdc00f9eca9bf2c1aa13671776f6941c7321ddf75b45c862f0c2c
   patches:
     - patches/0001-Obtain-and-prefer-custom-gfortran-from-env-variable.patch
     - patches/0002-intel_mkl-version.patch              # [blas_impl == "mkl"]
@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 4
+  number: 0
   # The Python versions supported for this release are 3.7-3.10
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
   skip: True  # [(blas_impl == 'openblas' and win) or py<37 or py>310]
@@ -47,7 +47,7 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.24,<3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -130,6 +130,13 @@ outputs:
     # behaviour change in MKL 2022? 
     # Arrays are not equal x: array([ 55, 145, 235,  69], dtype=uint8) vs y: array([ 55, 145, 235, 255], dtype=uint8)
     {% set tests_to_skip = tests_to_skip + " or (test_einsum_sums_uint8)" %} # [osx and blas_impl == 'mkl']
+    # test_lerp_symmetric returns small error in precision on all platforms but Windows.
+    # see: https://github.com/numpy/numpy/issues/22073
+    {% set tests_to_skip = tests_to_skip + " or test_lerp_symmetric" %}  # [not win]
+    # Bug with int8 einsums with clang/osx-64.
+    # see: https://github.com/numpy/numpy/issues/24732
+    {% set tests_to_skip = tests_to_skip + " or test_einsum_sums_uint8" %}  # [osx and x86]
+    
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
@@ -158,6 +165,7 @@ about:
   home: https://numpy.org/
   license: BSD-3-Clause
   license_file: LICENSE.txt
+  license_family: BSD
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
