@@ -165,6 +165,7 @@ about:
   home: https://numpy.org/
   license: BSD-3-Clause
   license_file: LICENSE.txt
+  license_family: BSD-3-Clause
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
