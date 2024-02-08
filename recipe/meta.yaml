@@ -39,13 +39,14 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - armpl  # [aarch64]        
+        - armpl  # [aarch64]
         - ninja-base
         - pkg-config
       host:
         - python
         - pip
         - cython >=0.29.34,<3.1
+        - meson-python >=0.15.0,<0.16.0
         - python-build
         # dependencies of vendored meson-python
         - pyproject-metadata >=0.7.1
@@ -57,7 +58,7 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-  
+
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
   # mkl_fft and mkl_random, and then numpy.
@@ -95,7 +96,7 @@ outputs:
     # https://github.com/numpy/numpy/issues/16046
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     # skip simd tests because vxe2 feature is not detected when running from prefect
-    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]   
+    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
 
     test:
       requires:
@@ -182,4 +183,4 @@ extra:
     - pelson
     - rgommers
     - ocefpaf
-    - chenghlee 
+    - chenghlee
