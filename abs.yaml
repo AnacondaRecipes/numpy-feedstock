@@ -1,0 +1,4 @@
+aggregate_branch: 3.12
+
+channels:
+  - https://staging.continuum.io/prefect/fs/meson-python-feedstock/pr6/766a71e
