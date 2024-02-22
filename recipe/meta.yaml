@@ -100,7 +100,7 @@ outputs:
         - pytest-cov >=4.1.0
         - pytest-xdist
         - hypothesis >=6.81.1
-        - pytz >=2023.3
+        - pytz >=2023.3.post1
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
