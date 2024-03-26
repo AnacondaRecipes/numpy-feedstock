@@ -1,4 +1,4 @@
-{% set version = "1.26.4" %}
+{% set version = "2.0.0b1" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,14 +6,14 @@ package:
 
 source:
   url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-  sha256: 2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010
+  sha256: e0bb33a37d0d0b9a19cd41a093877f830e06bd4d989341b9792896cf08e629f7
   patches:                                                # [blas_impl == "mkl" or s390x]
     - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
     - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
   number: 0
-  # numpy 1.26 no longer supports Python 3.8: https://numpy.org/devdocs/release/1.26.0-notes.html
+  # numpy 2.0.0 no longer supports Python 3.8: https://numpy.org/devdocs/release/2.0.0-notes.html
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<39 or py>=313]
@@ -45,8 +45,8 @@ outputs:
       host:
         - python
         - pip
-        - cython >=0.29.34,<3.1
-        - meson-python >=0.15.0,<0.16.0
+        - cython >=3.0.6
+        - meson-python >=0.15.0
         - python-build
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -106,7 +106,7 @@ outputs:
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
-        - mypy >=1.5.1
+        - mypy >=1.7.1
         - cffi  # [py<310]
         - charset-normalizer
         - meson
@@ -125,12 +125,7 @@ outputs:
         - numpy.linalg.lapack_lite
         - numpy.random.mtrand
         # from numpy/tests/test_public_api.py
-        - numpy.array_api
-        - numpy.array_api.linalg
         - numpy.ctypeslib
-        - numpy.doc
-        - numpy.doc.constants
-        - numpy.doc.ufuncs
         - numpy.dtypes
         - numpy.exceptions
         - numpy.f2py
@@ -141,11 +136,13 @@ outputs:
         - numpy.lib.recfunctions
         - numpy.lib.scimath
         - numpy.lib.stride_tricks
+        - numpy.lib.npyio
+        - numpy.lib.introspect
+        - numpy.lib.array_utils
         - numpy.linalg
         - numpy.ma
         - numpy.ma.extras
         - numpy.ma.mrecords
-        - numpy.matlib
         - numpy.polynomial
         - numpy.polynomial.chebyshev
         - numpy.polynomial.hermite

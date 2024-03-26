@@ -1,1 +1,3 @@
-aggregate_branch: 3.12
+# upload to a temp channel for testing
+upload_channels:
+  ad-testing: numpy2 

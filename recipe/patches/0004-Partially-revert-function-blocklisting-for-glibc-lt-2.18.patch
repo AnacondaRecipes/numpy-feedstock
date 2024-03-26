@@ -31,10 +31,10 @@ Please submit a full bug report,
 with preprocessed source if appropriate.
 See <https://gcc.gnu.org/bugs/> for instructions.
 
-diff --git a/numpy/core/src/common/npy_config.h b/numpy/core/src/common/npy_config.h
-index e59036688..4337f95ce 100644
---- a/numpy/core/src/common/npy_config.h
-+++ b/numpy/core/src/common/npy_config.h
+diff --git a/numpy/_core/src/common/npy_config.h b/numpy/_core/src/common/npy_config.h
+index e590366888..4337f95ceb 100644
+--- a/numpy/_core/src/common/npy_config.h
++++ b/numpy/_core/src/common/npy_config.h
 @@ -144,13 +144,11 @@
  #undef HAVE_CASINF
  #undef HAVE_CASINL
