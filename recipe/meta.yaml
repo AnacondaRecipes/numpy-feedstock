@@ -7,17 +7,15 @@ package:
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
     sha256: e0bb33a37d0d0b9a19cd41a093877f830e06bd4d989341b9792896cf08e629f7
-
+    patches:                                                # [blas_impl == "mkl" or s390x]
+      - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
+      - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
   # osx-64 error: no member named 'aligned_alloc' in the global namespace; did you mean simply 'aligned_alloc'?
   # See: https://github.com/numpy/numpy/pull/26123
   # See: https://github.com/numpy/numpy/issues/25940
   - git_url: https://github.com/mreineck/pocketfft.git    # [osx and x86_64]
     git_rev: 33ae5dc94c9cdc7f1c78346504a85de87cadaa12     # [osx and x86_64]
     folder: pocketfft                                     # [osx and x86_64]
-  
-  patches:                                                # [blas_impl == "mkl" or s390x]
-    - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
-    - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
   number: 0
