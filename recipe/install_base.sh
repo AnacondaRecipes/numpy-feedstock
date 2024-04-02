@@ -4,14 +4,6 @@ set -ex
 
 cd ${SRC_DIR}
 
-if [[ $target_platform == osx-64 ]]; then
-    # osx-64 error: no member named 'aligned_alloc' in the global namespace; did you mean simply 'aligned_alloc'?
-    # See: https://github.com/numpy/numpy/pull/26123
-    # See: https://github.com/numpy/numpy/issues/25940
-    rm -rf numpy/fft/pocketfft/*
-    mv pocketfft/* numpy/fft/pocketfft/
-fi
-
 UNAME_M=$(uname -m)
 case "$UNAME_M" in
     ppc64*)
