@@ -24,7 +24,6 @@ requirements:
   build:
     - patch     # [(blas_impl == "mkl" or s390x) and not win]
     - m2-patch  # [(blas_impl == "mkl") and win]
-    - git       # [osx and x86_64]
 
 outputs:
   # this one has all the actual contents
