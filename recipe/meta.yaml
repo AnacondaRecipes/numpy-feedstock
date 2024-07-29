@@ -1,4 +1,4 @@
-{% set version = "2.0.0rc2" %}
+{% set version = "2.0.1" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,7 +6,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 868e9edbee689d6fdb7957c0b790de2b2123e6feff5d66045d10760c521f2c00
+    sha256: 485b87235796410c3519a699cfe1faab097e509e90ebb05dcd098db2ae87e7b3
     patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
@@ -93,6 +93,9 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
+    # https://github.com/numpy/numpy/issues/27045
+    {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
+
 
     test:
       requires:
