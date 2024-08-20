@@ -94,13 +94,14 @@ outputs:
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
 
+
     test:
       requires:
         - pip
         - pytest >=7.4.0
         - pytest-cov >=4.1.0
         - pytest-xdist
-        - hypothesis >=6.81.1
+        - hypothesis ==6.111.0
         - pytz >=2023.3.post1
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
