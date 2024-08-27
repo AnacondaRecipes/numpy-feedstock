@@ -16,7 +16,7 @@ build:
   # numpy 2.0.0 no longer supports Python 3.8: https://numpy.org/devdocs/release/2.0.0-notes.html
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
-  skip: True  # [py<39 or py>=313]
+  skip: True  # [py<39 or py>=314]
   force_use_keys:
     - python
 
