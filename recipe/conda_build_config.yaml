@@ -5,6 +5,6 @@
 only_build_numpy_base: yes
 
 c_compiler:    # [win]
-  - vs2019     # [win]
+  - vs2022     # [win]
 cxx_compiler:  # [win]
-  - vs2019     # [win]
+  - vs2022     # [win]
