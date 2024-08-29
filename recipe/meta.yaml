@@ -93,6 +93,8 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
+    # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
+    {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
 
 
     test:
