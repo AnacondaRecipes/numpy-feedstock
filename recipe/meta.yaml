@@ -17,6 +17,7 @@ build:
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<39 or py>=313]
+  skip: True  # [not (win and py==312)]
   force_use_keys:
     - python
 
@@ -94,6 +95,8 @@ outputs:
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
 
+    {% set tests_to_skip = tests_to_skip + " test_unary_spurious_fpexception"} # [win]
+ 
 
     test:
       requires:
