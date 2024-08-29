@@ -95,7 +95,7 @@ outputs:
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
 
-    {% set tests_to_skip = tests_to_skip + " test_unary_spurious_fpexception"} # [win]
+    {% set tests_to_skip = tests_to_skip + " test_unary_spurious_fpexception" %} # [win]
  
 
     test:
