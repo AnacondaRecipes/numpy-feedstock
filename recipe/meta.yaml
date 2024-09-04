@@ -93,6 +93,8 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
+    # https://github.com/numpy/numpy/issues/27045
+    {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
 
 
     test:
