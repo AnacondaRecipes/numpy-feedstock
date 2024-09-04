@@ -12,7 +12,7 @@ source:
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 0
+  number: 1
   # numpy 2.0.0 no longer supports Python 3.8: https://numpy.org/devdocs/release/2.0.0-notes.html
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
