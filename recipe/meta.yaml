@@ -104,7 +104,7 @@ outputs:
         - pytest-cov >=4.1.0
         - pytest-xdist
         # due to hotfix this is the only hypothesis version that works with numpy 2.0.0 and above
-        - hypothesis ==6.111.0
+        - hypothesis >=6.111.0
         - pytz >=2023.3.post1
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
