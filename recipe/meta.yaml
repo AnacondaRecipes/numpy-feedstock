@@ -11,6 +11,7 @@ source:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
       - patches/0005-Stub-out-get_build_msvc_version.patch
+      - patches/0006-no-distutils.msvccompiler.patch
 
 build:
   number: 0

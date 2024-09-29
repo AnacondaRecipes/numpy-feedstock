@@ -1,0 +1,27 @@
+Follow up of patch 0005.
+Same issue being discussed here: https://github.com/numpy/numpy/pull/27406
+
+diff --git a/numpy/tests/test_public_api.py b/numpy/tests/test_public_api.py
+index 780e1fccb7..c7d7f14117 100644
+--- a/numpy/tests/test_public_api.py
++++ b/numpy/tests/test_public_api.py
+@@ -261,7 +261,6 @@ def test_NPY_NO_EXPORT():
+             "distutils.lib2def",
+             "distutils.line_endings",
+             "distutils.mingw32ccompiler",
+-            "distutils.msvccompiler",
+             "distutils.npy_pkg_config",
+             "distutils.numpy_distribution",
+             "distutils.pathccompiler",
+@@ -288,9 +287,9 @@ def is_unexpected(name):
+ 
+ 
+ if sys.version_info < (3, 12):
+-    SKIP_LIST = ["numpy.distutils.msvc9compiler"]
++    SKIP_LIST = ["numpy.distutils.msvc9compiler", "numpy.distutils.msvccompiler"]
+ else:
+-    SKIP_LIST = []
++    SKIP_LIST = ["numpy.distutils.msvccompiler"]
+ 
+ 
+ # suppressing warnings from deprecated modules
