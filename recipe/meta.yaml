@@ -49,8 +49,6 @@ outputs:
         - cython >=3.0.6
         - meson-python >=0.15.0
         - python-build
-        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        - setuptools <74
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
@@ -117,6 +115,8 @@ outputs:
         - cffi  # [py<310]
         - charset-normalizer
         - meson
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        - setuptools <74
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
