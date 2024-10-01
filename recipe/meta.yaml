@@ -7,11 +7,9 @@ package:
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
     sha256: d0cf7d55b1051387807405b3898efafa862997b4cba8aa5dbe657be794afeafd
-    patches:
+    patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
-      - patches/0005-Stub-out-get_build_msvc_version.patch
-      - patches/0006-no-distutils.msvccompiler.patch
 
 build:
   number: 0
@@ -24,8 +22,8 @@ build:
 
 requirements:
   build:
-    - patch     # [unix]
-    - m2-patch  # [win]
+    - patch     # [(blas_impl == "mkl" or s390x) and not win]
+    - m2-patch  # [(blas_impl == "mkl") and win]
 
 outputs:
   # this one has all the actual contents
@@ -51,6 +49,8 @@ outputs:
         - cython >=3.0.6
         - meson-python >=0.15.0
         - python-build
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        - setuptools <74
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
