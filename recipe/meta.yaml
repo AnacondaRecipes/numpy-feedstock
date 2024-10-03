@@ -88,6 +88,10 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
+      run_constrained:
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
+        - setuptools <74
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
@@ -120,8 +124,6 @@ outputs:
         - cffi  # [py<310]
         - charset-normalizer
         - meson
-        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        - setuptools <74
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
