@@ -1,4 +1,4 @@
-{% set version = "2.1.1" %}
+{% set version = "2.1.2" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.1.1/numpy/_core/include/numpy/numpyconfig.h#L125
@@ -10,14 +10,14 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: d0cf7d55b1051387807405b3898efafa862997b4cba8aa5dbe657be794afeafd
+    sha256: 6a6345a3bf23f5002f035fd3e74336ef43fc7b82133050c81f728beedac311f3
     patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
   number: 0
-  # numpy 2.1.1 no longer supports Python 3.9: https://numpy.org/devdocs/release/2.1.1-notes.html
+  # numpy 2.1.2 no longer supports Python 3.9: https://numpy.org/devdocs/release/2.1.2-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<310 or py>=314]
   force_use_keys:
