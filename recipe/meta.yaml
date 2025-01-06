@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 1e7b92235ac9923acd720bb2f140cb9a86c9213288883801f778fddd282efd5a
+    sha256: 883c987dee1880e2a864ab0dc9892292582510604156762362d9326444636e78
     patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
