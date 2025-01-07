@@ -1,4 +1,8 @@
-{% set version = "2.0.1" %}
+{% set version = "2.0.2" %}
+# numpy will by default use the ABI feature level for the first numpy version
+# that added support for the oldest currently-supported CPython version; see
+# https://github.com/numpy/numpy/blob/v2.0.2/numpy/_core/include/numpy/numpyconfig.h#L124
+{% set default_abi_level = "1.19" %}
 
 package:
   name: numpy_and_numpy_base
@@ -6,13 +10,13 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 485b87235796410c3519a699cfe1faab097e509e90ebb05dcd098db2ae87e7b3
+    sha256: 883c987dee1880e2a864ab0dc9892292582510604156762362d9326444636e78
     patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 1
+  number: 0
   # numpy 2.0.0 no longer supports Python 3.8: https://numpy.org/devdocs/release/2.0.0-notes.html
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
@@ -66,6 +70,8 @@ outputs:
     build:
       missing_dso_whitelist:  # [s390x]
         - $RPATH/ld64.so.1    # [s390x]
+      run_exports:
+        - numpy >={{ default_abi_level }},<3
     requirements:
       build:
         # for runtime alignment
@@ -83,6 +89,10 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
+      run_constrained:
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
+        - setuptools <74
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
