@@ -109,7 +109,7 @@ outputs:
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
     # test windows issue
-    {% set tests_to_skip = test_to_skip + " or test_cstruct" %} # [win] 
+    {% set tests_to_skip = tests_to_skip + " or test_cstruct" %} # [win] 
 
     test:
       requires:
