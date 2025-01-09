@@ -1,4 +1,4 @@
-{% set version = "2.2.0" %}
+{% set version = "2.2.1" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.1.1/numpy/_core/include/numpy/numpyconfig.h#L125
@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 140dd80ff8981a583a60980be1a655068f8adebf7a45a06a6858c873fcdcd4a0
+    sha256: 45681fd7128c8ad1c379f0ca0776a8b0c6583d2f69889ddac01559dfe4390918
     patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
@@ -108,8 +108,6 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
-    # test windows issue
-    {% set tests_to_skip = tests_to_skip + " or test_cstruct" %} # [win] 
 
     test:
       requires:
