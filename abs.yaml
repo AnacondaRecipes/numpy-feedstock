@@ -3,3 +3,4 @@ build_env_vars:
 
 channels:
    - https://staging.continuum.io/prefect/fs/intel_repack-feedstock/pr26/7ae728e
+   - https://staging.continuum.io/prefect/fs/mkl-service-feedstock/pr6/82a1a37
