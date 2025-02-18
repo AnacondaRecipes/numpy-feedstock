@@ -1,2 +1,5 @@
 build_env_vars:
   ANACONDA_ROCKET_ENABLE_PY313 : yes
+
+channels:
+   - https://staging.continuum.io/prefect/fs/intel_repack-feedstock/pr26/7ae728e
