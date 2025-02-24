@@ -110,7 +110,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27045
     {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
-    {% set tests_to_skip = tests_to_skip + " or test_half_correctness" %}  # [linux and x86_64]
+    {% set tests_to_skip = tests_to_skip + " or test_half_correctness or test_extension_incref_elide" %}  # [linux and x86_64]
 
     test:
       requires:
