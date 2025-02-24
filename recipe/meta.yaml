@@ -106,7 +106,6 @@ outputs:
     # https://github.com/numpy/numpy/issues/27045
     {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
 
-
     test:
       requires:
         - pip
@@ -128,8 +127,7 @@ outputs:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
-        - export CPU_COUNT=4  # [linux and ppc64le]
+        - set OPENBLAS_NUM_THREADS=1     # [win]
         - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
         - numpy
