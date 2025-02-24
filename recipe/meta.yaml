@@ -106,6 +106,11 @@ outputs:
     # https://github.com/numpy/numpy/issues/27045
     {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
 
+    {% if only_build_numpy_base == 'yes' %}
+    # These do not pass with just numpy-base.
+    {% set tests_to_skip = tests_to_skip + " or test_mingw32ccompiler or test_system_info" %}
+    {% endif %}
+
     test:
       requires:
         - pip
