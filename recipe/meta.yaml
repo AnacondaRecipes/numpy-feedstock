@@ -58,6 +58,10 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
+      run_constrained:
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools.
+        - setuptools <74
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
@@ -105,11 +109,6 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27045
     {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
-
-    {% if only_build_numpy_base == 'yes' %}
-    # These do not pass with just numpy-base.
-    {% set tests_to_skip = tests_to_skip + " or test_mingw32ccompiler or test_system_info" %}
-    {% endif %}
 
     test:
       requires:
