@@ -2,7 +2,7 @@
 # recommendation is to build numpy-base but not numpy, then build
 # mkl_fft and mkl_random, and then numpy.
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
-only_build_numpy_base: yes
+only_build_numpy_base: no
 
 c_compiler:    # [win]
   - vs2019     # [win]
