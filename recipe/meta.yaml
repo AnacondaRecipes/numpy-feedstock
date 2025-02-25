@@ -109,7 +109,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
-    {% set tests_to_skip = tests_to_skip + " or test_half_correctness or test_extension_incref_elide or test_temporary_with_cast or test_shapes or test_sincos_float32 or fft or _threading" %}  # [linux and x86_64]
+    {% set tests_to_skip = tests_to_skip + " or test_half_correctness or test_extension_incref_elide or test_temporary_with_cast or test_shapes or test_sincos_float32 or fft or thread" %}  # [linux and x86_64]
 
     test:
       requires:
