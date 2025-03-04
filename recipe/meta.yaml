@@ -21,7 +21,6 @@ build:
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<39 or py>=313]
-  skip: True  # [not (linux and x86_64)]
   force_use_keys:
     - python
 
