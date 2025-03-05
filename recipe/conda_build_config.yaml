@@ -12,4 +12,4 @@ fortran_compiler_version:  # [linux or osx]
 openblas:
   - 0.3.20
 mkl:
-  - 2023.*
+  - 2025.*
