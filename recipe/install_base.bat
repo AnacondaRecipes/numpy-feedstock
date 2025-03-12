@@ -3,7 +3,8 @@
 set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig;%BUILD_PREFIX%\Library\lib\pkgconfig"
 if "%blas_impl%" == "openblas" (
     set "BLAS=openblas"
-) else (
+)
+else (
     set "BLAS=mkl-sdl"
 )
 
@@ -18,10 +19,10 @@ if errorlevel 1 (
   exit /b 1
 )
 
-:: `pip install dist\numpy*.whl` does not work on windows,
+:: `pip install --no-deps --no-build-isolation dist\numpy*.whl` does not work on windows,
 :: so use a loop; there's only one wheel in dist/ anyway
 for /f %%f in ('dir /b /S .\dist') do (
-    pip install %%f
+    pip install --no-deps --no-build-isolation %%f
     if %ERRORLEVEL% neq 0 exit 1
 )
 
