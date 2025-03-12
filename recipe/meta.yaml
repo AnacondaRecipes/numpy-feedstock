@@ -132,9 +132,6 @@ outputs:
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1   # [unix and blas_impl != 'mkl']
         - set OPENBLAS_NUM_THREADS=1      # [win and blas_impl != 'mkl']
-        # Make sure MKL threading inside our CI dockers is done with GNU-native threads to avoid faults during testing.
-        # https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2025-0/mkl-set-threading-layer.html
-        - export MKL_THREADING_LAYER=GNU  # [linux and x86_64 and blas_impl == 'mkl']
         - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
         - numpy
