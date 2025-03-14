@@ -29,4 +29,4 @@ $PYTHON -m build --wheel --no-isolation --skip-dependency-check \
     -Csetup-args=-Dlapack=${BLAS} \
     $EXTRA_OPTS \
     || (cat builddir/meson-logs/meson-log.txt && exit 1)
-$PYTHON -m pip install dist/numpy*.whl
+$PYTHON -m pip install --no-deps --no-build-isolation dist/numpy*.whl
