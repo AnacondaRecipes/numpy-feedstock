@@ -1,1 +1,4 @@
-aggregate_branch: 3.12
+channels:
+  - brianwing
+  - https://staging.continuum.io/prefect/fs/mkl_random-feedstock/pr9/422492a
+  - https://staging.continuum.io/prefect/fs/mkl_fft-feedstock/pr11/005612d
