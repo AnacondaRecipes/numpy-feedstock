@@ -48,11 +48,13 @@ outputs:
         - cython >=0.29.34,<3.1
         - meson-python >=0.15.0,<0.16.0
         - python-build
+        - setuptools <60.0
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
+        - setuptools <60.0
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
@@ -73,6 +75,7 @@ outputs:
         - armpl  # [aarch64]
       host:
         - python
+        - setuptools <60.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
@@ -92,6 +95,8 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
+    # Skip distutils tests that are failing due to deprecated modules
+    {% set tests_to_skip = tests_to_skip + " or test_mingw32ccompiler or test_system_info" %}
 
     test:
       imports:
@@ -112,6 +117,7 @@ outputs:
         - cffi  # [py<310]
         - charset-normalizer
         - meson
+        - setuptools <60.0
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
