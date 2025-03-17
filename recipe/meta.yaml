@@ -115,8 +115,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - export CPU_COUNT=4  # [linux and ppc64le]
         - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
