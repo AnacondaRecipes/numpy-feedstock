@@ -10,4 +10,4 @@ cxx_compiler:  # [win]
   - vs2019     # [win]
 
 mkl:
-  - 2023.*
+  - 2025.*

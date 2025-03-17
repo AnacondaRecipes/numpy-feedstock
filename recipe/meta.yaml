@@ -17,7 +17,7 @@ source:
     - patches/0007-enable-meson-build.patch             # [py>=312] https://github.com/numpy/numpy/blob/v1.25.0/building_with_meson.md
 
 build:
-  number: 0
+  number: 1
   # numpy 1.25 no longer supports Python 3.8: https://numpy.org/devdocs/release/1.25.0-notes.html
   # "This release supports Python versions 3.9-3.11"
   skip: True  # [(blas_impl == 'openblas' and win)]
@@ -117,13 +117,15 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
     
     test:
+      imports:
+        - numpy
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - pytz
-        - pytest
+        - pytest 7.1.1
+        - hypothesis 6.14.1
         - pytest-cov
         - pytest-xdist
-        - hypothesis >=6.29.3
         - pytz >=2021.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
