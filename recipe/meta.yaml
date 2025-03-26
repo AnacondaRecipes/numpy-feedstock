@@ -16,7 +16,7 @@ source:
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 0
+  number: 1
   # numpy 2.1.3 no longer supports Python 3.9: https://numpy.org/devdocs/release/2.1.3-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<310 or py>=314]
@@ -53,7 +53,7 @@ outputs:
         - meson-python >=0.15.0
         - python-build
         # blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
@@ -84,13 +84,13 @@ outputs:
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - mkl-devel {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
       run:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
-        - mkl_fft  # [blas_impl == 'mkl']
+        - mkl_fft    # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
       run_constrained:
         # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
@@ -130,9 +130,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
-        - export CPU_COUNT=4  # [linux and ppc64le]
+        - export OPENBLAS_NUM_THREADS=1   # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1      # [win and blas_impl != 'mkl']
         - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
         - numpy
@@ -189,6 +188,10 @@ about:
   dev_url: https://github.com/numpy/numpy
 
 extra:
+  skip-lints:
+    - host_section_needs_exact_pinnings
+    - missing_imports_or_run_test_py
+    - missing_tests
   recipe-maintainers:
     - jakirkham
     - msarahan
