@@ -4,11 +4,6 @@ set -ex
 
 cd ${SRC_DIR}
 
-# Add macOS-specific linker flags to restore ld_classic compatibility
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    export LDFLAGS="${LDFLAGS} -Wl,-ld_classic"
-fi
-
 UNAME_M=$(uname -m)
 case "$UNAME_M" in
     ppc64*)
