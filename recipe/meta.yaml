@@ -126,7 +126,7 @@ outputs:
         - mypy >=1.7.1
         - cffi  # [py<311]
         - charset-normalizer
-        - meson
+        - meson >=1.5.2
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
