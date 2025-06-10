@@ -11,9 +11,8 @@ package:
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
     sha256: 581f87f9e9e9db2cba2141400e160e9dd644ee248788d6f90636eeb8fd9260a6
-    patches:                                                # [blas_impl == "mkl" or s390x]
+    patches:                                                # [blas_impl == "mkl"]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
-      - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
   number: 0
@@ -25,7 +24,7 @@ build:
 
 requirements:
   build:
-    - patch     # [(blas_impl == "mkl" or s390x) and not win]
+    - patch     # [(blas_impl == "mkl") and not win]
     - m2-patch  # [(blas_impl == "mkl") and win]
 
 outputs:
@@ -37,8 +36,6 @@ outputs:
       entry_points:
         - f2py = numpy.f2py.f2py2e:main
         - numpy-config = numpy._configtool:main
-      missing_dso_whitelist:  # [s390x]
-        - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
         - {{ compiler('c') }}
@@ -71,8 +68,6 @@ outputs:
   # which require numpy-base to build
   - name: numpy
     build:
-      missing_dso_whitelist:  # [s390x]
-        - $RPATH/ld64.so.1    # [s390x]
       run_exports:
         - numpy >={{ default_abi_level }},<3
     requirements:
@@ -100,12 +95,6 @@ outputs:
 
     {% set tests_to_skip = "_not_a_real_test" %}
 
-    # https://github.com/numpy/numpy/issues/3858 - could be related
-    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x]
-    # https://github.com/numpy/numpy/issues/16046
-    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
-    # skip simd tests because vxe2 feature is not detected when running from prefect
-    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
 
