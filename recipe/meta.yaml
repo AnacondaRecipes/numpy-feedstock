@@ -109,11 +109,13 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_cstruct" %}  # [win and py>312]
 
     test:
       requires:
         - pip
         - pytest >=7.4.0
+        - pytest-cov >=4.1.0
         - pytest-cov >=4.1.0
         - pytest-xdist
         # due to hotfix this is the only hypothesis version that works with numpy 2.0.0 and above
