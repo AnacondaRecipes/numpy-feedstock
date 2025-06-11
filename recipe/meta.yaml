@@ -11,8 +11,9 @@ package:
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
     sha256: 581f87f9e9e9db2cba2141400e160e9dd644ee248788d6f90636eeb8fd9260a6
-    patches:                                                # [blas_impl == "mkl"]
+    patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
+      - patches/0001-unique-cpp-header.patch                # [osx]
 
 build:
   number: 0
@@ -40,7 +41,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - armpl  # [aarch64]
+        - armpl  # [aarch64 and blas_impl != "openblas"]
         - ninja-base
         - pkg-config
       host:
@@ -75,7 +76,7 @@ outputs:
         # for runtime alignment
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - armpl  # [aarch64]
+        - armpl  # [aarch64 and blas_impl != "openblas"]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
@@ -104,7 +105,6 @@ outputs:
         - pytest >=7.4.0
         - pytest-cov >=4.1.0
         - pytest-xdist
-        # due to hotfix this is the only hypothesis version that works with numpy 2.0.0 and above
         - hypothesis >=6.111.0
         - pytz >=2023.3.post1
         - {{ compiler('c') }}  # [not osx]

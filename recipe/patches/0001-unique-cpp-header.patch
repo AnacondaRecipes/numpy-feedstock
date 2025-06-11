@@ -1,0 +1,15 @@
+From f1ac9459b544ddb810ddda39c3ae921f1c7d6f36 Mon Sep 17 00:00:00 2001
+From: jrobertson <jrobertson@anaconda.com>
+Date: Wed, 11 Jun 2025 18:33:10 +0000
+Subject: [PATCH] Add unordered_map to unique.cpp
+
+--- a/numpy/_core/src/multiarray/unique.cpp
++++ b/numpy/_core/src/multiarray/unique.cpp
+@@ -4,6 +4,7 @@
+ #include <Python.h>
+ 
+ #include <unordered_set>
++#include <unordered_map>
+ #include <functional>
+ 
+ #include <numpy/npy_common.h>
