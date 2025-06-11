@@ -1,3 +1,6 @@
+# Required for glibc >= 2.26 for intel-openmp to work.
+pkg_build_image_tag: main-almalinux-8
+
 channels:
   - brianwing
   - https://staging.continuum.io/prefect/fs/mkl_random-feedstock/pr9/422492a
