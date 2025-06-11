@@ -42,6 +42,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -79,6 +80,7 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
