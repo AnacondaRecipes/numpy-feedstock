@@ -41,7 +41,6 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - armpl  # [aarch64 and blas_impl != "openblas"]
         - ninja-base
         - pkg-config
       host:
