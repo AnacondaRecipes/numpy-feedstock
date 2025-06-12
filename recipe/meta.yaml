@@ -2,7 +2,7 @@
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.2.5/numpy/_core/include/numpy/numpyconfig.h#L125
-{% set default_abi_level = "1.21" %}
+{% set default_abi_level = "1.23" %}
 
 package:
   name: numpy_and_numpy_base
@@ -75,7 +75,6 @@ outputs:
         # for runtime alignment
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - armpl  # [aarch64 and blas_impl != "openblas"]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
@@ -90,16 +89,14 @@ outputs:
       run_constrained:
         # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
         # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
-        - setuptools <74
+        - setuptools
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
 
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
-    
-    # path error in pkg-config on osx only for numpy 2.3.0
-    {% set tests_to_skip = tests_to_skip + " or test_configtool_pkgconfigdir" %}  # [osx]
+
 
     test:
       requires:
@@ -113,9 +110,8 @@ outputs:
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
-        - typing-extensions >=4.2.0
-        - mypy >=1.7.1
-        - cffi  # [py<311]
+        - typing-extensions >=4.5.0
+        - mypy >=1.15.0
         - charset-normalizer
         - meson >=1.5.2
       commands:
