@@ -3,6 +3,7 @@
 # mkl_fft and mkl_random, and then numpy.
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
 only_build_numpy_base: no
+
 c_compiler_version:        # [linux]
   - 11.2.0                 # [linux]
 cxx_compiler_version:      # [linux]
@@ -12,4 +13,14 @@ fortran_compiler_version:  # [linux or osx]
 openblas:
   - 0.3.20
 mkl:
-  - 2023.*
+  - 2025.*
+
+# TODO: This is temporary to test stdlib configuration. Remove once these are merged into aggregate.
+c_stdlib:
+  - sysroot        # [linux]
+c_stdlib_version:  # [unix]
+  - 2.28           # [linux]
+cdt_name:          # [linux]
+  - el8            # [linux]
+BUILD: x86_64-conda_el8-linux-gnu   # [linux and x86_64]
+BUILD: aarch64-conda_el8-linux-gnu  # [linux and aarch64]
