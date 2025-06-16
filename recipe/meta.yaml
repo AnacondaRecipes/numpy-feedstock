@@ -16,7 +16,7 @@ source:
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 0
+  number: 1
   # numpy 2.1.3 no longer supports Python 3.9: https://numpy.org/devdocs/release/2.1.3-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<310 or py>=314]
@@ -98,17 +98,6 @@ outputs:
         - setuptools <74
     {% endif %}
 
-    {% set tests_to_skip = "_not_a_real_test" %}
-
-    # https://github.com/numpy/numpy/issues/3858 - could be related
-    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x]
-    # https://github.com/numpy/numpy/issues/16046
-    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
-    # skip simd tests because vxe2 feature is not detected when running from prefect
-    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
-    # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
-    {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
-
     test:
       requires:
         - pip
@@ -133,7 +122,7 @@ outputs:
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
         - export CPU_COUNT=4  # [linux and ppc64le]
-        - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
+        - pytest -vv --pyargs numpy --durations=50 --durations-min=1.0
       imports:
         - numpy
         - numpy.core.multiarray
