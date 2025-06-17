@@ -10,13 +10,3 @@ cxx_compiler:  # [win]
   - vs2019     # [win]
 mkl:
   - 2025.*
-
-# TODO: This is temporary to test stdlib configuration. Remove once these are merged into aggregate.
-c_stdlib:
-  - sysroot        # [linux]
-c_stdlib_version:  # [unix]
-  - 2.28           # [linux]
-cdt_name:          # [linux]
-  - el8            # [linux]
-BUILD: x86_64-conda_el8-linux-gnu   # [linux and x86_64]
-BUILD: aarch64-conda_el8-linux-gnu  # [linux and aarch64]
