@@ -55,7 +55,7 @@ outputs:
       run:
         - python
       run_constrained:
-        - setuptools
+        - setuptools <74
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
@@ -87,7 +87,7 @@ outputs:
       run_constrained:
         # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
         # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
-        - setuptools
+        - setuptools <74
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
