@@ -1,0 +1,23 @@
+From f1ac9459b544ddb810ddda39c3ae921f1c7d6f36 Mon Sep 17 00:00:00 2001
+From: jrobertson <jrobertson@anaconda.com>
+Date: Wed, 18 Jun 2025 18:33:10 +0000
+Subject: [PATCH] resolve path to pkgconfigdir
+--- a/numpy/_configtool.py
++++ b/numpy/_configtool.py
+@@ -1,5 +1,6 @@
+ import argparse
++import os
+ import sys
+ from pathlib import Path
+ 
+ from .lib._utils_impl import get_include
+@@ -30,7 +31,7 @@ def main() -> None:
+     if args.cflags:
+         print("-I" + get_include())
+     if args.pkgconfigdir:
+         _path = Path(get_include()) / '..' / 'lib' / 'pkgconfig'
+-        print(_path.resolve())
++        print(os.path.normpath(_path.absolute()))
+ 
+ 
+ if __name__ == "__main__": 
