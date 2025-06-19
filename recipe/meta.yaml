@@ -13,8 +13,6 @@ source:
     sha256: 581f87f9e9e9db2cba2141400e160e9dd644ee248788d6f90636eeb8fd9260a6
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
-      - patches/0001-unique-cpp-header.patch                # [osx]
-      - patches/0002-fix-configtool-pkgconfig-path.patch    # [osx]
 
 build:
   number: 0
