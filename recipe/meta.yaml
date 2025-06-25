@@ -91,6 +91,9 @@ outputs:
 
     {% set tests_to_skip = "_not_a_real_test" %}
 
+    # path error in pkg-config on osx only for numpy 2.3.0 on CI
+    {% set tests_to_skip = tests_to_skip + " or test_configtool_pkgconfigdir" %}  # [osx]
+
     test:
       requires:
         - pip
