@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 1
+  number: 2
   # The Python versions supported for this release are 3.7-3.10
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
   skip: True  # [(blas_impl == 'openblas' and win) or py<37 or py>310]
@@ -40,6 +40,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -50,7 +51,7 @@ outputs:
         - cython >=0.29.24,<3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
@@ -60,6 +61,8 @@ outputs:
     # If only_build_numpy_base: "yes", build numpy-base only; otherwise build all the outputs.
     {% if only_build_numpy_base != 'yes' %}
     test:
+      imports:
+        - numpy
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
         - IF NOT EXIST %SP_DIR%\numpy\distutils\site.cfg exit 1  # [win]
@@ -73,6 +76,7 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -83,7 +87,7 @@ outputs:
         - setuptools <60.0.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - mkl-devel {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
       run:
         - python
@@ -141,8 +145,8 @@ outputs:
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
-        - pytest
-        - hypothesis
+        - pytest 7.1.1
+        - hypothesis 6.14.1
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
@@ -150,8 +154,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
@@ -169,7 +173,7 @@ about:
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://docs.scipy.org/doc/numpy/reference/
+  doc_url: https://numpy.org/doc/stable/reference/
   dev_url: https://github.com/numpy/numpy
   dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
