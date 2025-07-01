@@ -16,7 +16,7 @@ source:
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 0
+  number: 2
   # numpy 2.0.0 no longer supports Python 3.8: https://numpy.org/devdocs/release/2.0.0-notes.html
   # "This release supports Python versions 3.9-3.12"
   skip: True  # [(blas_impl == 'openblas' and win)]
@@ -42,6 +42,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -54,10 +55,14 @@ outputs:
         - meson-python >=0.15.0
         - python-build
         # blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
+      run_constrained:
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools.
+        - setuptools <74
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
@@ -75,13 +80,14 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - mkl-devel {{ mkl }}  # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
       run:
         - python
@@ -106,7 +112,6 @@ outputs:
     # https://github.com/numpy/numpy/issues/27045
     {% set tests_to_skip = tests_to_skip + " or (test_regression and test_gh25784)" %}  # [osx]
 
-
     test:
       requires:
         - pip
@@ -127,9 +132,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
-        - export CPU_COUNT=4  # [linux and ppc64le]
+        - export OPENBLAS_NUM_THREADS=1   # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1      # [win and blas_impl != 'mkl']
         - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
         - numpy
@@ -186,6 +190,10 @@ about:
   dev_url: https://github.com/numpy/numpy
 
 extra:
+  skip-lints:
+    - missing_imports_or_run_test_py
+    - missing_tests
+    - host_section_needs_exact_pinnings
   recipe-maintainers:
     - jakirkham
     - msarahan
