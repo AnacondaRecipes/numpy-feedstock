@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 2
+  number: 3
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
@@ -43,6 +43,7 @@ outputs:
       build:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ stdlib('c') }}  # [linux]
         - armpl  # [aarch64]
       host:
         - python
@@ -133,8 +134,8 @@ outputs:
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
-        - pytest
-        - hypothesis
+        - pytest 7.1.1
+        - hypothesis 6.14.1
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
@@ -142,8 +143,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
@@ -161,7 +162,7 @@ about:
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://docs.scipy.org/doc/numpy/reference/
+  doc_url: https://numpy.org/doc/stable/reference/
   dev_url: https://github.com/numpy/numpy
   dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
