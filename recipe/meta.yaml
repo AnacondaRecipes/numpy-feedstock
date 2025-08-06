@@ -16,7 +16,7 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 1
+  number: 2
   # The Python versions supported for this release are 3.8-3.11 - 3.12 may work in the future.
   skip: True  # [(blas_impl == 'openblas' and win) or py<38]
   force_use_keys:
@@ -39,6 +39,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -129,10 +130,10 @@ outputs:
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
-        - pytest
+        - pytest 7.1.1
         - pytest-cov
         - pytest-xdist
-        - hypothesis >=6.29.3
+        - hypothesis  >=6.29.3, <6.44.0  # Fixed compatibility issue with array_api in older numpy versions
         - pytz >=2021.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
@@ -143,8 +144,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - export CPU_COUNT=4  # [linux and ppc64le]
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
