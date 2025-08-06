@@ -19,7 +19,6 @@ build:
   number: 2
   # The Python versions supported for this release are 3.8-3.11 - 3.12 may work in the future.
   skip: True  # [(blas_impl == 'openblas' and win) or py<38]
-  skip: True  # [py>=312]  # numpy 1.23.5 predates Python 3.12
   force_use_keys:
     - python
 
@@ -80,7 +79,7 @@ outputs:
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.30, <3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
