@@ -132,13 +132,12 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [(osx and arm64)]
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}   # [(s390x)]
 
-
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
         - pytest 7.1.1
-        - hypothesis >=6.111.0
+        - hypothesis <6.44.0
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
