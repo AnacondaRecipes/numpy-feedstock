@@ -41,9 +41,9 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ stdlib('c') }}  # [linux]
         - armpl  # [aarch64]
       host:
         - python
@@ -52,7 +52,7 @@ outputs:
         - cython >=0.29.24
         - setuptools <60.0.0
         - wheel >=0.37.0
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
@@ -61,6 +61,8 @@ outputs:
     # mkl_fft and mkl_random, and then numpy.
     # If only_build_numpy_base: "yes", build numpy-base only; otherwise build all the outputs.
     {% if only_build_numpy_base != 'yes' %}
+    imports:
+      - numpy
     test:
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
