@@ -49,7 +49,7 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.24, <3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
         - mkl-devel {{ mkl }}  # [blas_impl == "mkl"]
@@ -84,7 +84,7 @@ outputs:
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.24, <3.0  
         - setuptools <60.0.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
