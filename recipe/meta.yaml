@@ -131,7 +131,7 @@ outputs:
       requires:
         - pip     # force installation or `test_api_importable` will fail
         - setuptools <60.0.0
-        - pytest 7.2.0
+        - pytest 7.3.1
         - pytest-cov
         - pytest-xdist
         - hypothesis  >=6.29.3, <6.44.0  # Fixed compatibility issue with array_api in older numpy versions
