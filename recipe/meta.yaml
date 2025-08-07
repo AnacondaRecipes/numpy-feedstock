@@ -141,7 +141,7 @@ outputs:
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
-        - mypy >=0.991, <=1.5.1
+        - mypy 0.981
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
