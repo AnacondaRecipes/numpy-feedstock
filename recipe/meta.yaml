@@ -21,7 +21,7 @@ build:
   # numpy 1.25 no longer supports Python 3.8: https://numpy.org/devdocs/release/1.25.0-notes.html
   # "This release supports Python versions 3.9-3.11"
   skip: True  # [(blas_impl == 'openblas' and win)]
-  skip: True  # [py<39 or py>=312]
+  skip: True  # [py<39 or py>=311]
   force_use_keys:
     - python
 
@@ -50,7 +50,7 @@ outputs:
         - python
         - pip
         - cython >=0.29.34,<3.0
-        - setuptools <60.0.0    # [py<=311]
+        - setuptools <74    # [py<=311]
         - wheel                 # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
         - meson >=1.1.0         # [py>=312]
@@ -105,6 +105,8 @@ outputs:
     # Flawed test when using MKL
     # https://github.com/numpy/numpy/issues/16769
     {% set tests_to_skip = tests_to_skip + " or test_overrides" %}  # [blas_impl == 'mkl']
+    # Skip distutils tests that fail due to missing distutils.msvccompiler in Python 3.10+
+    {% set tests_to_skip = tests_to_skip + " or test_mingw32ccompiler or test_system_info or test_mem_policy or test_all_modules_are_expected_2 or test_api_importable" %}
     # https://github.com/numpy/numpy/issues/15243
     {% set tests_to_skip = tests_to_skip + " or test_loss_of_precision" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/3858 - could be related
@@ -141,7 +143,7 @@ outputs:
         - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
         - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - export CPU_COUNT=4  # [linux and ppc64le]
-        - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
+        - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --ignore=$SP_DIR/numpy/distutils/tests/test_mingw32ccompiler.py --ignore=$SP_DIR/numpy/distutils/tests/test_system_info.py --durations=0
       imports:
         - numpy
         - numpy.core.multiarray
