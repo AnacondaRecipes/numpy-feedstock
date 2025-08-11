@@ -24,11 +24,6 @@ build:
   force_use_keys:
     - python
 
-requirements:
-  build:
-    - patch     # [not win]
-    - m2-patch  # [win]
-
 outputs:
   # this one has all the actual contents
   - name: numpy-base
@@ -37,8 +32,6 @@ outputs:
     build:
       entry_points:
         - f2py = numpy.f2py.f2py2e:main
-      missing_dso_whitelist:  # [s390x]
-        - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
         - {{ stdlib('c') }}  # [linux]
@@ -84,7 +77,7 @@ outputs:
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.24, <3.0  
+        - cython >=0.29.24,<3.0  
         - setuptools <60.0.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
@@ -159,12 +152,12 @@ outputs:
 about:
   home: https://numpy.org/
   license: BSD-3-Clause
-  lisense_family: BSD
+  license_family: BSD
   license_file: LICENSE.txt
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://numpy.org/doc/stable/reference/
+  doc_url: https://numpy.org/doc/stable/reference
   dev_url: https://github.com/numpy/numpy
   dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
