@@ -78,7 +78,7 @@ outputs:
         - python
         - packaging  # [osx and arm64]
         - cython >=0.29.24,<3.0  
-        - setuptools <60.0.0
+        - setuptools <=59.2.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
@@ -128,7 +128,7 @@ outputs:
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
-        - setuptools <60.0.0
+        - setuptools <=59.2.0
         - pytest 7.1.1
         - hypothesis <6.44.0
         - {{ compiler('c') }}  # [not osx]
