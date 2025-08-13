@@ -16,18 +16,13 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 2
+  number: 3
   # numpy 1.20.0 no longer supports Python 3.6: https://numpy.org/doc/stable/release/1.20.0-notes.html
   # "The Python versions supported for this release are 3.7-3.9, support for Python 3.6 has been dropped"
   # numpy 1.21.x set Python upper bound <3.11, see https://github.com/numpy/numpy/commit/1e8d6a83985f3191c63963414981743adc4353cf
   skip: True  # [(blas_impl == 'openblas' and win) or py<38 or py>310]
   force_use_keys:
     - python
-
-requirements:
-  build:
-    - patch     # [not win]
-    - m2-patch  # [win]
 
 outputs:
   # this one has all the actual contents
@@ -37,10 +32,9 @@ outputs:
     build:
       entry_points:
         - f2py = numpy.f2py.f2py2e:main
-      missing_dso_whitelist:  # [s390x]
-        - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -48,10 +42,10 @@ outputs:
         - python
         - pip
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
+        - cython >=0.29.24, <3.0
         - setuptools <60.0.0
         - wheel >=0.37.0
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel {{ mkl }}  # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
@@ -60,6 +54,8 @@ outputs:
     # mkl_fft and mkl_random, and then numpy.
     # If only_build_numpy_base: "yes", build numpy-base only; otherwise build all the outputs.
     {% if only_build_numpy_base != 'yes' %}
+    imports:
+      - numpy
     test:
       commands:
         - test -e $SP_DIR/numpy/distutils/site.cfg     # [unix]
@@ -74,14 +70,15 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }} # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
-        - setuptools <60.0.0
+        - cython >=0.29.24,<3.0  
+        - setuptools <=59.2.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
@@ -128,13 +125,12 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_limited_api" %}   # [(osx and arm64)]
     {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}   # [(s390x)]
 
-
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
-        - setuptools <60.0.0
-        - pytest
-        - hypothesis
+        - setuptools <=59.2.0
+        - pytest 7.1.1
+        - hypothesis <6.44.0
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
@@ -142,8 +138,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
         - numpy
@@ -156,12 +152,12 @@ outputs:
 about:
   home: https://numpy.org/
   license: BSD-3-Clause
-  lisense_family: BSD
+  license_family: BSD
   license_file: LICENSE.txt
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://docs.scipy.org/doc/numpy/reference/
+  doc_url: https://numpy.org/doc/stable/reference
   dev_url: https://github.com/numpy/numpy
   dev_source_url: https://github.com/numpy/numpy/tree/master/doc
 
