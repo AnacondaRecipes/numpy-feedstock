@@ -16,9 +16,10 @@ source:
     - patches/0006-popcnt_fix.patch                     # [blas_impl == "mkl" and win]
 
 build:
-  number: 1
+  number: 2
   # The Python versions supported for this release are 3.8-3.11 - 3.12 may work in the future.
   skip: True  # [(blas_impl == 'openblas' and win) or py<38]
+  skip: True  # [py>=312]
   force_use_keys:
     - python
 
@@ -39,6 +40,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -78,8 +80,8 @@ outputs:
       host:
         - python
         - packaging  # [osx and arm64]
-        - cython >=0.29.24
-        - setuptools <60.0.0
+        - cython >=0.29.30,<3.0
+        - setuptools <=59.2.0
         - wheel >=0.37.0
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
         - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
@@ -128,23 +130,23 @@ outputs:
     test:
       requires:
         - pip     # force installation or `test_api_importable` will fail
-        - setuptools <60.0.0
-        - pytest
+        - setuptools <=59.2.0
+        - pytest 7.3.1
         - pytest-cov
         - pytest-xdist
-        - hypothesis >=6.29.3
+        - hypothesis  >=6.29.3, <6.44.0  # Fixed compatibility issue with array_api in older numpy versions
         - pytz >=2021.3
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
-        - mypy >=0.981
+        - mypy 0.981
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - export CPU_COUNT=4  # [linux and ppc64le]
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
