@@ -47,6 +47,7 @@ outputs:
         - python
         - pip
         - cython >=0.29.34,<3.1
+        # setuptools.distutils moved msvc compiler to a private module in setuptools 60.0.0
         - setuptools <=59.2.0   # [py<=311]
         - meson-python >=0.15.0,<0.16.0
         - python-build
@@ -104,6 +105,7 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.81.1
         - pytz >=2023.3.post1
+        # setuptools.distutils moved msvc compiler to a private module in setuptools 60.0.0
         - setuptools <=59.2.0   # [py<=311]
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
