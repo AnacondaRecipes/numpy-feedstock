@@ -47,7 +47,7 @@ outputs:
         - python
         - pip
         - cython >=0.29.34,<3.1
-        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
+        # https://numpy.org/doc/1.26/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
         - setuptools <60  # [py<=311]
         - meson-python >=0.15.0,<0.16.0
         - python-build
@@ -105,7 +105,7 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.81.1
         - pytz >=2023.3.post1
-        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
+        # https://numpy.org/doc/1.26/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
         - setuptools <60  # [py<=311]
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
