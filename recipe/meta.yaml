@@ -47,8 +47,8 @@ outputs:
         - python
         - pip
         - cython >=0.29.34,<3.1
-        # setuptools.distutils moved msvc compiler to a private module in setuptools 70.0.0
-        - setuptools <=69  # [py<=311]
+        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
+        - setuptools <60  # [py<=311]
         - meson-python >=0.15.0,<0.16.0
         - python-build
         # blas
@@ -105,8 +105,8 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.81.1
         - pytz >=2023.3.post1
-        # setuptools.distutils moved msvc compiler to a private module in setuptools 70.0.0
-        - setuptools <=69  # [py<=311]
+        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
+        - setuptools <60  # [py<=311]
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
