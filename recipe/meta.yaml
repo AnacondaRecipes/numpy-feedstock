@@ -49,7 +49,7 @@ outputs:
       run:
         - python
       run_constrained:
-        - setuptools <74
+        - setuptools
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
