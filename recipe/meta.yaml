@@ -17,11 +17,11 @@ source:
     - patches/0007-enable-meson-build.patch             # [py>=312] https://github.com/numpy/numpy/blob/v1.25.0/building_with_meson.md
 
 build:
-  number: 0
+  number: 1
   # numpy 1.25 no longer supports Python 3.8: https://numpy.org/devdocs/release/1.25.0-notes.html
   # "This release supports Python versions 3.9-3.11"
   skip: True  # [(blas_impl == 'openblas' and win)]
-  skip: True  # [py<39]
+  skip: True  # [py<39 or py>=311]
   force_use_keys:
     - python
 
@@ -42,6 +42,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -49,7 +50,8 @@ outputs:
         - python
         - pip
         - cython >=0.29.34,<3.0
-        - setuptools <60.0.0    # [py<=311]
+        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
+        - setuptools <60  # [py<=311]
         - wheel                 # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
         - meson >=1.1.0         # [py>=312]
@@ -76,12 +78,14 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
       host:
         - python
         - cython >=0.29.34,<3.0
+        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
         - setuptools <60.0.0    # [py<=311]
         - wheel                 # [py<=311]
         - meson-python >=0.10.0 # [py>=312]
@@ -126,18 +130,20 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.29.3
         - pytz >=2021.3
+        # https://numpy.org/doc/1.25/reference/distutils_status_migration.html#interaction-of-numpy-distutils-with-setuptools 
+        - setuptools <60  # [py<=311]
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
-        - mypy >=0.981
+        - mypy 0.981  # Locked for typing compatibility
         - cffi  # [py<310]
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1  # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1  # [win and blas_impl != 'mkl']
         - export CPU_COUNT=4  # [linux and ppc64le]
         - pytest -vvv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=0
       imports:
