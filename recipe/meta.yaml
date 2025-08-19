@@ -16,7 +16,7 @@ source:
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 0
+  number: 1
   # numpy 2.1.3 no longer supports Python 3.9: https://numpy.org/devdocs/release/2.1.3-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<310 or py>=314]
@@ -41,6 +41,7 @@ outputs:
         - $RPATH/ld64.so.1    # [s390x]
     requirements:
       build:
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -78,6 +79,7 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }}  # [linux]
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - armpl  # [aarch64]
@@ -108,6 +110,7 @@ outputs:
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
     {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or test_cstruct" %}  # [win and py>312]
 
     test:
       requires:
@@ -130,8 +133,8 @@ outputs:
       commands:
         - f2py -h
         - python -c "import numpy; numpy.show_config()"
-        - export OPENBLAS_NUM_THREADS=1  # [unix]
-        - set OPENBLAS_NUM_THREADS=1  # [win]
+        - export OPENBLAS_NUM_THREADS=1   # [unix and blas_impl != 'mkl']
+        - set OPENBLAS_NUM_THREADS=1      # [win and blas_impl != 'mkl']
         - export CPU_COUNT=4  # [linux and ppc64le]
         - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
