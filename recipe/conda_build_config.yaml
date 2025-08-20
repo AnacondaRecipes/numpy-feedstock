@@ -13,3 +13,6 @@ c_compiler_version:
   - 17.0.6            # [osx]
 cxx_compiler_version:
   - 17.0.6            # [osx]
+
+mkl:
+  - '2025'
