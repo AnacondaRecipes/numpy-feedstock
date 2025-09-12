@@ -1,4 +1,4 @@
-{% set version = "2.3.1" %}
+{% set version = "2.3.3" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.2.5/numpy/_core/include/numpy/numpyconfig.h#L125
@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 1ec9ae20a4226da374362cca3c62cd753faf2f951440b0e3b98e93c235441d2b
+    sha256: ddc7c39727ba62b80dfdbedf400d1c10ddfa8eefbd7ec8dcb118be8b56d31029
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
@@ -18,14 +18,14 @@ build:
   number: 0
   # numpy 2.3.0 no longer supports Python 3.10: https://numpy.org/devdocs/release/2.3.0-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
-  skip: True  # [py<311 or py>=314]
+  skip: True  # [py<311]
   force_use_keys:
     - python
 
 requirements:
   build:
     - patch     # [(blas_impl == "mkl") and not win]
-    - m2-patch  # [(blas_impl == "mkl") and win]
+    - msys2-patch  # [(blas_impl == "mkl") and win]
 
 outputs:
   # this one has all the actual contents
@@ -38,6 +38,7 @@ outputs:
         - numpy-config = numpy._configtool:main
     requirements:
       build:
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - ninja-base
@@ -70,6 +71,7 @@ outputs:
     requirements:
       build:
         # for runtime alignment
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
       host:
@@ -93,6 +95,9 @@ outputs:
 
     # path error in pkg-config on osx only for numpy 2.3.0 on CI
     {% set tests_to_skip = tests_to_skip + " or test_configtool_pkgconfigdir" %}  # [osx]
+    # NumPy's exp2 function is not raising FloatingPointError for overflow/underflow conditions on Windows, likely due to platform-specific floating-point exception handling differences between glibc and MSVCRT.
+    # This test passes on Linux with glibc ≥2.17 but fails on Windows because np.exp2(2000.0) returns inf instead of raising FloatingPointError.
+    {% set tests_to_skip = tests_to_skip + " or test_exp2" %}  # [win]
 
     test:
       requires:
@@ -102,6 +107,7 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.111.0
         - pytz >=2023.3.post1
+        - {{ stdlib('c') }}  # [not osx]
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
@@ -159,7 +165,7 @@ outputs:
         - numpy.version
 
 about:
-  home: https://numpy.org/
+  home: https://numpy.org
   license: BSD-3-Clause
   license_family: BSD
   license_file:
@@ -168,7 +174,7 @@ about:
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
-  doc_url: https://numpy.org/doc/stable/reference/
+  doc_url: https://numpy.org/doc/stable/reference
   dev_url: https://github.com/numpy/numpy
 
 extra:
@@ -179,3 +185,8 @@ extra:
     - rgommers
     - ocefpaf
     - chenghlee
+  skip-lints:
+    - missing_imports_or_run_test_py
+    - pip_install_args
+    - patch_unnecessary
+    - missing_tests
