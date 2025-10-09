@@ -15,7 +15,7 @@ source:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
-  number: 0
+  number: 1
   # numpy 2.3.0 no longer supports Python 3.10: https://numpy.org/devdocs/release/2.3.0-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<311]
@@ -54,8 +54,6 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-      run_constrained:
-        - setuptools <74
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
@@ -85,10 +83,6 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-      run_constrained:
-        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
-        - setuptools <74
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
