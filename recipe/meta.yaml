@@ -97,7 +97,7 @@ outputs:
       requires:
         - pip
         # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools.
         - setuptools <74
         - pytest >=7.4.0
         - pytest-cov >=4.1.0
