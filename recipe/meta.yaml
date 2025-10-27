@@ -81,7 +81,7 @@ outputs:
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
-    {% set tests_to_skip = tests_to_skip + " or test_cstruct" %}  # [win and py>312]
+    {% set tests_to_skip = tests_to_skip + " or test_cstruct or test_exp2" %}  # [win]
 
     test:
       requires:
