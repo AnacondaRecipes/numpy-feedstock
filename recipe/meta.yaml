@@ -97,12 +97,13 @@ outputs:
       requires:
         - pip
         # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools.
+        # Skip testing for python 3.14 until hypothesis is rebuilt
         - setuptools <74
         - pytest >=7.4.0
         - pytest-cov >=4.1.0
         - pytest-xdist
-        - hypothesis >=6.111.0
+        - hypothesis >=6.111.0 # [py<314]
         - pytz >=2023.3.post1
         - {{ stdlib('c') }}  # [not osx]
         - {{ compiler('c') }}  # [not osx]
@@ -119,7 +120,7 @@ outputs:
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
         - export CPU_COUNT=4  # [linux and ppc64le]
-        - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
+        - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0 # [py<314]
       imports:
         - numpy
         - numpy.core.multiarray
