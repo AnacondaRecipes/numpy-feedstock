@@ -16,7 +16,7 @@ source:
       - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
-  number: 2
+  number: 3
   # numpy 2.1.3 no longer supports Python 3.9: https://numpy.org/devdocs/release/2.1.3-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<310 or py>=314]
@@ -58,10 +58,6 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-      run_constrained:
-        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
-        - setuptools <74
 
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
@@ -94,10 +90,6 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft    # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-      run_constrained:
-        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
-        - setuptools <74
     {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
@@ -115,6 +107,9 @@ outputs:
     test:
       requires:
         - pip
+        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
+        # TODO remove when numpy stop using distutils.msvccompiler from setuptools. 
+        - setuptools <74
         - pytest >=7.4.0
         - pytest-cov >=4.1.0
         - pytest-cov >=4.1.0
