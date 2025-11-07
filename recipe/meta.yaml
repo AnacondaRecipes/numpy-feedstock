@@ -15,7 +15,7 @@ source:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
-  number: 0
+  number: 1
   # numpy 2.3.0 no longer supports Python 3.10: https://numpy.org/devdocs/release/2.3.0-notes.html
   skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<311]
@@ -98,12 +98,11 @@ outputs:
         - pip
         # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
         # TODO remove when numpy stop using distutils.msvccompiler from setuptools.
-        # Skip testing for python 3.14 until hypothesis is rebuilt
         - setuptools <74
         - pytest >=7.4.0
         - pytest-cov >=4.1.0
         - pytest-xdist
-        - hypothesis >=6.111.0 # [py<314]
+        - hypothesis >=6.111.0
         - pytz >=2023.3.post1
         - {{ stdlib('c') }}  # [not osx]
         - {{ compiler('c') }}  # [not osx]
@@ -120,7 +119,7 @@ outputs:
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
         - export CPU_COUNT=4  # [linux and ppc64le]
-        - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0 # [py<314]
+        - pytest -vv --pyargs numpy -k "not ({{ tests_to_skip }})" --durations=50 --durations-min=1.0
       imports:
         - numpy
         - numpy.core.multiarray
