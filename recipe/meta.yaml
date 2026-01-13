@@ -157,11 +157,26 @@ outputs:
 
 about:
   home: https://numpy.org
-  license: BSD-3-Clause
-  license_family: BSD
+  license: BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0
+  license_family: OTHER
   license_file:
     - LICENSE.txt
-    - LICENSES_bundled.txt
+    - numpy/_core/include/numpy/libdivide/LICENSE.txt
+    - numpy/_core/src/common/pythoncapi-compat/COPYING
+    - numpy/_core/src/highway/LICENSE
+    - numpy/_core/src/multiarray/dragon4_LICENSE.txt
+    - numpy/_core/src/npysort/x86-simd-sort/LICENSE.md
+    - numpy/_core/src/umath/svml/LICENSE
+    - numpy/fft/pocketfft/LICENSE.md
+    - numpy/ma/LICENSE
+    - numpy/linalg/lapack_lite/LICENSE.txt
+    - numpy/random/LICENSE.md
+    - numpy/random/src/distributions/LICENSE.md
+    - numpy/random/src/mt19937/LICENSE.md
+    - numpy/random/src/pcg64/LICENSE.md
+    - numpy/random/src/philox/LICENSE.md
+    - numpy/random/src/sfc64/LICENSE.md
+    - numpy/random/src/splitmix64/LICENSE.md
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
