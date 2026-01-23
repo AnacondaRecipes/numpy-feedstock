@@ -1,7 +1,7 @@
-{% set version = "2.3.4" %}
+{% set version = "2.4.1" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
-# https://github.com/numpy/numpy/blob/v2.3.4/numpy/_core/include/numpy/numpyconfig.h
+# https://github.com/numpy/numpy/blob/v2.4.1/numpy/_core/include/numpy/numpyconfig.h
 {% set default_abi_level = "1.23" %}
 
 package:
@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: a7d018bfedb375a8d979ac758b120ba846a7fe764911a64465fd87b8729f4a6a
+    sha256: a1ceafc5042451a858231588a104093474c6a5c57dcc724841f5c888d237d690
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
@@ -20,11 +20,6 @@ build:
   skip: True  # [py<311]
   force_use_keys:
     - python
-
-requirements:
-  build:
-    - patch     # [(blas_impl == "mkl") and not win]
-    - msys2-patch  # [(blas_impl == "mkl") and win]
 
 outputs:
   # this one has all the actual contents
@@ -46,7 +41,7 @@ outputs:
         - python
         - pip
         - cython >=3.0.6
-        - meson-python >=0.15.0
+        - meson-python >=0.18.0
         - python-build
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -164,11 +159,26 @@ outputs:
 
 about:
   home: https://numpy.org
-  license: BSD-3-Clause
-  license_family: BSD
+  license: BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0
+  license_family: OTHER
   license_file:
     - LICENSE.txt
-    - LICENSES_bundled.txt
+    - numpy/_core/include/numpy/libdivide/LICENSE.txt
+    - numpy/_core/src/common/pythoncapi-compat/COPYING
+    - numpy/_core/src/highway/LICENSE
+    - numpy/_core/src/multiarray/dragon4_LICENSE.txt
+    - numpy/_core/src/npysort/x86-simd-sort/LICENSE.md
+    - numpy/_core/src/umath/svml/LICENSE
+    - numpy/fft/pocketfft/LICENSE.md
+    - numpy/ma/LICENSE
+    - numpy/linalg/lapack_lite/LICENSE.txt
+    - numpy/random/LICENSE.md
+    - numpy/random/src/distributions/LICENSE.md
+    - numpy/random/src/mt19937/LICENSE.md
+    - numpy/random/src/pcg64/LICENSE.md
+    - numpy/random/src/philox/LICENSE.md
+    - numpy/random/src/sfc64/LICENSE.md
+    - numpy/random/src/splitmix64/LICENSE.md
   summary: Array processing for numbers, strings, records, and objects.
   description: |
     NumPy is the fundamental package needed for scientific computing with Python.
