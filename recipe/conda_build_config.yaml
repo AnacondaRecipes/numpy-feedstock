@@ -10,3 +10,6 @@ cxx_compiler:  # [win]
   - vs2019     # [win]
 mkl:
   - 2025
+blas_impl:
+  - mkl
+  - openblas
