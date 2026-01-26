@@ -11,5 +11,4 @@ cxx_compiler:  # [win]
 mkl:
   - 2025
 blas_impl:
-  - mkl
   - openblas
