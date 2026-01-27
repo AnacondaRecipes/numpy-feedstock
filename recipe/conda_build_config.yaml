@@ -8,5 +8,12 @@ c_compiler:    # [win]
   - vs2019     # [win]
 cxx_compiler:  # [win]
   - vs2019     # [win]
+
 mkl:
   - 2025.*
+
+openblas:
+  - "0.3.*"
+
+blas_impl:
+  - openblas
