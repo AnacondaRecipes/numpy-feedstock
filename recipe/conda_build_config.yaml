@@ -12,3 +12,8 @@ mkl:
   - 2025
 blas_impl:
   - openblas
+
+fortran_compiler:          # [win]
+  - flang                  # [win]
+fortran_compiler_version:  # [win]
+  - 20.1.8                 # [win]
