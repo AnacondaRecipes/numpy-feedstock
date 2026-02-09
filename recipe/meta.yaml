@@ -1,7 +1,7 @@
 {% set version = "2.4.2" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
-# https://github.com/numpy/numpy/blob/v2.4.1/numpy/_core/include/numpy/numpyconfig.h
+# https://github.com/numpy/numpy/blob/v2.4.2/numpy/_core/include/numpy/numpyconfig.h
 {% set default_abi_level = "1.23" %}
 
 package:
