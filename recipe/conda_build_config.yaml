@@ -5,9 +5,9 @@
 only_build_numpy_base: no
 
 c_compiler:    # [win]
-  - vs2019     # [win]
+  - vs2022     # [win]
 cxx_compiler:  # [win]
-  - vs2019     # [win]
+  - vs2022     # [win]
 
 c_compiler_version:
   - 17.0.6            # [osx]
