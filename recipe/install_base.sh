@@ -4,17 +4,6 @@ set -ex
 
 cd ${SRC_DIR}
 
-UNAME_M=$(uname -m)
-case "$UNAME_M" in
-    ppc64*)
-        # Optimizations trigger compiler bug.
-        EXTRA_OPTS="-Csetup-args=-Dcpu-dispatch=min"
-        ;;
-    *)
-        EXTRA_OPTS=""
-        ;;
-esac
-
 if [[ ${blas_impl} == openblas ]]; then
     BLAS=openblas
 else
