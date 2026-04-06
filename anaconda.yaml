@@ -2,3 +2,6 @@ anaconda_config_version: 1
 upstream_sources:
   - pypi:
       identifier: numpy
+    packages:
+      - numpy
+      - numpy-base
