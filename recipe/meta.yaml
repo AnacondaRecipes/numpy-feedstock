@@ -15,7 +15,7 @@ source:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
-  number: 0
+  number: 1
   skip: True  # [py<311]
   force_use_keys:
     - python
