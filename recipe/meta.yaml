@@ -16,7 +16,6 @@ source:
 
 build:
   number: 0
-  skip: True  # [(blas_impl == 'openblas' and win)]
   skip: True  # [py<311]
   force_use_keys:
     - python

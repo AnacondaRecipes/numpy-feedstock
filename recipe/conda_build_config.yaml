@@ -13,5 +13,13 @@ c_compiler_version:
   - 17.0.6            # [osx]
 cxx_compiler_version:
   - 17.0.6            # [osx]
+
+blas_impl:
+  - mkl                        # [(x86 or x86_64) and not osx]
+  - openblas
+
+fortran_compiler:
+  - flang             # [win]
 fortran_compiler_version:
   - 14.3.0            # [linux]
+  - 20                # [win]
