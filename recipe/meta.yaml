@@ -90,6 +90,10 @@ outputs:
     # test_cstruct fails on Windows with "OSError: [WinError 6] The handle is invalid" - likely ctypes/handle management issue
     {% set tests_to_skip = tests_to_skip + " or test_cstruct" %}  # [win]
 
+    # numpy.distutils legacy Windows Flang integration expects flang.lib,
+    # which is not provided by our flang toolchain.
+    {% set tests_to_skip = tests_to_skip + " or test_multi_fortran_libs_link" %}  # [win]
+
     test:
       requires:
         - pip
