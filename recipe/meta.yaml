@@ -100,10 +100,12 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.111.0
         - pytz >=2023.3.post1
-        - {{ stdlib('c') }}  # [not osx]
-        - {{ compiler('c') }}  # [not osx]
-        - {{ compiler('cxx') }}  # [not osx]
-        - {{ compiler('fortran') }}  # [not osx]
+        - {{ stdlib('c') }}
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        # ERROR: Could not detect Ninja v1.8.2 or newer
+        - ninja-base >= 1.8.2
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.5.0
         - mypy >=1.15.0
