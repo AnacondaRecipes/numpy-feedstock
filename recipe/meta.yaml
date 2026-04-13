@@ -15,13 +15,8 @@ source:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
-<<<<<<< rebuild/win-openblas
   number: 1
   # numpy 2.3.0 no longer supports Python 3.10: https://numpy.org/devdocs/release/2.3.0-notes.html
-=======
-  number: 0
-  skip: True  # [(blas_impl == 'openblas' and win)]
->>>>>>> 2.3.x-main
   skip: True  # [py<311]
   force_use_keys:
     - python
