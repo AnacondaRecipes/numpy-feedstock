@@ -13,7 +13,6 @@ source:
     sha256: a9c0d994680cd991b1cb772e8b297340085466a6fe964bc9d4e80f5e2f43c291
     patches:                                                # [blas_impl == "mkl" or s390x]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
-      - patches/0004-Partially-revert-function-blocklisting-for-glibc-lt-2.18.patch # [s390x]
 
 build:
   number: 1
@@ -101,7 +100,7 @@ outputs:
     # skip simd tests because vxe2 feature is not detected when running from prefect
     {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
     # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
-    {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
+    {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [(osx and arm64) or win]
 
     test:
       requires:
@@ -112,9 +111,10 @@ outputs:
         # due to hotfix this is the only hypothesis version that works with numpy 2.0.0 and above
         - hypothesis >=6.111.0
         - pytz >=2023.3.post1
-        - {{ compiler('c') }}  # [not osx]
-        - {{ compiler('cxx') }}  # [not osx]
-        - {{ compiler('fortran') }}  # [not osx]
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        - ninja-base
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.2.0
         - mypy >=1.7.1
