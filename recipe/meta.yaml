@@ -11,8 +11,9 @@ package:
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
     sha256: 784db1dcdab56bf0517743e746dfb0f885fc68d948aba86eeec2cba234bdf1c0
-    patches:                                                # [blas_impl == "mkl" or osx]
+    patches:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
+      - patches/0004-extbuild-meson-no-vsenv-unix.patch
 
 build:
   number: 1
