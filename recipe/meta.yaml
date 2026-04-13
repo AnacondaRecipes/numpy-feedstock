@@ -93,14 +93,10 @@ outputs:
 
     {% set tests_to_skip = "_not_a_real_test" %}
 
-    # https://github.com/numpy/numpy/issues/3858 - could be related
-    {% set tests_to_skip = tests_to_skip + " or test_big_arrays" %}  # [s390x]
-    # https://github.com/numpy/numpy/issues/16046
-    {% set tests_to_skip = tests_to_skip + " or test_gcd_overflow" %}  # [s390x]
-    # skip simd tests because vxe2 feature is not detected when running from prefect
-    {% set tests_to_skip = tests_to_skip + " or test_features" %}  # [s390x]
-    # https://github.com/numpy/numpy/issues/27313 - can be removed with clang >=16 update
-    {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [(osx and arm64) or win]
+    # Narrow: only cos/sin parametrizations (see -k: f-cos / f-sin match those node ids).
+    {% set tests_to_skip = tests_to_skip + " or (test_unary_spurious_fpexception and (f-cos or f-sin))" %}  # [osx and arm64]
+    # MSVC FP model: exp2 overflow and many unary ufunc edge cases differ from glibc (warnings/exceptions).
+    {% set tests_to_skip = tests_to_skip + " or test_exp2 or test_unary_spurious_fpexception" %}  # [win]
 
     test:
       requires:
