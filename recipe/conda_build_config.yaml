@@ -9,13 +9,8 @@ c_compiler:    # [win]
 cxx_compiler:  # [win]
   - vs2019     # [win]
 
-mkl:
-  - 2025.*
-
-openblas:
-  - "0.3.*"
-
 blas_impl:
+  - mkl                        # [(x86 or x86_64) and not osx]
   - openblas
 
 fortran_compiler:          # [win]

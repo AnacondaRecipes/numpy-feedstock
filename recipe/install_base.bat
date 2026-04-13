@@ -4,12 +4,10 @@ set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig;%B
 
 if "%blas_impl%" == "openblas" (
     set "BLAS=openblas"
-    set "LAPACK=openblas"
     set "OPENBLAS_ROOT=%LIBRARY_PREFIX%"
     set "OPENBLAS=%LIBRARY_PREFIX%"
 ) else (
     set "BLAS=mkl-sdl"
-    set "LAPACK=mkl-sdl"
 )
 
 mkdir builddir
@@ -17,7 +15,7 @@ mkdir builddir
     -Cbuilddir=builddir ^
     -Csetup-args=-Dallow-noblas=false ^
     -Csetup-args=-Dblas=%BLAS% ^
-    -Csetup-args=-Dlapack=%LAPACK%
+    -Csetup-args=-Dlapack=%BLAS%
 if errorlevel 1 (
   type builddir\meson-logs\meson-log.txt
   exit /b 1
