@@ -16,7 +16,7 @@ source:
 
 build:
   number: 1
-  skip: True  # [py<311]
+  skip: True  # [py<311 or py>=315]
   force_use_keys:
     - python
 
