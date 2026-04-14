@@ -107,6 +107,7 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.111.0
         - pytz >=2023.3.post1
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('fortran') }}
