@@ -3,6 +3,7 @@
 set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig;%BUILD_PREFIX%\Library\lib\pkgconfig"
 if "%blas_impl%" == "openblas" (
     set "BLAS=openblas"
+    set "OPENBLAS_ROOT=%LIBRARY_PREFIX%"
 ) else (
     set "BLAS=mkl-sdl"
 )
