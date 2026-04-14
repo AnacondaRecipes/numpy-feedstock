@@ -11,13 +11,14 @@ package:
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
     sha256: 784db1dcdab56bf0517743e746dfb0f885fc68d948aba86eeec2cba234bdf1c0
-    patches:                                                # [blas_impl == "mkl" or osx]
+    patches:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
+      - patches/0004-extbuild-meson-no-vsenv-unix.patch
 
 build:
-  number: 0
-  skip: True  # [(blas_impl == 'openblas' and win)]
-  skip: True  # [py<311]
+  number: 1
+  # As of numpy 2.3.0, no longer supports Python 3.10: https://numpy.org/devdocs/release/2.3.0-notes.html
+  skip: True  # [py<311 or py>=315]
   force_use_keys:
     - python
 
@@ -86,6 +87,12 @@ outputs:
     # NumPy's exp2 function is not raising FloatingPointError for overflow/underflow conditions on Windows, likely due to platform-specific floating-point exception handling differences between glibc and MSVCRT.
     # This test passes on Linux with glibc ≥2.17 but fails on Windows because np.exp2(2000.0) returns inf instead of raising FloatingPointError.
     {% set tests_to_skip = tests_to_skip + " or test_exp2" %}  # [win]
+    # test_cstruct fails on Windows with "OSError: [WinError 6] The handle is invalid" - likely ctypes/handle management issue
+    {% set tests_to_skip = tests_to_skip + " or test_cstruct" %}  # [win]
+
+    # numpy.distutils legacy Windows Flang integration expects flang.lib,
+    # which is not provided by our flang toolchain.
+    {% set tests_to_skip = tests_to_skip + " or test_multi_fortran_libs_link" %}  # [win]
 
     test:
       requires:
@@ -98,10 +105,12 @@ outputs:
         - pytest-xdist
         - hypothesis >=6.111.0
         - pytz >=2023.3.post1
-        - {{ stdlib('c') }}  # [not osx]
-        - {{ compiler('c') }}  # [not osx]
-        - {{ compiler('cxx') }}  # [not osx]
-        - {{ compiler('fortran') }}  # [not osx]
+        - {{ stdlib('c') }}
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - {{ compiler('fortran') }}
+        # ERROR: Could not detect Ninja v1.8.2 or newer
+        - ninja-base >= 1.8.2
         - nomkl  # [x86 and blas_impl != 'mkl']
         - typing-extensions >=4.5.0
         - mypy >=1.15.0

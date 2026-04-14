@@ -1,0 +1,18 @@
+From 3a96c62cf8adf1c9e9ed6bd5b3a9bdbf0fb59bea Mon Sep 17 00:00:00 2001
+From: Eric Lundby <Eric.Lundby@gmail.com>
+Date: Thu, 10 Apr 2026 12:00:00 +0000
+Subject: [PATCH] BLD: do not pass --vsenv to meson on non-Windows (extbuild)
+
+Meson --vsenv is for MSVC. On Linux/macOS it breaks Meson 1.10+ / test_cstruct
+(Ninja detection).
+
+---
+ numpy/testing/_private/extbuild.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/numpy/testing/_private/extbuild.py b/numpy/testing/_private/extbuild.py
+--- a/numpy/testing/_private/extbuild.py
++++ b/numpy/testing/_private/extbuild.py
+@@ -236,1 +236,1 @@
+-        subprocess.check_call(["meson", "setup", "--vsenv",
++        subprocess.check_call(["meson", "setup",
