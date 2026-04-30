@@ -2,7 +2,7 @@ anaconda_config_version: 1
 upstream_sources:
   - pypi:
       identifier: numpy
-      include_regex: ^2\.0\.\d+(?:[a-z][a-z0-9]*)?$
+      include_regex: ^2\.1\.\d+(?:[a-z][a-z0-9]*)?$
     packages:
       - numpy
       - numpy-base
