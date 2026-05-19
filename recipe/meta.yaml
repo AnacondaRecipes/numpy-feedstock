@@ -1,29 +1,32 @@
-{% set version = "2.4.4" %}
+{% set version = "2.4.6" %}
+{% set default_abi_level = "1.23" %}
+{% set tests_to_skip = "_not_a_real_test" %}
+{% set tests_to_skip = tests_to_skip + " or test_configtool_pkgconfigdir" %}  # [osx]
+{% set tests_to_skip = tests_to_skip + " or test_exp2" %}  # [win]
+
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.4.2/numpy/_core/include/numpy/numpyconfig.h
-{% set default_abi_level = "1.23" %}
-
 package:
   name: numpy_and_numpy_base
   version: {{ version }}
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 2d390634c5182175533585cc89f3608a4682ccb173cc9bb940b2881c8d6f8fa0
-    patches:                                                # [blas_impl == "mkl" or osx]
-      - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
+    sha256: f3a3570c4a2a16746ac2c31a7c7c7b0c186b95ce902e33db6f28094ed7387dda
+    patches:  # [blas_impl == "mkl" or osx]
+      - patches/0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
 
 build:
-  number: 1
-  skip: True  # [py<311 or py>=315]
+  number: 0
+  skip: true  # [py<311 or py>=315]
   force_use_keys:
     - python
 
 outputs:
   # this one has all the actual contents
   - name: numpy-base
-    script: install_base.sh   # [unix]
+    script: install_base.sh  # [unix]
     script: install_base.bat  # [win]
     build:
       entry_points:
@@ -47,12 +50,10 @@ outputs:
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
-
   # When building out the initial package set for a new Python version / MKL version the
   # recommendation is to build numpy-base but not numpy, then build
   # mkl_fft and mkl_random, and then numpy.
   # If only_build_numpy_base: "yes build numpy-base only; otherwise build all the outputs.
-  {% if only_build_numpy_base != 'yes' %}
   # numpy is a metapackage that may include mkl_fft and mkl_random both of
   # which require numpy-base to build
   - name: numpy
@@ -75,17 +76,10 @@ outputs:
         - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
-        - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-    {% endif %}
-
-    {% set tests_to_skip = "_not_a_real_test" %}
-
+        - mkl_random  # [blas_impl == 'mkl' and (not win or vc>=14)]
     # path error in pkg-config on osx only for numpy 2.3.0 on CI
-    {% set tests_to_skip = tests_to_skip + " or test_configtool_pkgconfigdir" %}  # [osx]
     # NumPy's exp2 function is not raising FloatingPointError for overflow/underflow conditions on Windows, likely due to platform-specific floating-point exception handling differences between glibc and MSVCRT.
     # This test passes on Linux with glibc ≥2.17 but fails on Windows because np.exp2(2000.0) returns inf instead of raising FloatingPointError.
-    {% set tests_to_skip = tests_to_skip + " or test_exp2" %}  # [win]
-
     test:
       requires:
         - pip
@@ -131,7 +125,7 @@ outputs:
         - numpy.lib.introspect
         - numpy.lib.mixins
         - numpy.lib.npyio
-        - numpy.lib.recfunctions # note: still needs cleaning, was forgotten for 2.0
+        - numpy.lib.recfunctions  # note: still needs cleaning, was forgotten for 2.0
         - numpy.lib.scimath
         - numpy.lib.stride_tricks
         - numpy.linalg
