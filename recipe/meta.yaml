@@ -1,4 +1,4 @@
-{% set version = "2.4.4" %}
+{% set version = "2.4.6" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.4.2/numpy/_core/include/numpy/numpyconfig.h
@@ -10,12 +10,12 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 2d390634c5182175533585cc89f3608a4682ccb173cc9bb940b2881c8d6f8fa0
+    sha256: f3a3570c4a2a16746ac2c31a7c7c7b0c186b95ce902e33db6f28094ed7387dda
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
-  number: 1
+  number: 0
   skip: True  # [py<311 or py>=315]
   force_use_keys:
     - python
