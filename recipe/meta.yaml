@@ -1,8 +1,8 @@
-{% set version = "2.4.6" %}
+{% set version = "2.5.0" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
-# https://github.com/numpy/numpy/blob/v2.4.2/numpy/_core/include/numpy/numpyconfig.h
-{% set default_abi_level = "1.23" %}
+# https://github.com/numpy/numpy/blob/v2.5.0/numpy/_core/include/numpy/numpyconfig.h#L124
+{% set default_abi_level = "1.25" %}
 
 package:
   name: numpy_and_numpy_base
@@ -10,13 +10,13 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: f3a3570c4a2a16746ac2c31a7c7c7b0c186b95ce902e33db6f28094ed7387dda
+    sha256: 5a129578019311b6e56bdd714250f19b518f7dceeeb8d1af5490f4942d3f891c
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
   number: 0
-  skip: True  # [py<311 or py>=315]
+  skip: true  # [py<312 or py>=315]
   force_use_keys:
     - python
 
@@ -39,8 +39,8 @@ outputs:
       host:
         - python
         - pip
-        - cython >=3.0.6
         - meson-python >=0.18.0
+        - cython >=3.0.6
         - python-build
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -85,6 +85,11 @@ outputs:
     # NumPy's exp2 function is not raising FloatingPointError for overflow/underflow conditions on Windows, likely due to platform-specific floating-point exception handling differences between glibc and MSVCRT.
     # This test passes on Linux with glibc ≥2.17 but fails on Windows because np.exp2(2000.0) returns inf instead of raising FloatingPointError.
     {% set tests_to_skip = tests_to_skip + " or test_exp2" %}  # [win]
+    # NumPy 2.5.0 GA added a BLAS GEMM thread-safety test (test_blas_gemm_thread_safety)
+    # that requires an unreleased dev version of OpenBLAS (0.3.33.112),
+    # but the latest stable release is only 0.3.33 — so the test fails and likely all distros using stable OpenBLAS.
+    # see https://github.com/numpy/numpy/issues/31708
+    {% set tests_to_skip = tests_to_skip + " or test_blas_gemm_thread_safety" %}
 
     test:
       requires:
