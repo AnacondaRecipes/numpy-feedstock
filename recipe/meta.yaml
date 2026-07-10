@@ -1,4 +1,4 @@
-{% set version = "2.5.0" %}
+{% set version = "2.5.1" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.5.0/numpy/_core/include/numpy/numpyconfig.h#L124
@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: 5a129578019311b6e56bdd714250f19b518f7dceeeb8d1af5490f4942d3f891c
+    sha256: a48a113e6afea91f5608793bafa7ef2ad481fefbda87ec5069f483de61cb9fa3
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
@@ -113,6 +113,7 @@ outputs:
         - meson >=1.8.3,<=1.9
       commands:
         - f2py -h
+        - pip check
         - python -c "import numpy; numpy.show_config()"
         - export OPENBLAS_NUM_THREADS=1  # [unix]
         - set OPENBLAS_NUM_THREADS=1  # [win]
