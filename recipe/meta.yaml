@@ -83,23 +83,19 @@ outputs:
     test:
       requires:
         - pip
-        # restrict setuptools: see https://github.com/numpy/numpy/issues/27405
-        # TODO remove when numpy stop using distutils.msvccompiler from setuptools.
-        - setuptools <74
-        - pytest >=7.4.0
-        - pytest-cov >=4.1.0
+        - hypothesis >=6.152.1
+        - pytest >=9.0.3
+        - pytest-cov >=7.1.0
         - pytest-xdist
-        - hypothesis >=6.142.2
-        - pytz >=2023.3.post1
+        - pytest-timeout
+        - charset-normalizer
+        - python-tzdata
         - {{ stdlib('c') }}  # [not osx]
         - {{ compiler('c') }}  # [not osx]
         - {{ compiler('cxx') }}  # [not osx]
         - {{ compiler('fortran') }}  # [not osx]
         - nomkl  # [x86 and blas_impl != 'mkl']
-        - typing-extensions >=4.5.0
-        - mypy >=1.18.2
-        - charset-normalizer
-        - meson >=1.8.3,<=1.9
+        - meson >=1.8.3
       commands:
         - f2py -h
         - pip check
