@@ -1,4 +1,4 @@
-{% set version = "2.5.1" %}
+{% set version = "2.5.2" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.5.0/numpy/_core/include/numpy/numpyconfig.h#L124
@@ -10,7 +10,7 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: a48a113e6afea91f5608793bafa7ef2ad481fefbda87ec5069f483de61cb9fa3
+    sha256: d482d171c406ae88c5b19cad3b6a1c4c5209f886ab74bc44c2c865c23f52d860
     patches:                                                # [blas_impl == "mkl" or osx]
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
@@ -40,7 +40,7 @@ outputs:
         - python
         - pip
         - meson-python >=0.18.0
-        - cython >=3.0.6
+        - cython >=3.1.0
         - python-build
         # blas
         - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
@@ -76,7 +76,7 @@ outputs:
         # openblas or mkl runtime included with run_exports
         - mkl_fft  # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
-    {% endif %}
+  {% endif %}
 
     {% set tests_to_skip = "_not_a_real_test" %}
 
