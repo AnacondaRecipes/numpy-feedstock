@@ -1,0 +1,14 @@
+build_parameters:
+  - "--suppress-variables"
+  - "--error-overlinking"
+  - "--error-overdepending"
+  - "--no-test"
+
+upload_channels:
+  - ad-testing/label/py315
+
+channels:
+  - ad-testing/label/py315
+
+build_env_vars:
+  ANACONDA_ROCKET_ENABLE_PY315: True
