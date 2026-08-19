@@ -9,6 +9,14 @@ upload_channels:
 
 channels:
   - ad-testing/label/py315
+  # py315 bootstrap hosts are on PR staging until review-gated promotion.
+  # Strip all staging URLs before merge (U12).
+  - https://staging.continuum.io/pbp/fs/cython-feedstock/pr35/867291d
+  - https://staging.continuum.io/pbp/fs/meson-feedstock/pr25/9e3735b
+  - https://staging.continuum.io/pbp/fs/python-build-feedstock/pr7/bce7847
+  - https://staging.continuum.io/pbp/fs/pyproject-metadata-feedstock/pr7/7d1ebdb
+  - https://staging.continuum.io/pbp/fs/pyproject_hooks-feedstock/pr4/8be4dbf
+  - https://staging.continuum.io/pbp/fs/meson-python-feedstock/pr21/01caf42
 
 build_env_vars:
   ANACONDA_ROCKET_ENABLE_PY315: True
