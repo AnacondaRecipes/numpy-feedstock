@@ -17,6 +17,8 @@ channels:
   - https://staging.continuum.io/pbp/fs/pyproject-metadata-feedstock/pr7/7d1ebdb
   - https://staging.continuum.io/pbp/fs/pyproject_hooks-feedstock/pr4/8be4dbf
   - https://staging.continuum.io/pbp/fs/meson-python-feedstock/pr21/01caf42
+  - https://staging.continuum.io/pbp/fs/mkl_fft-feedstock/pr16/a6b998a
+  - https://staging.continuum.io/pbp/fs/mkl_random-feedstock/pr13/6b4cbb3
 
 build_env_vars:
   ANACONDA_ROCKET_ENABLE_PY315: True
