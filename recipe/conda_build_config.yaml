@@ -3,17 +3,6 @@
 # mkl_fft and mkl_random, and then numpy.
 # If only_build_numpy_base: yes, build numpy-base only; otherwise build all the outputs.
 only_build_numpy_base: no
-# Until AnacondaRecipes/aggregate#534 merges: t-only overlay.
-python:
-  - "3.14.* *_cp314t"
-numpy:
-  - 2.3
-mkl:
-  - "2025"
-zip_keys:
-  -
-    - python
-    - numpy
 
 c_compiler:    # [win]
   - vs2022     # [win]
