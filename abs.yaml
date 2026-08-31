@@ -1,0 +1,18 @@
+build_parameters:
+  - "--no-test"
+build_env_vars:
+  ANACONDA_ROCKET_ENABLE_FREETHREADING: yes
+channels:
+  - https://staging.continuum.io/pbp/fs/flit-feedstock/pr23/d27f75f
+  - https://staging.continuum.io/pbp/fs/setuptools-feedstock/pr109/9b1e75c
+  - https://staging.continuum.io/pbp/fs/pyproject_hooks-feedstock/pr5/1975be3
+  - https://staging.continuum.io/pbp/fs/pyproject-metadata-feedstock/pr8/d4ee3c7
+  - https://staging.continuum.io/pbp/fs/packaging-feedstock/pr26/ed52c28
+  - https://staging.continuum.io/pbp/fs/meson-feedstock/pr26/3762582
+  - https://staging.continuum.io/pbp/fs/meson-python-feedstock/pr22/fd7905b
+  - https://staging.continuum.io/pbp/fs/python-build-feedstock/pr8/f894c6d
+  - https://staging.continuum.io/pbp/fs/cython-feedstock/pr36/9bdfa6a
+  - https://staging.continuum.io/pbp/fs/mkl-service-feedstock/pr10/55939a2
+  - https://staging.continuum.io/pbp/fs/mkl_fft-feedstock/pr17/26c44ac
+  - https://staging.continuum.io/pbp/fs/mkl_random-feedstock/pr14/c4b0922
+  - https://staging.continuum.io/pbp/fs/wheel-feedstock/pr18/42eaeb2
