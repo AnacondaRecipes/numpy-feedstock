@@ -5,14 +5,14 @@ build_env_vars:
 channels:
   - https://staging.continuum.io/pbp/fs/flit-feedstock/pr23/4df3dd3
   - https://staging.continuum.io/pbp/fs/setuptools-feedstock/pr109/cac687d
-  - https://staging.continuum.io/pbp/fs/pyproject_hooks-feedstock/pr5/1345d3f
-  - https://staging.continuum.io/pbp/fs/pyproject-metadata-feedstock/pr8/0945775
-  - https://staging.continuum.io/pbp/fs/packaging-feedstock/pr26/62299c3
-  - https://staging.continuum.io/pbp/fs/meson-feedstock/pr26/2014cc0
-  - https://staging.continuum.io/pbp/fs/meson-python-feedstock/pr22/c127684
-  - https://staging.continuum.io/pbp/fs/python-build-feedstock/pr8/4cfc8b8
-  - https://staging.continuum.io/pbp/fs/cython-feedstock/pr36/7121819
-  - https://staging.continuum.io/pbp/fs/mkl-service-feedstock/pr10/4c83c3b
-  - https://staging.continuum.io/pbp/fs/mkl_fft-feedstock/pr17/d92dd1b
-  - https://staging.continuum.io/pbp/fs/mkl_random-feedstock/pr14/5c537bf
-  - https://staging.continuum.io/pbp/fs/wheel-feedstock/pr18/3e091ae
+  - https://staging.continuum.io/pbp/fs/pyproject_hooks-feedstock/pr5/9fd2d26
+  - https://staging.continuum.io/pbp/fs/pyproject-metadata-feedstock/pr8/f22dbd0
+  - https://staging.continuum.io/pbp/fs/packaging-feedstock/pr26/c60aab5
+  - https://staging.continuum.io/pbp/fs/meson-feedstock/pr26/3df7021
+  - https://staging.continuum.io/pbp/fs/meson-python-feedstock/pr22/f9acde6
+  - https://staging.continuum.io/pbp/fs/python-build-feedstock/pr8/2ea08d7
+  - https://staging.continuum.io/pbp/fs/cython-feedstock/pr36/35e8844
+  - https://staging.continuum.io/pbp/fs/mkl-service-feedstock/pr10/371e6d9
+  - https://staging.continuum.io/pbp/fs/mkl_fft-feedstock/pr17/a98ce12
+  - https://staging.continuum.io/pbp/fs/mkl_random-feedstock/pr14/238f4bc
+  - https://staging.continuum.io/pbp/fs/wheel-feedstock/pr18/1708729
