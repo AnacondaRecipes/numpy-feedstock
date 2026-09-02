@@ -15,7 +15,7 @@ source:
       - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
 
 build:
-  number: 0
+  number: 2
   skip: true  # [py<312 or py>=315]
   force_use_keys:
     - python
@@ -26,6 +26,9 @@ outputs:
     script: install_base.sh   # [unix]
     script: install_base.bat  # [win]
     build:
+      # Same feature as python 3.14t so unspecified solves prefer GIL twins.
+      track_features:
+        - free-threading  # [is_freethreading]
       entry_points:
         - f2py = numpy.f2py.f2py2e:main
         - numpy-config = numpy._configtool:main
@@ -57,6 +60,8 @@ outputs:
   # which require numpy-base to build
   - name: numpy
     build:
+      track_features:
+        - free-threading  # [is_freethreading]
       run_exports:
         - numpy >={{ default_abi_level }},<3
     requirements:
