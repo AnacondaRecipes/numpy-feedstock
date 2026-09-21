@@ -1,4 +1,4 @@
-{% set version = "2.5.2" %}
+{% set version = "2.5.3" %}
 # numpy will by default use the ABI feature level for the first numpy version
 # that added support for the oldest currently-supported CPython version; see
 # https://github.com/numpy/numpy/blob/v2.5.0/numpy/_core/include/numpy/numpyconfig.h#L124
@@ -10,9 +10,9 @@ package:
 
 source:
   - url: https://github.com/numpy/numpy/releases/download/v{{ version }}/numpy-{{ version }}.tar.gz
-    sha256: d482d171c406ae88c5b19cad3b6a1c4c5209f886ab74bc44c2c865c23f52d860
-    patches:                                                # [blas_impl == "mkl" or osx]
-      - patches/0003-intel_init_mkl.patch                   # [blas_impl == "mkl"]
+    sha256: df2d5874ff183595a4ba404edd04f6bd9b5505c1d7708573f6a6c17489a67563
+    patches:                               # [blas_impl == "mkl" or osx]
+      - patches/0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
 
 build:
   number: 0
@@ -43,7 +43,7 @@ outputs:
         - cython >=3.1.0
         - python-build
         # blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == "mkl"]
+        - mkl-devel  {{ mkl }}           # [blas_impl == "mkl"]
         - openblas-devel {{ openblas }}  # [blas_impl == "openblas"]
       run:
         - python
@@ -68,13 +68,13 @@ outputs:
       host:
         - python
         # these import blas metapackages to ensure consistency with downstream libs that also use blas
-        - mkl-devel  {{ mkl }}  # [blas_impl == 'mkl']
+        - mkl-devel  {{ mkl }}           # [blas_impl == 'mkl']
         - openblas-devel {{ openblas }}  # [blas_impl == 'openblas']
       run:
         - python
         - {{ pin_subpackage('numpy-base', exact=True) }}
         # openblas or mkl runtime included with run_exports
-        - mkl_fft  # [blas_impl == 'mkl']
+        - mkl_fft    # [blas_impl == 'mkl']
         - mkl_random # [blas_impl == 'mkl' and (not win or vc>=14)]
   {% endif %}
 
