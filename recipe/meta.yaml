@@ -15,7 +15,7 @@ source:
       - patches/0003-intel_init_mkl.patch  # [blas_impl == "mkl"]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<312]
   force_use_keys:
     - python
@@ -83,6 +83,15 @@ outputs:
     # NumPy's exp2 function is not raising FloatingPointError for overflow/underflow conditions on Windows, likely due to platform-specific floating-point exception handling differences between glibc and MSVCRT.
     # This test passes on Linux with glibc ≥2.17 but fails on Windows because np.exp2(2000.0) returns inf instead of raising FloatingPointError.
     {% set tests_to_skip = tests_to_skip + " or test_exp2" %}  # [win]
+
+    # NumPy's np.linalg.inv and np.linalg.solve crash with an access violation on win-arm64,
+    # see https://github.com/numpy/numpy/issues/29442. OpenBLAS 0.3.31 for win-arm64
+    # dereferences a bad pointer in the LAPACK ?GESV routine for certain problem sizes, and
+    # np.linalg.inv is implemented on top of gesv (identity right-hand side), so it dies for
+    # 23x23..31x31 matrices. The TestTensorinv tests invert a 24x24 matrix and are the only
+    # tests in the suite that hit a broken size. Remove this skip when openblas is updated
+    # past 0.3.31 (0.3.32+ lists ?GESV/buffer-allocation fixes for arm64, not yet verified).
+    {% set tests_to_skip = tests_to_skip + " or test_tensorinv" %}  # [win and arm64 and blas_impl == 'openblas']
 
     test:
       requires:
